@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Menu, X, Search, User, ShoppingBag, ChevronDown, ChevronUp } from 'lucide-react'
@@ -41,12 +41,29 @@ export function SiteHeaderInner({
 
   const activeSection = activeMega ? MENU.find((s) => s.id === activeMega) : null
 
+  // Lock body scroll when mobile menu is open to prevent page scroll propagation
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden'
+      document.body.style.height = '100vh'
+    } else {
+      document.body.style.overflow = ''
+      document.body.style.height = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+      document.body.style.height = ''
+    }
+  }, [mobileOpen])
+
   const closeMobile = () => {
     setMobileOpen(false)
     setMobileExpandedPet(null)
   }
 
   return (
+    <>
     <div className="fixed top-0 left-0 right-0 z-50 flex flex-col w-full">
       {/* Announcement Bar */}
       <div className="w-full bg-black py-2 px-4 flex items-center justify-center text-center z-50 border-b border-neutral-800">
@@ -235,109 +252,110 @@ export function SiteHeaderInner({
       </div>
 
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
-
-      {/* Mobile Drawer (Menu Navigation) */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.5 }}
-              exit={{ opacity: 0 }}
-              onClick={closeMobile}
-              className="fixed inset-0 bg-black z-40 lg:hidden"
-            />
-            <motion.div
-              initial={{ x: '-100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 250 }}
-              className="fixed top-0 left-0 h-[100dvh] w-[85vw] max-w-[360px] bg-white border-r-2 border-black shadow-[4px_0px_0px_0px_rgba(0,0,0,1)] z-50 flex flex-col lg:hidden overflow-hidden"
-            >
-              {/* Drawer header */}
-              <div className="flex items-center justify-between p-5 border-b-2 border-black bg-[#FAF6F0] flex-shrink-0">
-                <h2 className="font-whisker-bites text-xl font-black uppercase text-black tracking-wide">
-                  Shop
-                </h2>
-                <button
-                  onClick={closeMobile}
-                  className="p-1 rounded-lg border border-transparent active:border-black active:bg-[#ffea79] transition-all cursor-pointer"
-                  aria-label="Close menu"
-                >
-                  <X className="w-5 h-5 text-black" />
-                </button>
-              </div>
-
-              {/* Drawer body — nested accordion */}
-              <nav
-                className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 py-4 flex flex-col gap-2 pb-24"
-                style={{ touchAction: 'pan-y', WebkitOverflowScrolling: 'touch' }}
-              >
-                <Link
-                  href="/shop"
-                  onClick={closeMobile}
-                  className="font-sans font-extrabold text-sm text-black uppercase tracking-wider py-3 px-3 bg-[#ffea79] border border-black rounded-xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-black hover:text-white transition-colors text-center"
-                >
-                  Shop All 🛒
-                </Link>
-
-                {MENU.map((section) => {
-                  const expanded = mobileExpandedPet === section.id
-                  return (
-                    <div key={section.id} className="border border-black rounded-xl overflow-hidden shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                      <button
-                        onClick={() => setMobileExpandedPet(expanded ? null : section.id)}
-                        className="w-full px-4 py-3 flex items-center justify-between font-whisker-bites text-base font-black uppercase tracking-wide border-b border-black/10"
-                        style={{ backgroundColor: expanded ? PET_ACCENTS[section.id] : '#FAF6F0' }}
-                      >
-                        <span className="flex items-center gap-2">
-                          <span className="text-lg">{section.emoji}</span>
-                          <span>{section.label}</span>
-                        </span>
-                        {expanded ? <ChevronUp className="w-4 h-4 stroke-[2.5]" /> : <ChevronDown className="w-4 h-4 stroke-[2.5]" />}
-                      </button>
-
-                      {expanded && (
-                        <div className="bg-white">
-                          <div className="p-3 flex flex-col gap-3">
-                            <Link
-                              href={section.shopAllHref}
-                              onClick={closeMobile}
-                              className="text-[11px] font-black uppercase text-black hover:underline px-2 py-1.5 bg-[#FAF6F0] border border-black/20 rounded-lg text-center"
-                            >
-                              Shop All {section.label} {section.emoji}
-                            </Link>
-                            {section.columns.map((col) => (
-                              <div key={col.title} className="flex flex-col gap-1.5">
-                                <h4 className="text-[10px] font-black uppercase text-zinc-400 tracking-widest px-1">
-                                  {col.title}
-                                </h4>
-                                <ul className="flex flex-col gap-1">
-                                  {col.items.map((item) => (
-                                    <li key={item.href}>
-                                      <Link
-                                        href={item.href}
-                                        onClick={closeMobile}
-                                        className="text-[12px] font-extrabold text-zinc-700 hover:text-black px-2 py-1.5 block leading-tight"
-                                      >
-                                        {item.label}
-                                      </Link>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )
-                })}
-              </nav>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
     </div>
+
+    {/* Mobile Drawer — rendered as a root-level sibling of the header so iOS
+        Safari does not trap touch events inside the header's fixed/flex wrapper.
+        Single scrollable container with a sticky header. */}
+    <AnimatePresence>
+      {mobileOpen && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.5 }}
+            exit={{ opacity: 0 }}
+            onClick={closeMobile}
+            className="fixed inset-0 bg-black z-[60] lg:hidden"
+          />
+          <motion.aside
+            initial={{ x: '-100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '-100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 250 }}
+            className="fixed top-0 left-0 h-[100dvh] w-[85vw] max-w-[360px] bg-white border-r-2 border-black shadow-[4px_0px_0px_0px_rgba(0,0,0,1)] z-[70] lg:hidden overflow-y-auto overscroll-contain"
+            style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}
+          >
+            {/* Sticky drawer header — stays pinned while the body scrolls under it */}
+            <div className="sticky top-0 z-10 flex items-center justify-between p-5 border-b-2 border-black bg-[#FAF6F0]">
+              <h2 className="font-whisker-bites text-xl font-black uppercase text-black tracking-wide">
+                Shop
+              </h2>
+              <button
+                onClick={closeMobile}
+                className="p-1 rounded-lg border border-transparent active:border-black active:bg-[#ffea79] transition-all cursor-pointer"
+                aria-label="Close menu"
+              >
+                <X className="w-5 h-5 text-black" />
+              </button>
+            </div>
+
+            {/* Drawer body */}
+            <nav className="px-4 py-4 pb-36 flex flex-col gap-2">
+              <Link
+                href="/shop"
+                onClick={closeMobile}
+                className="font-sans font-extrabold text-sm text-black uppercase tracking-wider py-3 px-3 bg-[#ffea79] border border-black rounded-xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-black hover:text-white transition-colors text-center"
+              >
+                Shop All 🛒
+              </Link>
+
+              {MENU.map((section) => {
+                const expanded = mobileExpandedPet === section.id
+                return (
+                  <div key={section.id} className="border border-black rounded-xl overflow-hidden shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                    <button
+                      onClick={() => setMobileExpandedPet(expanded ? null : section.id)}
+                      className="w-full px-4 py-3 flex items-center justify-between font-whisker-bites text-base font-black uppercase tracking-wide border-b border-black/10"
+                      style={{ backgroundColor: expanded ? PET_ACCENTS[section.id] : '#FAF6F0' }}
+                    >
+                      <span className="flex items-center gap-2">
+                        <span className="text-lg">{section.emoji}</span>
+                        <span>{section.label}</span>
+                      </span>
+                      {expanded ? <ChevronUp className="w-4 h-4 stroke-[2.5]" /> : <ChevronDown className="w-4 h-4 stroke-[2.5]" />}
+                    </button>
+
+                    {expanded && (
+                      <div className="bg-white">
+                        <div className="p-3 flex flex-col gap-3">
+                          <Link
+                            href={section.shopAllHref}
+                            onClick={closeMobile}
+                            className="text-[11px] font-black uppercase text-black hover:underline px-2 py-1.5 bg-[#FAF6F0] border border-black/20 rounded-lg text-center"
+                          >
+                            Shop All {section.label} {section.emoji}
+                          </Link>
+                          {section.columns.map((col) => (
+                            <div key={col.title} className="flex flex-col gap-1.5">
+                              <h4 className="text-[10px] font-black uppercase text-zinc-400 tracking-widest px-1">
+                                {col.title}
+                              </h4>
+                              <ul className="flex flex-col gap-1">
+                                {col.items.map((item) => (
+                                  <li key={item.href}>
+                                    <Link
+                                      href={item.href}
+                                      onClick={closeMobile}
+                                      className="text-[12px] font-extrabold text-zinc-700 hover:text-black px-2 py-1.5 block leading-tight"
+                                    >
+                                      {item.label}
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </nav>
+          </motion.aside>
+        </>
+      )}
+    </AnimatePresence>
+    </>
   )
 }
