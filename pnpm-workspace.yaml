@@ -1,0 +1,4 @@
+# Build scripts allowlist — required by pnpm 11+.
+# `sharp` ships native binaries that need its postinstall script to run.
+onlyBuiltDependencies:
+  - sharp
