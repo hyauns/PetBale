@@ -6,15 +6,15 @@ import Link from 'next/link'
 import type { HomeHero } from '@/lib/shopify/content'
 
 const DEFAULT: HomeHero = {
-  starsText: '21515+ VERIFIED REVIEWS, SOLD OUT 7X',
-  headlineLine1: 'FRESH RAW MEALS +',
-  headlineLine2: 'ORGANIC TOPPINGS',
-  subtitle: "LEVEL UP YOUR PET'S DIET WITH OUR PREMIUM RAW MEALS AND HIGH-VALUE ORGANIC TOPPINGS",
+  starsText: 'US-BASED RETAILER • FREE SHIPPING OVER $40 • 30-DAY HAPPINESS GUARANTEE',
+  headlineLine1: 'PREMIUM PET CARE,',
+  headlineLine2: 'TRUSTED BRANDS',
+  subtitle: 'SHOP DOG FOOD, CAT FOOD, TREATS, FLEA & TICK, LITTER, AND PET ESSENTIALS FROM 100+ TRUSTED BRANDS — DELIVERED FAST ACROSS THE US.',
   ctaPrimaryLabel: 'SHOP DOG FOOD',
   ctaPrimaryUrl: '/collections/dog-food',
   ctaSecondaryLabel: 'SHOP CAT FOOD',
   ctaSecondaryUrl: '/collections/cat-food',
-  floatingStickerText: 'NEW PROTEIN MEALS!',
+  floatingStickerText: 'FREE SHIPPING $40+',
   imageUrl: '/images/ramen-hero-products.png',
   imageAlt: 'PetBale products',
 }

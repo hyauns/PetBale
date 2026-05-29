@@ -474,6 +474,76 @@ export async function getFaqContent(): Promise<FaqContent> {
   }
 }
 
+// ── Trust badges (LegitScript / .pharmacy / etc.) ──────────────────────
+
+export interface TrustBadge {
+  name: string
+  imageUrl: string | null
+  imageAlt: string
+  link: string | null
+  sortOrder: number
+}
+
+interface TrustBadgeRaw {
+  fields: {
+    key: string
+    value: string | null
+    reference: {
+      image?: { url: string; altText: string | null }
+      url?: string
+    } | null
+  }[]
+}
+
+function adaptTrustBadge(node: TrustBadgeRaw): TrustBadge {
+  const f = node.fields
+  const get = (key: string): string =>
+    f.find((x) => x.key === key)?.value ?? ''
+  const ref = f.find((x) => x.key === 'image')?.reference
+  const imageUrl = ref?.image?.url ?? ref?.url ?? null
+  const sortRaw = get('sort_order')
+  return {
+    name: get('name') || 'Trust badge',
+    imageUrl,
+    imageAlt: ref?.image?.altText || get('name') || 'Trust badge',
+    link: get('link') || null,
+    sortOrder: sortRaw ? parseInt(sortRaw, 10) : 99,
+  }
+}
+
+export async function getTrustBadges(): Promise<TrustBadge[]> {
+  const query = /* GraphQL */ `
+    query TrustBadges {
+      items: metaobjects(type: "trust_badge", first: 10) {
+        edges {
+          node {
+            fields {
+              key
+              value
+              reference {
+                ... on MediaImage { image { url altText } }
+                ... on GenericFile { url }
+              }
+            }
+          }
+        }
+      }
+    }
+  `
+  try {
+    const data = await shopifyFetch<{ items: { edges: { node: TrustBadgeRaw }[] } }>({
+      query,
+      next: { revalidate: 300 },
+    })
+    return data.items.edges
+      .map((e) => adaptTrustBadge(e.node))
+      .sort((a, b) => a.sortOrder - b.sortOrder)
+  } catch (err) {
+    console.warn('[trust-badges] fetch failed', err)
+    return []
+  }
+}
+
 // ── Site Branding (logos + favicon) ─────────────────────────────────────
 
 export interface SiteBranding {

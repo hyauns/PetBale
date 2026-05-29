@@ -4,7 +4,14 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Instagram, Facebook, Youtube, Music2, Twitter, Mail, Phone, MapPin } from 'lucide-react'
 import { motion } from 'framer-motion'
-import type { HomeFooterLink, SiteBranding } from '@/lib/shopify/content'
+import type { HomeFooterLink, SiteBranding, TrustBadge } from '@/lib/shopify/content'
+
+// Local fallback images shipped in /public — used when a trust_badge metaobject
+// entry has no uploaded image yet. Lookup by metaobject `name`.
+const LOCAL_BADGE_FALLBACKS: Record<string, { src: string; width: number; height: number; className: string }> = {
+  'LegitScript Certified': { src: '/legitscript.png', width: 48, height: 52, className: 'h-12 w-auto object-contain' },
+  '.pharmacy Verified': { src: '/pharmacy.jpg', width: 130, height: 40, className: 'h-10 w-auto object-contain' },
+}
 
 const BUSINESS_INFO = {
   address: '3832 Fescue St, Clermont, FL 34714',
@@ -43,9 +50,11 @@ const DEFAULT_LINKS: Record<string, { label: string; href: string }[]> = {
 export function SiteFooterInner({
   footerLinks: shopifyLinks,
   branding,
+  trustBadges = [],
 }: {
   footerLinks?: HomeFooterLink[]
   branding?: SiteBranding | null
+  trustBadges?: TrustBadge[]
 }) {
   const grouped = shopifyLinks && shopifyLinks.length > 0
     ? shopifyLinks.reduce<Record<string, { label: string; href: string }[]>>((acc, l) => {
@@ -111,44 +120,47 @@ export function SiteFooterInner({
               Your ultimate pet care superstore. Premium brands, quick delivery, and unbeatable prices.
             </p>
 
-            {/* Certifications */}
-            <div className="mt-8 pt-6 border-t border-white/10">
-              <h4 className="text-white/40 text-[10px] font-black uppercase tracking-widest mb-3">
-                Certified by
-              </h4>
-              <div className="flex items-center gap-3 flex-wrap">
-                <a
-                  href="https://www.legitscript.com/"
-                  target="_blank"
-                  rel="noreferrer noopener nofollow"
-                  aria-label="LegitScript Certified"
-                  className="bg-white border-2 border-black rounded-lg p-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 transition-all duration-200"
-                >
-                  <Image
-                    src="/legitscript.png"
-                    alt="LegitScript Certified"
-                    width={48}
-                    height={52}
-                    className="h-12 w-auto object-contain"
-                  />
-                </a>
-                <a
-                  href="https://www.safe.pharmacy/"
-                  target="_blank"
-                  rel="noreferrer noopener nofollow"
-                  aria-label=".pharmacy Verified"
-                  className="bg-white border-2 border-black rounded-lg p-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 transition-all duration-200"
-                >
-                  <Image
-                    src="/pharmacy.jpg"
-                    alt=".pharmacy Verified"
-                    width={130}
-                    height={40}
-                    className="h-10 w-auto object-contain"
-                  />
-                </a>
+            {/* Trust badges — render from Shopify metaobject, fall back to bundled images by name */}
+            {trustBadges.length > 0 && (
+              <div className="mt-8 pt-6 border-t border-white/10">
+                <h4 className="text-white/40 text-[10px] font-black uppercase tracking-widest mb-3">
+                  Trusted by
+                </h4>
+                <div className="flex items-center gap-3 flex-wrap">
+                  {trustBadges.map((badge) => {
+                    const fallback = LOCAL_BADGE_FALLBACKS[badge.name]
+                    const src = badge.imageUrl ?? fallback?.src
+                    if (!src) return null
+                    const inner = (
+                      <Image
+                        src={src}
+                        alt={badge.imageAlt}
+                        width={badge.imageUrl ? 130 : fallback?.width ?? 130}
+                        height={badge.imageUrl ? 50 : fallback?.height ?? 50}
+                        className={fallback?.className ?? 'h-12 w-auto object-contain'}
+                      />
+                    )
+                    const wrapper = 'bg-white border-2 border-black rounded-lg p-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 transition-all duration-200'
+                    return badge.link ? (
+                      <a
+                        key={badge.name}
+                        href={badge.link}
+                        target="_blank"
+                        rel="noreferrer noopener nofollow"
+                        aria-label={badge.name}
+                        className={wrapper}
+                      >
+                        {inner}
+                      </a>
+                    ) : (
+                      <div key={badge.name} aria-label={badge.name} className={wrapper}>
+                        {inner}
+                      </div>
+                    )
+                  })}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Link columns */}

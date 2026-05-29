@@ -1,4 +1,4 @@
-import { getSiteBranding } from '@/lib/shopify/content'
+import { getSiteBranding, getTrustBadges } from '@/lib/shopify/content'
 import type { HomeFooterLink } from '@/lib/shopify/content'
 import { SiteFooterInner } from './site-footer-inner'
 
@@ -7,6 +7,15 @@ export async function SiteFooter({
 }: {
   footerLinks?: HomeFooterLink[]
 }) {
-  const branding = await getSiteBranding()
-  return <SiteFooterInner footerLinks={footerLinks} branding={branding} />
+  const [branding, trustBadges] = await Promise.all([
+    getSiteBranding(),
+    getTrustBadges(),
+  ])
+  return (
+    <SiteFooterInner
+      footerLinks={footerLinks}
+      branding={branding}
+      trustBadges={trustBadges}
+    />
+  )
 }

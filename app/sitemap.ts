@@ -9,7 +9,6 @@ const STATIC_PATHS: { path: string; priority: number; changeFrequency: MetadataR
   { path: '/', priority: 1.0, changeFrequency: 'daily' },
   { path: '/shop', priority: 0.9, changeFrequency: 'daily' },
   { path: '/brands', priority: 0.7, changeFrequency: 'weekly' },
-  { path: '/search', priority: 0.5, changeFrequency: 'weekly' },
   { path: '/about', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/contact', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/faq', priority: 0.7, changeFrequency: 'monthly' },
@@ -22,7 +21,55 @@ const STATIC_PATHS: { path: string; priority: number; changeFrequency: MetadataR
   { path: '/payment-policy', priority: 0.3, changeFrequency: 'yearly' },
 ]
 
-const CATEGORY_SLUGS = [...Object.keys(CATEGORY_TO_SHOPIFY_HANDLES), 'deals']
+/**
+ * Every collection slug we render at /collections/[slug]:
+ *  - 6 UI category slugs (dog-food, cat-food, …)
+ *  - 31 pet-specific Smart Collections (dog-dry-food, cat-dry-food, …)
+ *  - 6 broad PetSmart category handles used in the mega menu
+ */
+const COLLECTION_SLUGS: string[] = [
+  // UI category slugs
+  ...Object.keys(CATEGORY_TO_SHOPIFY_HANDLES),
+  'deals',
+  // Dog smart collections
+  'dog-dry-food',
+  'dog-vet-diets',
+  'dog-fresh-frozen',
+  'dog-food-toppers',
+  'dog-treats-all',
+  'dog-treats-bones-chews',
+  'dog-treats-training',
+  'dog-treats-soft-chewy',
+  'dog-treats-dental',
+  'dog-treats-jerky',
+  'dog-beds-furniture',
+  'dog-crates-gates',
+  'dog-collars-leashes',
+  'dog-toys',
+  'dog-health-wellness',
+  'dog-training-behavior',
+  // Cat smart collections
+  'cat-dry-food',
+  'cat-wet-food',
+  'cat-kitten-food',
+  'cat-vet-diets',
+  'cat-food-toppers',
+  'cat-treats-all',
+  'cat-litter-only',
+  'cat-litter-boxes',
+  'cat-waste-disposal',
+  'cat-furniture-towers',
+  'cat-scratchers',
+  'cat-toys',
+  'cat-health-wellness',
+  // Mega menu broad handles
+  'dog-supplies',
+  'cat-supplies',
+  'fish-supplies',
+  'bird-supplies',
+  'reptile-supplies',
+  'health-and-wellness',
+]
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date()
@@ -34,7 +81,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority,
   }))
 
-  const collectionEntries: MetadataRoute.Sitemap = CATEGORY_SLUGS.map((slug) => ({
+  const collectionEntries: MetadataRoute.Sitemap = COLLECTION_SLUGS.map((slug) => ({
     url: `${SITE_URL}/collections/${slug}`,
     lastModified: now,
     changeFrequency: 'daily',

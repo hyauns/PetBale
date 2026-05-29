@@ -11,7 +11,7 @@ import { EMPTY_BRANDING, type HomeAnnouncement, type SiteBranding } from '@/lib/
 import { MENU } from '@/lib/menu'
 
 const DEFAULT_ANNOUNCEMENT: HomeAnnouncement = {
-  text: 'SUMMER SALE 🎁 10% OFF USE CODE',
+  text: 'SUMMER SALE 🎁 5% OFF USE CODE',
   highlightLabel: 'SUMMER',
   codeValue: 'SUMMER',
 }
