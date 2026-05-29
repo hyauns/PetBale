@@ -6,7 +6,7 @@ import Link from 'next/link'
 import type { HomeHero } from '@/lib/shopify/content'
 
 const DEFAULT: HomeHero = {
-  starsText: 'US-BASED RETAILER • FREE SHIPPING OVER $40 • 30-DAY HAPPINESS GUARANTEE',
+  starsText: 'FREE US SHIPPING OVER $40',
   headlineLine1: 'PREMIUM PET CARE,',
   headlineLine2: 'TRUSTED BRANDS',
   subtitle: 'SHOP DOG FOOD, CAT FOOD, TREATS, FLEA & TICK, LITTER, AND PET ESSENTIALS FROM 100+ TRUSTED BRANDS — DELIVERED FAST ACROSS THE US.',
