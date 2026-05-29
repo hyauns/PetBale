@@ -91,7 +91,7 @@ export function SiteHeaderInner({
             <Link
               href="/shop"
               onMouseEnter={() => setActiveMega('dog')}
-              className="font-sans font-extrabold text-sm md:text-base text-black tracking-wide hover:opacity-85 transition-opacity flex items-center gap-1"
+              className="font-sans font-extrabold text-sm md:text-base text-black tracking-wide hover:opacity-85 transition-opacity hidden sm:flex items-center gap-1"
             >
               Shop
               <ChevronDown className={`w-3.5 h-3.5 stroke-[2.5] transition-transform ${activeMega ? 'rotate-180' : ''}`} />
@@ -161,9 +161,13 @@ export function SiteHeaderInner({
             >
               <Search className="w-5 h-5 stroke-[2.5]" />
             </button>
-            <button className="text-black hover:scale-105 transition-transform p-1 hidden sm:block" aria-label="Account">
+            <a
+              href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_CUSTOMER_DOMAIN || process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || 'pay.petbale.com'}/account`}
+              className="text-black hover:scale-105 transition-transform p-1 hidden sm:block"
+              aria-label="Account"
+            >
               <User className="w-5 h-5 stroke-[2.5]" />
-            </button>
+            </a>
             <button
               onClick={() => setIsCartOpen(true)}
               className="relative bg-black hover:bg-neutral-800 text-white flex items-center justify-center transition-all cursor-pointer
