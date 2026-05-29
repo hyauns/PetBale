@@ -317,6 +317,7 @@ function mapVariants(product: ShopifyProduct): CatalogVariant[] {
       ? Math.round(parseFloat(v.compareAtPrice.amount))
       : undefined,
     availableForSale: v.availableForSale,
+    sku: v.sku ?? null,
   }))
 }
 

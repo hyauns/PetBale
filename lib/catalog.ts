@@ -66,6 +66,7 @@ export interface CatalogVariant {
   price: number
   comparePrice?: number
   availableForSale: boolean
+  sku?: string | null
 }
 
 export async function getAllProducts(): Promise<CatalogProduct[]> {

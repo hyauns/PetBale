@@ -30,6 +30,7 @@ export const PRODUCT_FRAGMENT = /* GraphQL */ `
         node {
           id
           title
+          sku
           availableForSale
           quantityAvailable
           price {
