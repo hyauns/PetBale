@@ -78,11 +78,11 @@ export function FilterSidebar({ facets, selected, brands, className }: FilterSid
   )
 
   return (
-    <div className={`flex flex-col gap-5 ${className ?? ''}`}>
+    <div className={`flex flex-col gap-5 lg:gap-7 ${className ?? ''}`}>
       {hasAnyFilter(selected) && (
         <button
           onClick={() => apply(EMPTY_FILTERS)}
-          className="w-full py-2.5 bg-[#FAF6F0] hover:bg-black hover:text-white border border-black rounded-xl text-black text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer"
+          className="w-full py-2.5 lg:py-3 bg-[#FAF6F0] hover:bg-black hover:text-white border border-black rounded-xl text-black text-[10px] lg:text-xs font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer"
         >
           Clear All Filters ✕
         </button>
@@ -101,10 +101,10 @@ export function FilterSidebar({ facets, selected, brands, className }: FilterSid
                   checked={active}
                   onChange={() => apply({ ...selected, pet: active ? null : pt })}
                 />
-                <div className="w-4 h-4 rounded-full border border-black flex items-center justify-center bg-white peer-checked:bg-[#ffea79] shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
-                  {active && <div className="w-1.5 h-1.5 rounded-full bg-black" />}
+                <div className="w-4 h-4 lg:w-5 lg:h-5 rounded-full border border-black flex items-center justify-center bg-white peer-checked:bg-[#ffea79] shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                  {active && <div className="w-1.5 h-1.5 lg:w-2 lg:h-2 rounded-full bg-black" />}
                 </div>
-                <span className={`text-xs font-black uppercase leading-none ${active ? 'text-black' : 'text-zinc-700'}`}>
+                <span className={`text-xs lg:text-sm font-black uppercase leading-none ${active ? 'text-black' : 'text-zinc-700'}`}>
                   {pt}
                 </span>
               </label>
@@ -142,7 +142,7 @@ export function FilterSidebar({ facets, selected, brands, className }: FilterSid
                     priceMax: active ? null : b.max,
                   })
                 }
-                className={`px-3 py-1.5 text-[10px] font-black uppercase border border-black rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer ${active ? 'bg-[#ffea79] text-black' : 'bg-white text-zinc-700 hover:bg-[#FAF6F0]'}`}
+                className={`px-3 py-1.5 lg:px-4 lg:py-2 text-[10px] lg:text-xs font-black uppercase border border-black rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer ${active ? 'bg-[#ffea79] text-black' : 'bg-white text-zinc-700 hover:bg-[#FAF6F0]'}`}
               >
                 {b.label}
               </button>
@@ -153,15 +153,15 @@ export function FilterSidebar({ facets, selected, brands, className }: FilterSid
 
       <Section title="Availability">
         <label className="flex items-center justify-between cursor-pointer select-none">
-          <span className="text-xs font-black uppercase text-zinc-700">In stock only</span>
+          <span className="text-xs lg:text-sm font-black uppercase text-zinc-700">In stock only</span>
           <button
             type="button"
             onClick={() => apply({ ...selected, inStock: !selected.inStock })}
-            className={`relative w-10 h-5 rounded-full border border-black transition-colors ${selected.inStock ? 'bg-[#4AD395]' : 'bg-white'}`}
+            className={`relative w-10 h-5 lg:w-12 lg:h-6 rounded-full border border-black transition-colors ${selected.inStock ? 'bg-[#4AD395]' : 'bg-white'}`}
             aria-pressed={selected.inStock}
           >
             <span
-              className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-black transition-transform ${selected.inStock ? 'translate-x-5' : ''}`}
+              className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 lg:w-4 lg:h-4 rounded-full bg-black transition-transform ${selected.inStock ? 'translate-x-5 lg:translate-x-6' : ''}`}
             />
           </button>
         </label>
@@ -242,13 +242,13 @@ export function FilterSidebar({ facets, selected, brands, className }: FilterSid
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(true)
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 lg:gap-4">
       <button
         onClick={() => setOpen(!open)}
-        className="font-whisker-bites text-base font-black uppercase text-black tracking-wide pb-2 border-b border-black/10 flex items-center justify-between cursor-pointer"
+        className="font-whisker-bites text-base lg:text-xl font-black uppercase text-black tracking-wide pb-2 lg:pb-3 border-b border-black/10 flex items-center justify-between cursor-pointer"
       >
         <span>{title}</span>
-        <ChevronDown className={`w-4 h-4 transition-transform ${open ? '' : '-rotate-90'}`} />
+        <ChevronDown className={`w-4 h-4 lg:w-5 lg:h-5 transition-transform ${open ? '' : '-rotate-90'}`} />
       </button>
       <AnimatePresence initial={false}>
         {open && (
@@ -290,14 +290,14 @@ function CheckboxList({
   const scrollable = truncateAt !== undefined
 
   return (
-    <div className={`flex flex-col gap-2.5 ${scrollable ? 'max-h-72 overflow-y-auto pr-1' : ''}`}>
+    <div className={`flex flex-col gap-2.5 lg:gap-3 ${scrollable ? 'max-h-72 lg:max-h-96 overflow-y-auto pr-1' : ''}`}>
       {visible.map((opt) => {
         const active = selected.includes(opt.label)
         const hasCount = opt.count !== undefined
         return (
           <label
             key={opt.label}
-            className={`flex items-center cursor-pointer select-none ${hasCount ? 'gap-2.5' : 'gap-3'}`}
+            className={`flex items-center cursor-pointer select-none ${hasCount ? 'gap-2.5 lg:gap-3' : 'gap-3 lg:gap-3.5'}`}
           >
             <input
               type="checkbox"
@@ -305,24 +305,24 @@ function CheckboxList({
               checked={active}
               onChange={() => onToggle(opt.label)}
             />
-            <div className={`w-4 h-4 border border-black rounded flex items-center justify-center shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] ${active ? 'bg-[#ffea79]' : 'bg-white'}`}>
+            <div className={`w-4 h-4 lg:w-5 lg:h-5 border border-black rounded flex items-center justify-center shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] ${active ? 'bg-[#ffea79]' : 'bg-white'}`}>
               {active && (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="w-3 h-3 text-black">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="w-3 h-3 lg:w-3.5 lg:h-3.5 text-black">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               )}
             </div>
-            <span className={`font-black uppercase ${active ? 'text-black' : 'text-zinc-700'} ${hasCount ? 'text-[11px] leading-tight flex-1 truncate' : 'text-xs leading-none'}`}>
+            <span className={`font-black uppercase ${active ? 'text-black' : 'text-zinc-700'} ${hasCount ? 'text-[11px] lg:text-sm leading-tight flex-1 truncate' : 'text-xs lg:text-sm leading-none'}`}>
               {opt.label}
             </span>
-            {hasCount && <span className="text-[9px] font-bold text-zinc-400">{opt.count}</span>}
+            {hasCount && <span className="text-[9px] lg:text-[11px] font-bold text-zinc-400">{opt.count}</span>}
           </label>
         )
       })}
       {showMore && (
         <button
           onClick={() => setShowAll(true)}
-          className="text-[10px] font-black uppercase text-[#ff990a] hover:underline cursor-pointer text-left"
+          className="text-[10px] lg:text-xs font-black uppercase text-[#ff990a] hover:underline cursor-pointer text-left"
         >
           Show all ({options.length})
         </button>
@@ -356,49 +356,49 @@ function SearchableBrandList({
   const visible = showAll ? filtered : filtered.slice(0, 10)
 
   return (
-    <div className="flex flex-col gap-2.5">
+    <div className="flex flex-col gap-2.5 lg:gap-3">
       <div className="relative">
-        <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-400" />
+        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 lg:w-4 lg:h-4 text-zinc-400" />
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Search brands..."
-          className="w-full pl-7 pr-2 py-1.5 text-[11px] font-bold border border-black rounded-lg outline-none focus:bg-[#FAF6F0]"
+          className="w-full pl-8 pr-2 py-1.5 lg:py-2 text-[11px] lg:text-sm font-bold border border-black rounded-lg outline-none focus:bg-[#FAF6F0]"
         />
       </div>
-      <div className="flex flex-col gap-2 max-h-72 overflow-y-auto pr-1">
+      <div className="flex flex-col gap-2 lg:gap-2.5 max-h-72 lg:max-h-96 overflow-y-auto pr-1">
         {visible.map((v) => {
           const active = selected.includes(v.label)
           return (
-            <label key={v.label} className="flex items-center gap-2.5 cursor-pointer select-none">
+            <label key={v.label} className="flex items-center gap-2.5 lg:gap-3 cursor-pointer select-none">
               <input
                 type="checkbox"
                 className="sr-only peer"
                 checked={active}
                 onChange={() => onToggle(v.label)}
               />
-              <div className={`w-4 h-4 border border-black rounded flex items-center justify-center shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] ${active ? 'bg-[#ffea79]' : 'bg-white'}`}>
+              <div className={`w-4 h-4 lg:w-5 lg:h-5 border border-black rounded flex items-center justify-center shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] ${active ? 'bg-[#ffea79]' : 'bg-white'}`}>
                 {active && (
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="w-3 h-3 text-black">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" className="w-3 h-3 lg:w-3.5 lg:h-3.5 text-black">
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
                 )}
               </div>
-              <span className="text-[11px] font-black uppercase leading-tight flex-1 truncate text-zinc-700">
+              <span className="text-[11px] lg:text-sm font-black uppercase leading-tight flex-1 truncate text-zinc-700">
                 {v.label}
               </span>
-              <span className="text-[9px] font-bold text-zinc-400">{v.count}</span>
+              <span className="text-[9px] lg:text-[11px] font-bold text-zinc-400">{v.count}</span>
             </label>
           )
         })}
         {filtered.length === 0 && (
-          <span className="text-[10px] font-bold text-zinc-400 italic">No matches</span>
+          <span className="text-[10px] lg:text-xs font-bold text-zinc-400 italic">No matches</span>
         )}
       </div>
       {filtered.length > 10 && !showAll && (
         <button
           onClick={() => setShowAll(true)}
-          className="text-[10px] font-black uppercase text-[#ff990a] hover:underline cursor-pointer text-left"
+          className="text-[10px] lg:text-xs font-black uppercase text-[#ff990a] hover:underline cursor-pointer text-left"
         >
           Show all ({filtered.length})
         </button>
@@ -452,15 +452,15 @@ export function ActiveFilterChips({ selected }: ActiveFilterChipsProps) {
       {chips.map((c, i) => (
         <span
           key={i}
-          className="inline-flex items-center gap-1.5 pl-3 pr-1 py-1 bg-white border border-black rounded-full text-[10px] font-black uppercase shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)] select-none"
+          className="inline-flex items-center gap-1.5 pl-3 pr-1 py-1 lg:pl-4 lg:pr-1.5 lg:py-1.5 bg-white border border-black rounded-full text-[10px] lg:text-xs font-black uppercase shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)] select-none"
         >
           {c.label}
           <button
             onClick={c.onRemove}
             aria-label={`Remove ${c.label}`}
-            className="w-4 h-4 rounded-full bg-black text-white flex items-center justify-center cursor-pointer hover:bg-[#ff990a]"
+            className="w-4 h-4 lg:w-5 lg:h-5 rounded-full bg-black text-white flex items-center justify-center cursor-pointer hover:bg-[#ff990a]"
           >
-            <X className="w-2.5 h-2.5 stroke-[3]" />
+            <X className="w-2.5 h-2.5 lg:w-3 lg:h-3 stroke-[3]" />
           </button>
         </span>
       ))}
