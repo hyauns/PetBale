@@ -5,7 +5,13 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Search, Mail, Package, ArrowLeft, ExternalLink } from 'lucide-react'
 
-const SHOP_DOMAIN = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN ?? ''
+// Customer-facing checkout/account domain (e.g. pay.petbale.com).
+// Falls back to the technical myshopify.com endpoint used by the Storefront API
+// so the page still works before the custom domain is wired in Shopify Admin.
+const CUSTOMER_DOMAIN =
+  process.env.NEXT_PUBLIC_SHOPIFY_CUSTOMER_DOMAIN ||
+  process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN ||
+  ''
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export function TrackOrderClient() {
@@ -19,7 +25,7 @@ export function TrackOrderClient() {
       return
     }
     setErrorMsg(null)
-    const url = `https://${SHOP_DOMAIN}/account?email=${encodeURIComponent(email.trim())}`
+    const url = `https://${CUSTOMER_DOMAIN}/account?email=${encodeURIComponent(email.trim())}`
     window.location.href = url
   }
 

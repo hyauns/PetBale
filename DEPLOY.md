@@ -16,8 +16,9 @@ Add these in **Coolify → Project → Environment Variables** before the first 
 
 | Variable | Example | Notes |
 |---|---|---|
-| `NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN` | `12ujgr-dk.myshopify.com` | Shopify shop domain (no `https://`) |
+| `NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN` | `12ujgr-dk.myshopify.com` | Technical Shopify endpoint used to call the Storefront API (no `https://`) |
 | `NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN` | `shpat_…` | Storefront API access token |
+| `NEXT_PUBLIC_SHOPIFY_CUSTOMER_DOMAIN` | `pay.petbale.com` | Public Shopify domain used for `/track` redirect and (auto) checkout URL. Set this after wiring a custom domain in Shopify Admin → Settings → Domains. |
 | `NEXT_PUBLIC_SITE_URL` | `https://petbale.com` | Final public origin — used by `metadataBase`, `sitemap.xml`, `robots.txt`, OG tags. **Do not include a trailing slash.** |
 
 ### Required (runtime-only)
