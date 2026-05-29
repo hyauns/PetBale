@@ -29,7 +29,18 @@ export interface CatalogProduct {
   imageSrc: string
   accent: string
   colorHex: string
-  category: 'dog-food' | 'cat-food' | 'dog-treats' | 'flea-tick' | 'cat-litter' | 'deals'
+  category:
+    | 'dog-food'
+    | 'cat-food'
+    | 'dog-treats'
+    | 'flea-tick'
+    | 'cat-litter'
+    | 'deals'
+    | 'dog-supplies'
+    | 'cat-supplies'
+    | 'fish-supplies'
+    | 'bird-supplies'
+    | 'reptile-supplies'
   shortDescription: string
   longDescription: string
   descriptionBlocks: DescriptionBlock[]

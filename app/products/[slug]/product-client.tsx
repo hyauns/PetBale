@@ -14,6 +14,11 @@ const CATEGORY_LABELS: Record<string, string> = {
   'flea-tick': 'FLEA & TICK',
   'cat-litter': 'CAT LITTER',
   deals: 'DEALS',
+  'dog-supplies': 'DOG SUPPLIES',
+  'cat-supplies': 'CAT SUPPLIES',
+  'fish-supplies': 'FISH SUPPLIES',
+  'bird-supplies': 'BIRD SUPPLIES',
+  'reptile-supplies': 'REPTILE SUPPLIES',
 }
 import type { CatalogProduct } from '@/lib/catalog'
 import type { DisplayReview } from '@/lib/alireviews/adapters'

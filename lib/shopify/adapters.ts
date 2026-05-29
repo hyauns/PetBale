@@ -8,6 +8,11 @@ const CATEGORY_ACCENTS: Record<CatalogProduct['category'], { accent: string; col
   'flea-tick': { accent: 'bg-[#6cd1ff]', colorHex: '#6cd1ff' },
   'cat-litter': { accent: 'bg-[#B19FFB]', colorHex: '#B19FFB' },
   deals: { accent: 'bg-[#ffb224]', colorHex: '#ffb224' },
+  'dog-supplies': { accent: 'bg-[#ffea79]', colorHex: '#ffea79' },
+  'cat-supplies': { accent: 'bg-[#FF69B4]', colorHex: '#FF69B4' },
+  'fish-supplies': { accent: 'bg-[#6cd1ff]', colorHex: '#6cd1ff' },
+  'bird-supplies': { accent: 'bg-[#4AD395]', colorHex: '#4AD395' },
+  'reptile-supplies': { accent: 'bg-[#B19FFB]', colorHex: '#B19FFB' },
 }
 
 const KNOWN_CATEGORIES = Object.keys(CATEGORY_ACCENTS) as CatalogProduct['category'][]
@@ -48,13 +53,36 @@ function pickCategory(product: ShopifyProduct): CatalogProduct['category'] {
   const collectionHandles = product.collections.edges.map((e) => e.node.handle)
   const match = KNOWN_CATEGORIES.find((c) => collectionHandles.includes(c))
   if (match) return match
-  // Fallback heuristic by productType / tags
-  const lc = `${product.productType} ${product.tags.join(' ')}`.toLowerCase()
-  if (lc.includes('cat') && lc.includes('litter')) return 'cat-litter'
-  if (lc.includes('flea') || lc.includes('tick')) return 'flea-tick'
-  if (lc.includes('treat')) return 'dog-treats'
-  if (lc.includes('cat')) return 'cat-food'
-  return 'dog-food'
+
+  // Use PetSmart taxonomy tags: pet:Dog, pet:Cat, pet:Fish, pet:Bird, pet:Reptile,
+  // category:Food, category:Treats, category:Litter, category:Flea & Tick, ...
+  const lowerTags = product.tags.map((t) => t.toLowerCase())
+  const petTag = lowerTags.find((t) => t.startsWith('pet:'))?.slice(4) ?? ''
+  const categoryTags = lowerTags.filter((t) => t.startsWith('category:')).map((t) => t.slice(9))
+  const cats = categoryTags.join(' ')
+
+  if (petTag === 'cat') {
+    if (cats.includes('litter') || cats.includes('waste')) return 'cat-litter'
+    if (cats.includes('food') || cats.includes('treats')) return 'cat-food'
+    return 'cat-supplies'
+  }
+  if (petTag === 'dog') {
+    if (cats.includes('flea') || cats.includes('tick')) return 'flea-tick'
+    if (cats.includes('treat')) return 'dog-treats'
+    if (cats.includes('food')) return 'dog-food'
+    return 'dog-supplies'
+  }
+  if (petTag === 'fish') return 'fish-supplies'
+  if (petTag === 'bird') return 'bird-supplies'
+  if (petTag === 'reptile') return 'reptile-supplies'
+
+  // Last-resort heuristic on productType (no fuzzy substring on 'cat' to avoid
+  // matching the literal word 'category')
+  const pt = product.productType.toLowerCase()
+  if (pt.includes('flea') || pt.includes('tick')) return 'flea-tick'
+  if (pt.includes('litter')) return 'cat-litter'
+  if (pt.includes('treat')) return 'dog-treats'
+  return 'deals'
 }
 
 const NAMED_ENTITIES: Record<string, string> = {
