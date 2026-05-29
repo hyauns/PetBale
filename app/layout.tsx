@@ -11,16 +11,22 @@ import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from '@/lib/site'
 export async function generateMetadata(): Promise<Metadata> {
   const branding = await getSiteBranding()
 
+  // Build the icon list in the order browsers should prefer.
+  // Only fall back to the boilerplate /icon.svg + /icon-light-32x32.png when
+  // *nothing* has been uploaded to Shopify — those files are placeholders that
+  // ship with the Next.js scaffold and would otherwise win over the PNG.
   const icon: { url: string; type?: string; sizes?: string }[] = []
   if (branding.faviconSvgUrl) {
     icon.push({ url: branding.faviconSvgUrl, type: 'image/svg+xml' })
-  } else {
-    icon.push({ url: '/icon.svg', type: 'image/svg+xml' })
   }
   if (branding.faviconPng32Url) {
     icon.push({ url: branding.faviconPng32Url, sizes: '32x32', type: 'image/png' })
-  } else {
-    icon.push({ url: '/icon-light-32x32.png', sizes: '32x32', type: 'image/png' })
+  }
+  if (icon.length === 0) {
+    icon.push(
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/icon-light-32x32.png', sizes: '32x32', type: 'image/png' }
+    )
   }
   const apple = branding.appleTouchIconUrl || '/apple-icon.png'
 
