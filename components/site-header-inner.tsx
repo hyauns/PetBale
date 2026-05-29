@@ -297,47 +297,39 @@ export function SiteHeaderInner({
                         {expanded ? <ChevronUp className="w-4 h-4 stroke-[2.5]" /> : <ChevronDown className="w-4 h-4 stroke-[2.5]" />}
                       </button>
 
-                      <AnimatePresence initial={false}>
-                        {expanded && (
-                          <motion.div
-                            initial={{ height: 0 }}
-                            animate={{ height: 'auto' }}
-                            exit={{ height: 0 }}
-                            transition={{ duration: 0.18 }}
-                            className="overflow-hidden bg-white"
-                          >
-                            <div className="p-3 flex flex-col gap-3">
-                              <Link
-                                href={section.shopAllHref}
-                                onClick={closeMobile}
-                                className="text-[11px] font-black uppercase text-black hover:underline px-2 py-1.5 bg-[#FAF6F0] border border-black/20 rounded-lg text-center"
-                              >
-                                Shop All {section.label} {section.emoji}
-                              </Link>
-                              {section.columns.map((col) => (
-                                <div key={col.title} className="flex flex-col gap-1.5">
-                                  <h4 className="text-[10px] font-black uppercase text-zinc-400 tracking-widest px-1">
-                                    {col.title}
-                                  </h4>
-                                  <ul className="flex flex-col gap-1">
-                                    {col.items.map((item) => (
-                                      <li key={item.href}>
-                                        <Link
-                                          href={item.href}
-                                          onClick={closeMobile}
-                                          className="text-[12px] font-extrabold text-zinc-700 hover:text-black px-2 py-1.5 block leading-tight"
-                                        >
-                                          {item.label}
-                                        </Link>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              ))}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                      {expanded && (
+                        <div className="bg-white">
+                          <div className="p-3 flex flex-col gap-3">
+                            <Link
+                              href={section.shopAllHref}
+                              onClick={closeMobile}
+                              className="text-[11px] font-black uppercase text-black hover:underline px-2 py-1.5 bg-[#FAF6F0] border border-black/20 rounded-lg text-center"
+                            >
+                              Shop All {section.label} {section.emoji}
+                            </Link>
+                            {section.columns.map((col) => (
+                              <div key={col.title} className="flex flex-col gap-1.5">
+                                <h4 className="text-[10px] font-black uppercase text-zinc-400 tracking-widest px-1">
+                                  {col.title}
+                                </h4>
+                                <ul className="flex flex-col gap-1">
+                                  {col.items.map((item) => (
+                                    <li key={item.href}>
+                                      <Link
+                                        href={item.href}
+                                        onClick={closeMobile}
+                                        className="text-[12px] font-extrabold text-zinc-700 hover:text-black px-2 py-1.5 block leading-tight"
+                                      >
+                                        {item.label}
+                                      </Link>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )
                 })}
