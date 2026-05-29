@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { JsonLd } from '@/components/json-ld'
 import { getFilteredCategoryProducts } from '@/lib/catalog'
 import { parseFiltersFromSearch } from '@/lib/shopify/filters'
 import { CollectionClient } from './collection-client'
+import { SITE_URL } from '@/lib/site'
 
 export const revalidate = 60
 
@@ -80,9 +82,20 @@ export default async function CollectionPage({
   const selected = parseFiltersFromSearch(sp)
   const { products, facets } = await getFilteredCategoryProducts(slug, selected, { first: 48 })
   const brands = brandsFromProducts(products)
+  const categoryLabel = CATEGORY_LABELS[slug]?.title ?? slug.replace(/-/g, ' ')
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: categoryLabel, item: `${SITE_URL}/collections/${slug}` },
+    ],
+  }
 
   return (
     <>
+      <JsonLd data={breadcrumbSchema} />
       <SiteHeader />
       <CollectionClient
         slug={slug}

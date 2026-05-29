@@ -143,14 +143,19 @@ export function CollectionClient({
 
       <div className="max-w-[96%] mx-auto px-6 relative z-10">
 
-        <div className="mb-8">
+        <div className="mb-8 flex items-center gap-3 flex-wrap">
           <Link
             href="/#shop-categories"
             className="inline-flex items-center gap-2 px-6 py-2.5 bg-white border border-black rounded-full shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-xs font-black hover:bg-[#ffea79] transition-all select-none"
           >
             <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
-            <span>BACK TO CATEGORIES</span>
+            <span>BACK</span>
           </Link>
+          <nav aria-label="Breadcrumb" className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-black rounded-full shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-xs font-black">
+            <Link href="/" className="hover:text-[#ff990a] transition-colors">HOME</Link>
+            <span className="text-zinc-400">/</span>
+            <span className="text-zinc-500 uppercase" aria-current="page">{details.title.toUpperCase()}</span>
+          </nav>
         </div>
 
         <div className={cn(

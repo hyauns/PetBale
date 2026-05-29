@@ -6,6 +6,15 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { ShoppingBag, ChevronLeft, ChevronRight } from 'lucide-react'
+
+const CATEGORY_LABELS: Record<string, string> = {
+  'dog-food': 'DOG FOOD',
+  'cat-food': 'CAT FOOD',
+  'dog-treats': 'DOG TREATS',
+  'flea-tick': 'FLEA & TICK',
+  'cat-litter': 'CAT LITTER',
+  deals: 'DEALS',
+}
 import type { CatalogProduct } from '@/lib/catalog'
 import type { DisplayReview } from '@/lib/alireviews/adapters'
 import { cn } from '@/lib/utils'
@@ -161,13 +170,15 @@ export function ProductClient({
       />
 
       <div className="max-w-7xl mx-auto px-6 pt-32 lg:pt-36 pb-6 relative z-10">
-        <div className="inline-flex items-center gap-2.5 px-6 py-2.5 bg-white border-2 border-black rounded-full shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] text-xs sm:text-sm font-black">
+        <nav aria-label="Breadcrumb" className="inline-flex items-center gap-2.5 px-6 py-2.5 bg-white border-2 border-black rounded-full shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] text-xs sm:text-sm font-black">
           <Link href="/" className="hover:text-[#ff990a] transition-colors">HOME</Link>
           <span className="text-zinc-400">/</span>
-          <span className="text-[#ff990a] hover:underline cursor-pointer">PRODUCTS</span>
+          <Link href={`/collections/${product.category}`} className="text-[#ff990a] hover:underline">
+            {CATEGORY_LABELS[product.category] ?? 'SHOP'}
+          </Link>
           <span className="text-zinc-400">/</span>
-          <span className="text-zinc-500 uppercase truncate max-w-[150px] sm:max-w-none">{product.name}</span>
-        </div>
+          <span className="text-zinc-500 uppercase truncate max-w-[150px] sm:max-w-none" aria-current="page">{product.name}</span>
+        </nav>
       </div>
 
       <section className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">

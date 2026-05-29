@@ -5,8 +5,11 @@ import { CartDrawer } from '@/components/cart-drawer'
 import { CookieConsent } from '@/components/cookie-consent'
 import { Analytics } from '@vercel/analytics/next'
 import { AnalyticsScripts } from '@/components/analytics-scripts'
+import { JsonLd } from '@/components/json-ld'
 import { getSiteBranding } from '@/lib/shopify/content'
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from '@/lib/site'
+
+const DEFAULT_OG_IMAGE = `${SITE_URL}/og-default.png`
 
 export async function generateMetadata(): Promise<Metadata> {
   const branding = await getSiteBranding()
@@ -49,11 +52,20 @@ export async function generateMetadata(): Promise<Metadata> {
       description: SITE_DESCRIPTION,
       url: SITE_URL,
       locale: 'en_US',
+      images: [
+        {
+          url: DEFAULT_OG_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: `${SITE_NAME} — Premium pet supplies`,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: `${SITE_NAME} — Premium Multi-Brand Pet Care Superstore`,
       description: SITE_DESCRIPTION,
+      images: [DEFAULT_OG_IMAGE],
     },
     robots: {
       index: true,
@@ -66,6 +78,53 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
+const ORGANIZATION_SCHEMA = {
+  '@context': 'https://schema.org',
+  '@type': 'OnlineStore',
+  name: SITE_NAME,
+  legalName: 'DOG BOWL BAKERY LLC',
+  url: SITE_URL,
+  logo: `${SITE_URL}/icon.svg`,
+  image: DEFAULT_OG_IMAGE,
+  description: SITE_DESCRIPTION,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '3832 FESCUE ST',
+    addressLocality: 'CLERMONT',
+    addressRegion: 'FL',
+    postalCode: '34714',
+    addressCountry: 'US',
+  },
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'customer service',
+    email: 'cs@petbale.com',
+    telephone: '+1-651-755-5757',
+    areaServed: 'US',
+    availableLanguage: ['English'],
+  },
+  sameAs: [
+    'https://instagram.com',
+    'https://facebook.com',
+    'https://youtube.com',
+  ],
+}
+
+const WEBSITE_SCHEMA = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE_NAME,
+  url: SITE_URL,
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: `${SITE_URL}/search?q={search_term_string}`,
+    },
+    'query-input': 'required name=search_term_string',
+  },
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -74,6 +133,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="bg-background">
       <body className="font-sans antialiased">
+        <JsonLd data={ORGANIZATION_SCHEMA} />
+        <JsonLd data={WEBSITE_SCHEMA} />
         <CartProvider>
           {children}
           <CartDrawer />
