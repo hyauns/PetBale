@@ -55,7 +55,7 @@ export function HeroSection({ content }: { content?: HomeHero | null }) {
 
   return (
     <section 
-      className="relative min-h-[550px] md:min-h-[650px] lg:min-h-[720px] w-full flex items-center pt-36 sm:pt-40 md:pt-44 lg:pt-48 pb-12 md:pb-16 overflow-hidden bg-gradient-to-tr from-[#6CD1FF] via-[#B8ECFF] to-[#E3F7FF]" 
+      className="relative min-h-[550px] md:min-h-[650px] lg:min-h-[720px] w-full flex items-center pt-24 sm:pt-28 md:pt-32 lg:pt-36 pb-12 md:pb-16 overflow-hidden bg-gradient-to-tr from-[#6CD1FF] via-[#B8ECFF] to-[#E3F7FF]" 
       aria-label="Hero"
     >
       <div className="max-w-[98%] mx-auto px-6 lg:px-8 w-full z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
