@@ -26,7 +26,7 @@ const DEFAULT_LINKS: Record<string, { label: string; href: string }[]> = {
   Company: [
     { label: 'About PetBale', href: '/about' },
     { label: 'FAQs', href: '/faq' },
-    { label: 'Sustainability', href: '/' },
+    { label: 'Brands', href: '/brands' },
     { label: 'Track Order', href: '/track' },
     { label: 'Contact', href: '/contact' },
   ],
