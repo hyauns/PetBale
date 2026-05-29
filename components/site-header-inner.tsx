@@ -255,7 +255,7 @@ export function SiteHeaderInner({
               className="fixed top-0 left-0 h-[100dvh] w-[85vw] max-w-[360px] bg-white border-r-2 border-black shadow-[4px_0px_0px_0px_rgba(0,0,0,1)] z-50 flex flex-col lg:hidden overflow-hidden"
             >
               {/* Drawer header */}
-              <div className="flex items-center justify-between p-5 border-b-2 border-black bg-[#FAF6F0]">
+              <div className="flex items-center justify-between p-5 border-b-2 border-black bg-[#FAF6F0] flex-shrink-0">
                 <h2 className="font-whisker-bites text-xl font-black uppercase text-black tracking-wide">
                   Shop
                 </h2>
@@ -269,7 +269,10 @@ export function SiteHeaderInner({
               </div>
 
               {/* Drawer body — nested accordion */}
-              <nav className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 py-4 flex flex-col gap-2 pb-24">
+              <nav
+                className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 py-4 flex flex-col gap-2 pb-24"
+                style={{ touchAction: 'pan-y', WebkitOverflowScrolling: 'touch' }}
+              >
                 <Link
                   href="/shop"
                   onClick={closeMobile}
