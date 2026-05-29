@@ -99,7 +99,7 @@ const ORGANIZATION_SCHEMA = {
     '@type': 'ContactPoint',
     contactType: 'customer service',
     email: 'cs@petbale.com',
-    telephone: '+1-651-755-5757',
+    telephone: '+1-651-377-4420',
     areaServed: 'US',
     availableLanguage: ['English'],
   },
