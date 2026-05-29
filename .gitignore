@@ -1,0 +1,38 @@
+# v0 sandbox internal files
+__v0_runtime_loader.js
+__v0_devtools.tsx
+__v0_jsx-dev-runtime.ts
+.snowflake/
+.v0-trash/
+.vercel/
+
+# Environment variables — NEVER commit secrets
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+
+# Build artifacts
+node_modules
+.next/
+.tmp/
+tsconfig.tsbuildinfo
+
+# Editor + OS
+.DS_Store
+.vscode/
+.idea/
+
+# Local tool state (Claude Code, agent runtime)
+.claude/
+.agent/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-error.log*
+
+# Test output
+coverage/
