@@ -111,67 +111,78 @@ export function SiteFooterInner({
               Your ultimate pet care superstore. Premium brands, quick delivery, and unbeatable prices.
             </p>
 
-            {/* Get In Touch — NAP icons + conditional social */}
-            <h4 className="text-white/40 text-[10px] font-black uppercase tracking-widest mb-3">
+            {/* Get In Touch — large NAP icon next to each line */}
+            <h4 className="text-white/40 text-[10px] font-black uppercase tracking-widest mb-4">
               Get in touch
             </h4>
-            <div className="flex items-center gap-4 flex-wrap">
-              {(() => {
-                const nap: { Icon: typeof Mail; label: string; href: string; bg: string; external?: boolean }[] = [
-                  { Icon: Mail, label: `Email ${BUSINESS_INFO.email}`, href: `mailto:${BUSINESS_INFO.email}`, bg: '#6cd1ff' },
-                  { Icon: Phone, label: `Call ${BUSINESS_INFO.phone}`, href: `tel:${BUSINESS_INFO.phoneTel}`, bg: '#ffea79' },
-                  { Icon: MapPin, label: `Find us at ${BUSINESS_INFO.address}`, href: BUSINESS_INFO.mapsUrl, bg: '#4AD395', external: true },
-                ]
-                const social: typeof nap = []
-                if (branding?.socialInstagramUrl) social.push({ Icon: Instagram, label: 'Follow PetBale on Instagram', href: branding.socialInstagramUrl, bg: '#FF69B4', external: true })
-                if (branding?.socialFacebookUrl) social.push({ Icon: Facebook, label: 'Follow PetBale on Facebook', href: branding.socialFacebookUrl, bg: '#6cd1ff', external: true })
-                if (branding?.socialYoutubeUrl) social.push({ Icon: Youtube, label: 'Watch PetBale on YouTube', href: branding.socialYoutubeUrl, bg: '#FF69B4', external: true })
-                if (branding?.socialTiktokUrl) social.push({ Icon: Music2, label: 'Follow PetBale on TikTok', href: branding.socialTiktokUrl, bg: '#ffea79', external: true })
-                if (branding?.socialXUrl) social.push({ Icon: Twitter, label: 'Follow PetBale on X', href: branding.socialXUrl, bg: '#B19FFB', external: true })
-                return [...nap, ...social].map(({ Icon, label, href, bg, external }, index) => (
-                  <motion.div
-                    key={label}
+            <address className="not-italic flex flex-col gap-3">
+              {[
+                { Icon: Mail, label: `Email ${BUSINESS_INFO.email}`, href: `mailto:${BUSINESS_INFO.email}`, text: BUSINESS_INFO.email, bg: '#6cd1ff' },
+                { Icon: Phone, label: `Call ${BUSINESS_INFO.phone}`, href: `tel:${BUSINESS_INFO.phoneTel}`, text: BUSINESS_INFO.phone, bg: '#ffea79' },
+                { Icon: MapPin, label: `Find us at ${BUSINESS_INFO.address}`, href: BUSINESS_INFO.mapsUrl, text: BUSINESS_INFO.address, bg: '#4AD395', external: true },
+              ].map(({ Icon, label, href, text, bg, external }, index) => (
+                <div key={label} className="flex items-center gap-3.5">
+                  <motion.a
+                    href={href}
+                    target={external ? '_blank' : undefined}
+                    rel={external ? 'noreferrer noopener' : undefined}
+                    aria-label={label}
                     whileHover={{
                       scale: 1.1,
                       rotate: index % 2 === 0 ? -6 : 6,
                       translateY: -2,
                     }}
                     whileTap={{ scale: 0.95 }}
+                    style={{ '--hover-bg': bg } as React.CSSProperties}
+                    className="w-11 h-11 rounded-full bg-white border-2 border-black flex items-center justify-center text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-[var(--hover-bg)] transition-colors duration-200 flex-shrink-0"
                   >
-                    <a
+                    <Icon className="w-5 h-5" aria-hidden="true" />
+                  </motion.a>
+                  <a
+                    href={href}
+                    target={external ? '_blank' : undefined}
+                    rel={external ? 'noreferrer noopener' : undefined}
+                    className="text-white/80 hover:text-white text-sm font-extrabold uppercase tracking-wide leading-snug transition-colors"
+                  >
+                    {text}
+                  </a>
+                </div>
+              ))}
+            </address>
+
+            {/* Conditional social icons — only render when URL is set in site_branding */}
+            {(() => {
+              const social: { Icon: typeof Mail; label: string; href: string; bg: string }[] = []
+              if (branding?.socialInstagramUrl) social.push({ Icon: Instagram, label: 'Follow PetBale on Instagram', href: branding.socialInstagramUrl, bg: '#FF69B4' })
+              if (branding?.socialFacebookUrl) social.push({ Icon: Facebook, label: 'Follow PetBale on Facebook', href: branding.socialFacebookUrl, bg: '#6cd1ff' })
+              if (branding?.socialYoutubeUrl) social.push({ Icon: Youtube, label: 'Watch PetBale on YouTube', href: branding.socialYoutubeUrl, bg: '#FF69B4' })
+              if (branding?.socialTiktokUrl) social.push({ Icon: Music2, label: 'Follow PetBale on TikTok', href: branding.socialTiktokUrl, bg: '#ffea79' })
+              if (branding?.socialXUrl) social.push({ Icon: Twitter, label: 'Follow PetBale on X', href: branding.socialXUrl, bg: '#B19FFB' })
+              if (social.length === 0) return null
+              return (
+                <div className="mt-6 flex items-center gap-4 flex-wrap">
+                  {social.map(({ Icon, label, href, bg }, index) => (
+                    <motion.a
+                      key={label}
                       href={href}
-                      target={external ? '_blank' : undefined}
-                      rel={external ? 'noreferrer noopener' : undefined}
+                      target="_blank"
+                      rel="noreferrer noopener"
                       aria-label={label}
+                      whileHover={{
+                        scale: 1.1,
+                        rotate: index % 2 === 0 ? -6 : 6,
+                        translateY: -2,
+                      }}
+                      whileTap={{ scale: 0.95 }}
                       style={{ '--hover-bg': bg } as React.CSSProperties}
                       className="w-11 h-11 rounded-full bg-white border-2 border-black flex items-center justify-center text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-[var(--hover-bg)] transition-colors duration-200"
                     >
                       <Icon className="w-5 h-5" aria-hidden="true" />
-                    </a>
-                  </motion.div>
-                ))
-              })()}
-            </div>
-
-            {/* Plain-text NAP for crawlers + Google Merchant Center compliance */}
-            <address className="not-italic mt-5 text-white/60 text-[11px] font-extrabold uppercase tracking-wider leading-relaxed">
-              <div className="flex items-start gap-2">
-                <MapPin className="w-3.5 h-3.5 stroke-[2.5] flex-shrink-0 mt-0.5 text-white/40" />
-                <span>{BUSINESS_INFO.address}</span>
-              </div>
-              <div className="flex items-center gap-2 mt-1.5">
-                <Mail className="w-3.5 h-3.5 stroke-[2.5] flex-shrink-0 text-white/40" />
-                <a href={`mailto:${BUSINESS_INFO.email}`} className="hover:text-white transition-colors">
-                  {BUSINESS_INFO.email}
-                </a>
-              </div>
-              <div className="flex items-center gap-2 mt-1.5">
-                <Phone className="w-3.5 h-3.5 stroke-[2.5] flex-shrink-0 text-white/40" />
-                <a href={`tel:${BUSINESS_INFO.phoneTel}`} className="hover:text-white transition-colors">
-                  {BUSINESS_INFO.phone}
-                </a>
-              </div>
-            </address>
+                    </motion.a>
+                  ))}
+                </div>
+              )
+            })()}
 
             {/* Certifications */}
             <div className="mt-8 pt-6 border-t border-white/10">
