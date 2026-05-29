@@ -97,7 +97,7 @@ export function ContactClient() {
                 </div>
                 <div>
                   <h3 className="text-xs font-black text-zinc-400 uppercase tracking-widest leading-none">EMAIL US</h3>
-                  <p className="text-sm font-black text-black uppercase mt-1">support@petbale.com</p>
+                  <p className="text-sm font-black text-black uppercase mt-1">cs@petbale.com</p>
                 </div>
               </div>
 

@@ -27,7 +27,7 @@ Add these in **Coolify → Project → Environment Variables** before the first 
 | `ALI_REVIEWS_API_KEY` | `…` | Bearer token for `pub.kudosi.ai` |
 | `RESEND_API_KEY` | `re_…` | For contact form. Optional if contact form is not used. |
 | `CONTACT_FROM_EMAIL` | `noreply@petbale.com` | Verified Resend sender |
-| `CONTACT_TO_EMAIL` | `support@petbale.com` | Where contact submissions land |
+| `CONTACT_TO_EMAIL` | `cs@petbale.com` | Where contact submissions land |
 
 ### Optional (build-time)
 
@@ -66,7 +66,7 @@ The storefront is headless — these steps live in Shopify Admin:
 - **Settings → Shipping**: add at least one zone (US contiguous) and a rate matching `Shipping Policy`.
 - **Settings → Taxes**: configure US state sales tax.
 - **Settings → Customer accounts**: choose **Show login link** so `/track` works.
-- **Settings → Notifications → Sender email**: set to `support@petbale.com`.
+- **Settings → Notifications → Sender email**: set to `cs@petbale.com`.
 - **Online Store → Preferences**: disable the password page once ready to launch.
 
 ## 6. Updating the live site
