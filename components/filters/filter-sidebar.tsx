@@ -60,7 +60,7 @@ export function FilterSidebar({ facets, selected, brands, className }: FilterSid
     const qs = serializeFilters(cleaned)
     // Preserve any non-filter params (e.g. sort)
     const preserved = new URLSearchParams(searchParams.toString())
-    for (const k of ['pet', 'brand', 'price', 'stock', 'lifestage', 'breedsize', 'foodform', 'flavor', 'category']) {
+    for (const k of ['pet', 'brand', 'price', 'stock', 'lifestage', 'breedsize', 'foodform', 'flavor', 'category', 'page']) {
       preserved.delete(k)
     }
     const merged = qs ? [qs, preserved.toString()].filter(Boolean).join('&') : preserved.toString()
@@ -423,7 +423,7 @@ export function ActiveFilterChips({ selected }: ActiveFilterChipsProps) {
     const cleaned = reconcileFilters(next)
     const qs = serializeFilters(cleaned)
     const preserved = new URLSearchParams(searchParams.toString())
-    for (const k of ['pet', 'brand', 'price', 'stock', 'lifestage', 'breedsize', 'foodform', 'flavor', 'category']) {
+    for (const k of ['pet', 'brand', 'price', 'stock', 'lifestage', 'breedsize', 'foodform', 'flavor', 'category', 'page']) {
       preserved.delete(k)
     }
     const merged = qs ? [qs, preserved.toString()].filter(Boolean).join('&') : preserved.toString()

@@ -10,6 +10,7 @@ import { useCart } from '@/hooks/use-cart'
 import { RatingStars } from '@/components/rating-stars'
 import { ActiveFilterChips, FilterSidebar, type BrandOption } from '@/components/filters/filter-sidebar'
 import { MobileFilterDrawer, MobileSortByAccordion, MobileCategoriesAccordion } from '@/components/filters/mobile-filter-drawer'
+import { Pagination } from '@/components/pagination'
 import type { SelectedFilters } from '@/lib/shopify/filters'
 
 const PET_CATEGORY_MAP: Record<string, string[]> = {
@@ -26,14 +27,18 @@ const CATEGORIES = [
   { id: 'deals', name: 'Deals & Offers 🎁' },
 ]
 
+const PAGE_SIZE = 24
+
 export function ShopClient({
   products,
   brands,
   selectedFilters,
+  currentPage = 1,
 }: {
   products: CatalogProduct[]
   brands?: BrandOption[]
   selectedFilters?: SelectedFilters
+  currentPage?: number
 }) {
   const { addToCart } = useCart()
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
@@ -79,6 +84,14 @@ export function ShopClient({
     else if (sortBy === 'name') result.sort((a, b) => a.name.localeCompare(b.name))
     return result
   }, [products, selectedCategories, selectedFilters, sortBy])
+
+  const totalCount = filteredProducts.length
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE))
+  const safePage = Math.min(currentPage, totalPages)
+  const visibleProducts = useMemo(() => {
+    const start = (safePage - 1) * PAGE_SIZE
+    return filteredProducts.slice(start, start + PAGE_SIZE)
+  }, [filteredProducts, safePage])
 
   return (
     <main className="min-h-screen bg-[#FAF6F0] text-black font-tbj-interval pb-24 pt-32 relative overflow-hidden select-none">
@@ -231,6 +244,12 @@ export function ShopClient({
 
           <div className="lg:col-span-9">
             {selectedFilters && <ActiveFilterChips selected={selectedFilters} />}
+            {totalCount > 0 && (
+              <p className="text-[11px] lg:text-xs font-black uppercase tracking-wider text-zinc-500 mb-4">
+                Showing {(safePage - 1) * PAGE_SIZE + 1}
+                –{Math.min(safePage * PAGE_SIZE, totalCount)} of {totalCount} products
+              </p>
+            )}
             {filteredProducts.length === 0 ? (
               <div className="bg-white border border-black rounded-2xl p-12 text-center py-20 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                 <span className="text-6xl mb-6 select-none inline-block animate-bounce">🦖</span>
@@ -249,7 +268,7 @@ export function ShopClient({
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-                {filteredProducts.map((product) => (
+                {visibleProducts.map((product) => (
                   <div
                     key={product.slug}
                     className="relative bg-white border border-black rounded-xl p-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4.5px_4.5px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[-1.5px] transition-all duration-150 flex flex-col justify-between h-[490px]"
@@ -316,6 +335,9 @@ export function ShopClient({
                   </div>
                 ))}
               </div>
+            )}
+            {totalPages > 1 && (
+              <Pagination currentPage={safePage} totalPages={totalPages} />
             )}
           </div>
 

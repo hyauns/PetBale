@@ -30,6 +30,12 @@ function brandsFromProducts(products: { brand: string }[]) {
     .sort((a, b) => b.count - a.count)
 }
 
+function parsePage(raw: string | string[] | undefined): number {
+  const v = Array.isArray(raw) ? raw[0] : raw
+  const n = v ? parseInt(v, 10) : 1
+  return Number.isFinite(n) && n > 0 ? n : 1
+}
+
 export default async function ShopPage({
   searchParams,
 }: {
@@ -37,12 +43,18 @@ export default async function ShopPage({
 }) {
   const sp = await searchParams
   const selected = parseFiltersFromSearch(sp)
+  const currentPage = parsePage(sp.page)
   const products = await getAllProducts()
   const brands = brandsFromProducts(products)
   return (
     <>
       <SiteHeader />
-      <ShopClient products={products} brands={brands} selectedFilters={selected} />
+      <ShopClient
+        products={products}
+        brands={brands}
+        selectedFilters={selected}
+        currentPage={currentPage}
+      />
       <SiteFooter />
     </>
   )

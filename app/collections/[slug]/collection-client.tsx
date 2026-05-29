@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils'
 import { RatingStars } from '@/components/rating-stars'
 import { ActiveFilterChips, FilterSidebar, type BrandOption } from '@/components/filters/filter-sidebar'
 import { MobileFilterDrawer, MobileSortByAccordion, MobileCategoriesAccordion } from '@/components/filters/mobile-filter-drawer'
+import { Pagination } from '@/components/pagination'
 import type { SelectedFilters } from '@/lib/shopify/filters'
 import type { ShopifyFacet } from '@/lib/shopify/queries'
 
@@ -90,12 +91,20 @@ export function CollectionClient({
   facets,
   brands,
   selectedFilters,
+  currentPage = 1,
+  totalPages = 1,
+  totalCount,
+  pageSize = 24,
 }: {
   slug: string
   products: CatalogProduct[]
   facets?: ShopifyFacet[]
   brands?: BrandOption[]
   selectedFilters?: SelectedFilters
+  currentPage?: number
+  totalPages?: number
+  totalCount?: number
+  pageSize?: number
 }) {
   const router = useRouter()
   const { addToCart } = useCart()
@@ -278,6 +287,12 @@ export function CollectionClient({
 
           <div className="lg:col-span-9">
             {selectedFilters && <ActiveFilterChips selected={selectedFilters} />}
+            {sortedProducts.length > 0 && totalCount !== undefined && (
+              <p className="text-[11px] lg:text-xs font-black uppercase tracking-wider text-zinc-500 mb-4">
+                Showing {(currentPage - 1) * pageSize + 1}
+                –{Math.min(currentPage * pageSize, totalCount)} of {totalCount} products
+              </p>
+            )}
             {sortedProducts.length === 0 ? (
               <div className="bg-white border border-black rounded-2xl p-12 text-center py-20 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                 <span className="text-6xl mb-6 select-none inline-block animate-bounce">📦</span>
@@ -363,6 +378,9 @@ export function CollectionClient({
                   </div>
                 ))}
               </div>
+            )}
+            {totalPages > 1 && (
+              <Pagination currentPage={currentPage} totalPages={totalPages} />
             )}
           </div>
 

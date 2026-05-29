@@ -71,6 +71,15 @@ function brandsFromProducts(products: { brand: string }[]): { label: string; cou
     .sort((a, b) => b.count - a.count)
 }
 
+const PAGE_SIZE = 24
+const MAX_PRODUCTS = 240 // Cap the collection fetch at 10 pages worth of products.
+
+function parsePage(raw: string | string[] | undefined): number {
+  const v = Array.isArray(raw) ? raw[0] : raw
+  const n = v ? parseInt(v, 10) : 1
+  return Number.isFinite(n) && n > 0 ? n : 1
+}
+
 export default async function CollectionPage({
   params,
   searchParams,
@@ -80,8 +89,17 @@ export default async function CollectionPage({
 }) {
   const [{ slug }, sp] = await Promise.all([params, searchParams])
   const selected = parseFiltersFromSearch(sp)
-  const { products, facets } = await getFilteredCategoryProducts(slug, selected, { first: 48 })
-  const brands = brandsFromProducts(products)
+  const currentPage = parsePage(sp.page)
+
+  const { products: allProducts, facets } = await getFilteredCategoryProducts(slug, selected, {
+    first: MAX_PRODUCTS,
+  })
+  const brands = brandsFromProducts(allProducts)
+  const totalCount = allProducts.length
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE))
+  const safePage = Math.min(currentPage, totalPages)
+  const start = (safePage - 1) * PAGE_SIZE
+  const products = allProducts.slice(start, start + PAGE_SIZE)
   const categoryLabel = CATEGORY_LABELS[slug]?.title ?? slug.replace(/-/g, ' ')
 
   const breadcrumbSchema = {
@@ -103,6 +121,10 @@ export default async function CollectionPage({
         facets={facets}
         brands={brands}
         selectedFilters={selected}
+        currentPage={safePage}
+        totalPages={totalPages}
+        totalCount={totalCount}
+        pageSize={PAGE_SIZE}
       />
       <SiteFooter />
     </>
