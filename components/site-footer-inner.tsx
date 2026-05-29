@@ -2,9 +2,17 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { Instagram, Facebook, Youtube } from 'lucide-react'
+import { Instagram, Facebook, Youtube, Music2, Twitter, Mail, Phone, MapPin } from 'lucide-react'
 import { motion } from 'framer-motion'
 import type { HomeFooterLink, SiteBranding } from '@/lib/shopify/content'
+
+const BUSINESS_INFO = {
+  address: '3832 Fescue St, Clermont, FL 34714',
+  email: 'cs@petbale.com',
+  phone: '+1 (651) 377-4420',
+  phoneTel: '+16513774420',
+  mapsUrl: 'https://www.google.com/maps/search/?api=1&query=3832+Fescue+St+Clermont+FL+34714',
+}
 
 const DEFAULT_LINKS: Record<string, { label: string; href: string }[]> = {
   Shop: [
@@ -103,35 +111,67 @@ export function SiteFooterInner({
               Your ultimate pet care superstore. Premium brands, quick delivery, and unbeatable prices.
             </p>
 
-            {/* Bouncy Pop-art Social links */}
-            <div className="flex items-center gap-4">
-              {[
-                { Icon: Instagram, label: 'Follow PetBale on Instagram', href: 'https://instagram.com', bg: '#6cd1ff' },
-                { Icon: Facebook, label: 'Follow PetBale on Facebook', href: 'https://facebook.com', bg: '#ffea79' },
-                { Icon: Youtube, label: 'Watch PetBale on YouTube', href: 'https://youtube.com', bg: '#6cd1ff' },
-              ].map(({ Icon, label, href, bg }, index) => (
-                <motion.div
-                  key={label}
-                  whileHover={{
-                    scale: 1.1,
-                    rotate: index % 2 === 0 ? -6 : 6,
-                    translateY: -2
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <a
-                    href={href}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    aria-label={label}
-                    style={{ '--hover-bg': bg } as React.CSSProperties}
-                    className="w-11 h-11 rounded-full bg-white border-2 border-black flex items-center justify-center text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-[var(--hover-bg)] transition-colors duration-200"
+            {/* Get In Touch — NAP icons + conditional social */}
+            <h4 className="text-white/40 text-[10px] font-black uppercase tracking-widest mb-3">
+              Get in touch
+            </h4>
+            <div className="flex items-center gap-4 flex-wrap">
+              {(() => {
+                const nap: { Icon: typeof Mail; label: string; href: string; bg: string; external?: boolean }[] = [
+                  { Icon: Mail, label: `Email ${BUSINESS_INFO.email}`, href: `mailto:${BUSINESS_INFO.email}`, bg: '#6cd1ff' },
+                  { Icon: Phone, label: `Call ${BUSINESS_INFO.phone}`, href: `tel:${BUSINESS_INFO.phoneTel}`, bg: '#ffea79' },
+                  { Icon: MapPin, label: `Find us at ${BUSINESS_INFO.address}`, href: BUSINESS_INFO.mapsUrl, bg: '#4AD395', external: true },
+                ]
+                const social: typeof nap = []
+                if (branding?.socialInstagramUrl) social.push({ Icon: Instagram, label: 'Follow PetBale on Instagram', href: branding.socialInstagramUrl, bg: '#FF69B4', external: true })
+                if (branding?.socialFacebookUrl) social.push({ Icon: Facebook, label: 'Follow PetBale on Facebook', href: branding.socialFacebookUrl, bg: '#6cd1ff', external: true })
+                if (branding?.socialYoutubeUrl) social.push({ Icon: Youtube, label: 'Watch PetBale on YouTube', href: branding.socialYoutubeUrl, bg: '#FF69B4', external: true })
+                if (branding?.socialTiktokUrl) social.push({ Icon: Music2, label: 'Follow PetBale on TikTok', href: branding.socialTiktokUrl, bg: '#ffea79', external: true })
+                if (branding?.socialXUrl) social.push({ Icon: Twitter, label: 'Follow PetBale on X', href: branding.socialXUrl, bg: '#B19FFB', external: true })
+                return [...nap, ...social].map(({ Icon, label, href, bg, external }, index) => (
+                  <motion.div
+                    key={label}
+                    whileHover={{
+                      scale: 1.1,
+                      rotate: index % 2 === 0 ? -6 : 6,
+                      translateY: -2,
+                    }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    <Icon className="w-5 h-5" aria-hidden="true" />
-                  </a>
-                </motion.div>
-              ))}
+                    <a
+                      href={href}
+                      target={external ? '_blank' : undefined}
+                      rel={external ? 'noreferrer noopener' : undefined}
+                      aria-label={label}
+                      style={{ '--hover-bg': bg } as React.CSSProperties}
+                      className="w-11 h-11 rounded-full bg-white border-2 border-black flex items-center justify-center text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:bg-[var(--hover-bg)] transition-colors duration-200"
+                    >
+                      <Icon className="w-5 h-5" aria-hidden="true" />
+                    </a>
+                  </motion.div>
+                ))
+              })()}
             </div>
+
+            {/* Plain-text NAP for crawlers + Google Merchant Center compliance */}
+            <address className="not-italic mt-5 text-white/60 text-[11px] font-extrabold uppercase tracking-wider leading-relaxed">
+              <div className="flex items-start gap-2">
+                <MapPin className="w-3.5 h-3.5 stroke-[2.5] flex-shrink-0 mt-0.5 text-white/40" />
+                <span>{BUSINESS_INFO.address}</span>
+              </div>
+              <div className="flex items-center gap-2 mt-1.5">
+                <Mail className="w-3.5 h-3.5 stroke-[2.5] flex-shrink-0 text-white/40" />
+                <a href={`mailto:${BUSINESS_INFO.email}`} className="hover:text-white transition-colors">
+                  {BUSINESS_INFO.email}
+                </a>
+              </div>
+              <div className="flex items-center gap-2 mt-1.5">
+                <Phone className="w-3.5 h-3.5 stroke-[2.5] flex-shrink-0 text-white/40" />
+                <a href={`tel:${BUSINESS_INFO.phoneTel}`} className="hover:text-white transition-colors">
+                  {BUSINESS_INFO.phone}
+                </a>
+              </div>
+            </address>
 
             {/* Certifications */}
             <div className="mt-8 pt-6 border-t border-white/10">

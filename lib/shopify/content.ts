@@ -487,6 +487,11 @@ export interface SiteBranding {
   faviconSvgUrl: string | null
   faviconPng32Url: string | null
   appleTouchIconUrl: string | null
+  socialInstagramUrl: string | null
+  socialFacebookUrl: string | null
+  socialYoutubeUrl: string | null
+  socialTiktokUrl: string | null
+  socialXUrl: string | null
 }
 
 export const EMPTY_BRANDING: SiteBranding = {
@@ -500,6 +505,11 @@ export const EMPTY_BRANDING: SiteBranding = {
   faviconSvgUrl: null,
   faviconPng32Url: null,
   appleTouchIconUrl: null,
+  socialInstagramUrl: null,
+  socialFacebookUrl: null,
+  socialYoutubeUrl: null,
+  socialTiktokUrl: null,
+  socialXUrl: null,
 }
 
 interface BrandingField {
@@ -562,6 +572,11 @@ export async function getSiteBranding(): Promise<SiteBranding> {
       faviconSvgUrl: fav?.url ?? null,
       faviconPng32Url: favPng?.url ?? null,
       appleTouchIconUrl: apple?.url ?? null,
+      socialInstagramUrl: bv(f, 'social_instagram') || null,
+      socialFacebookUrl: bv(f, 'social_facebook') || null,
+      socialYoutubeUrl: bv(f, 'social_youtube') || null,
+      socialTiktokUrl: bv(f, 'social_tiktok') || null,
+      socialXUrl: bv(f, 'social_x') || null,
     }
   } catch (err) {
     console.warn('[site-branding] fetch failed, using empty', err)
