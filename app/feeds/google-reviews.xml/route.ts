@@ -3,6 +3,7 @@ import { SITE_URL, SITE_NAME } from '@/lib/site'
 import { getAllShopifyProducts } from '@/lib/shopify/queries'
 import type { ShopifyProduct } from '@/lib/shopify/types'
 import { getAliReviews, extractShopifyId, type AliReview } from '@/lib/alireviews/client'
+import { decodeHtmlEntities } from '@/lib/shopify/adapters'
 
 /**
  * Google Merchant Center product reviews feed (Product Ratings program).
@@ -152,7 +153,7 @@ function renderReview(product: ShopifyProduct, review: AliReview): string {
                 : ''
             }
           </product_ids>
-          <product_name>${xmlEscape(product.title)}</product_name>
+          <product_name>${xmlEscape(decodeHtmlEntities(product.title))}</product_name>
           <product_url>${xmlEscape(productUrl)}</product_url>
         </product>
       </products>

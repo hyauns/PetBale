@@ -3,6 +3,7 @@ import { SITE_URL } from '@/lib/site'
 import { getAllShopifyProducts } from '@/lib/shopify/queries'
 import type { ShopifyProduct, ShopifyVariant } from '@/lib/shopify/types'
 import { resolveGoogleCategory } from '@/lib/feeds/google-taxonomy'
+import { decodeHtmlEntities } from '@/lib/shopify/adapters'
 
 /**
  * Google Merchant Center product feed (RSS 2.0 + g: namespace).
@@ -46,17 +47,8 @@ function htmlToPlainText(html: string): string {
     .replace(/<br\s*\/?\s*>/gi, ' ')
     .replace(/<\/p>/gi, ' ')
     .replace(/<[^>]+>/g, '')
-  const decoded = stripped
-    .replace(/&nbsp;/gi, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&apos;/g, "'")
-    .replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number(code)))
-    .replace(/&#x([0-9a-f]+);/gi, (_, code) => String.fromCodePoint(parseInt(code, 16)))
-  return decoded.replace(/\s+/g, ' ').trim()
+  // decodeHtmlEntities covers &trade; &reg; &copy; etc. on top of the basics
+  return decodeHtmlEntities(stripped).replace(/\s+/g, ' ').trim()
 }
 
 /** Title Case — Google penalizes ALL CAPS. Preserves acronyms ≤ 4 chars. */
@@ -136,11 +128,14 @@ function renderVariant(product: ShopifyProduct, variant: ShopifyVariant): string
   // Variant title: blank/Default Title means the product has no real variants.
   const hasRealVariant =
     variant.title && variant.title.toLowerCase() !== 'default title' && variant.title !== ''
-  const baseTitle = toTitleCase(product.title)
-  const variantTitle = hasRealVariant ? `${baseTitle} — ${variant.title}` : baseTitle
+  const baseTitle = toTitleCase(decodeHtmlEntities(product.title))
+  const variantTitle = hasRealVariant
+    ? `${baseTitle} — ${decodeHtmlEntities(variant.title)}`
+    : baseTitle
 
   const description = htmlToPlainText(product.description || product.descriptionHtml).slice(0, 5000)
-  const safeDescription = description || `${baseTitle} from ${product.vendor || SHOP_NAME}.`
+  const safeDescription =
+    description || `${baseTitle} from ${product.vendor ? decodeHtmlEntities(product.vendor) : SHOP_NAME}.`
 
   // Image
   const featured = product.featuredImage?.url
@@ -176,7 +171,7 @@ function renderVariant(product: ShopifyProduct, variant: ShopifyVariant): string
         availability,
         price: regular,
         salePrice: sale,
-        brand: product.vendor || SHOP_NAME,
+        brand: product.vendor ? decodeHtmlEntities(product.vendor) : SHOP_NAME,
         mpn: variant.sku || '',
         condition: 'new',
         product,
@@ -196,7 +191,7 @@ function renderVariant(product: ShopifyProduct, variant: ShopifyVariant): string
     availability,
     price: regularPrice,
     salePrice: salePriceTag,
-    brand: product.vendor || SHOP_NAME,
+    brand: product.vendor ? decodeHtmlEntities(product.vendor) : SHOP_NAME,
     mpn: variant.sku || '',
     condition: 'new',
     product,
@@ -256,7 +251,7 @@ function buildItem(f: ItemFields): string {
   const customLabel0 = pet ?? ''
   const customLabel1 = catRoot ?? ''
   const customLabel2 = catLeaf ?? ''
-  const customLabel3 = product.vendor ?? ''
+  const customLabel3 = product.vendor ? decodeHtmlEntities(product.vendor) : ''
   const customLabel4 = variant.compareAtPrice && parseFloat(variant.compareAtPrice.amount) > parseFloat(variant.price.amount) ? 'sale' : ''
 
   const additional = f.additionalImages

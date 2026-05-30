@@ -104,7 +104,7 @@ const NAMED_ENTITIES: Record<string, string> = {
   ldquo: '“',
 }
 
-function decodeHtmlEntities(s: string): string {
+export function decodeHtmlEntities(s: string): string {
   return s
     .replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number(code)))
     .replace(/&#x([0-9a-f]+);/gi, (_, code) => String.fromCodePoint(parseInt(code, 16)))
@@ -303,9 +303,9 @@ function getWeightLabel(variant: ShopifyVariant): string {
   const sizeOption = variant.selectedOptions.find(
     (o) => /size|weight|pack/i.test(o.name)
   )
-  if (sizeOption) return sizeOption.value
-  if (variant.title && variant.title !== 'Default Title') return variant.title
-  return variant.selectedOptions[0]?.value ?? '1 unit'
+  if (sizeOption) return decodeHtmlEntities(sizeOption.value)
+  if (variant.title && variant.title !== 'Default Title') return decodeHtmlEntities(variant.title)
+  return decodeHtmlEntities(variant.selectedOptions[0]?.value ?? '1 unit')
 }
 
 function mapVariants(product: ShopifyProduct): CatalogVariant[] {
@@ -339,11 +339,11 @@ export function adaptShopifyProduct(product: ShopifyProduct): CatalogProduct {
   return {
     shopifyProductId: shopifyIdMatch ? Number(shopifyIdMatch[1]) : null,
     slug: product.handle,
-    name: product.title.toUpperCase(),
+    name: decodeHtmlEntities(product.title).toUpperCase(),
     price,
     comparePrice: compareAt,
     onSale,
-    brand: product.vendor || 'PETBALE',
+    brand: product.vendor ? decodeHtmlEntities(product.vendor) : 'PETBALE',
     reviewsList: [],
     imageSrc: featured,
     accent,
@@ -358,7 +358,7 @@ export function adaptShopifyProduct(product: ShopifyProduct): CatalogProduct {
     moisture: analysis.moisture,
     images: product.images.edges.map((e) => ({
       src: e.node.url,
-      alt: e.node.altText || product.title,
+      alt: e.node.altText || decodeHtmlEntities(product.title),
     })),
     ingredients: parseIngredients(metafields),
     feedingGuide: [],
