@@ -48,6 +48,39 @@ const DEFAULT_LINKS: Record<string, { label: string; href: string }[]> = {
   ],
 }
 
+// "Your Privacy Choices" opt-out icon (CCPA/CPRA). Uses its own colors via the
+// fill fallbacks so it stays the recognizable blue/white toggle on the footer.
+function PrivacyChoicesIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      height="22px"
+      width="22px"
+      role="img"
+      aria-label="Your Privacy Choices"
+      focusable="false"
+      className="flex-shrink-0"
+    >
+      <path
+        fill="var(--chirp-ui-elements-privacy-02, #fff)"
+        d="M2 11.794A4.795 4.795 0 0 1 6.795 7h10.41a4.795 4.795 0 0 1 0 9.589H6.796A4.794 4.794 0 0 1 2 11.795Z"
+      />
+      <path
+        fill="var(--chirp-ui-elements-privacy-primary, #06f)"
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M6.795 7.822h6.321l-2.1 7.945H6.794a3.973 3.973 0 0 1 0-7.945ZM2 11.794A4.795 4.795 0 0 1 6.795 7h10.41a4.795 4.795 0 0 1 0 9.589H6.796A4.794 4.794 0 0 1 2 11.795Zm3.94-.136 1.216 1.273 2.629-3.124a.41.41 0 0 1 .585 0 .412.412 0 0 1 0 .586l-2.921 3.412a.416.416 0 0 1-.59 0l-1.504-1.561a.412.412 0 0 1 0-.586.41.41 0 0 1 .585 0Z"
+      />
+      <path
+        fill="var(--chirp-ui-elements-privacy-02, #fff)"
+        d="M14.473 13.26a.42.42 0 0 0 .003.585c.16.16.433.156.585.003l1.485-1.464 1.461 1.46a.42.42 0 0 0 .585-.003.42.42 0 0 0 0-.585l-1.457-1.461 1.457-1.488a.417.417 0 0 0 0-.585.424.424 0 0 0-.585-.004l-1.46 1.492-1.486-1.488a.42.42 0 0 0-.585.003.424.424 0 0 0-.003.586l1.488 1.484-1.488 1.464Z"
+      />
+    </svg>
+  )
+}
+
 export function SiteFooterInner({
   footerLinks: shopifyLinks,
   branding,
@@ -265,6 +298,17 @@ export function SiteFooterInner({
                 </div>
               )
             })()}
+
+            {/* Your Privacy Choices (CCPA/CPRA data-sharing opt-out) */}
+            <div className="mt-6 pt-5 border-t border-white/10">
+              <Link
+                href="/data-sharing-opt-out"
+                className="inline-flex items-center gap-2 text-white/60 hover:text-[#6cd1ff] font-extrabold text-xs tracking-wider transition-colors duration-150 uppercase"
+              >
+                <PrivacyChoicesIcon />
+                <span>Your Privacy Choices</span>
+              </Link>
+            </div>
           </div>
         </div>
 
