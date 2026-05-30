@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { Instagram, Facebook, Youtube, Music2, Twitter, Mail, Phone, MapPin } from 'lucide-react'
 import { motion } from 'framer-motion'
 import type { HomeFooterLink, SiteBranding, TrustBadge } from '@/lib/shopify/content'
+import { PaymentIcons } from './payment-icons'
 
 // Local fallback images shipped in /public — used when a trust_badge metaobject
 // entry has no uploaded image yet. Lookup by metaobject `name`.
@@ -51,10 +52,14 @@ export function SiteFooterInner({
   footerLinks: shopifyLinks,
   branding,
   trustBadges = [],
+  cardBrands = [],
+  digitalWallets = [],
 }: {
   footerLinks?: HomeFooterLink[]
   branding?: SiteBranding | null
   trustBadges?: TrustBadge[]
+  cardBrands?: string[]
+  digitalWallets?: string[]
 }) {
   const grouped = shopifyLinks && shopifyLinks.length > 0
     ? shopifyLinks.reduce<Record<string, { label: string; href: string }[]>>((acc, l) => {
@@ -263,12 +268,17 @@ export function SiteFooterInner({
           </div>
         </div>
 
-        {/* Bottom bar */}
+        {/* Bottom bar — copyright | payment icons | tagline */}
         <div className="mt-12 pt-8 border-t-2 border-dashed border-white/10 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <p className="text-white/40 text-xs font-black uppercase tracking-widest">
+          <p className="text-white/40 text-xs font-black uppercase tracking-widest text-center sm:text-left order-2 sm:order-1">
             &copy; {new Date().getFullYear()} PETBALE OPERATED BY: DOG BOWL BAKERY LLC. ALL RIGHTS RESERVED.
           </p>
-          <p className="text-white/40 text-xs font-black uppercase tracking-widest">
+          <PaymentIcons
+            cardBrands={cardBrands}
+            digitalWallets={digitalWallets}
+            className="order-1 sm:order-2 shrink-0"
+          />
+          <p className="text-white/40 text-xs font-black uppercase tracking-widest text-center sm:text-right order-3">
             Made with care for pets &amp; the planet 🌱
           </p>
         </div>

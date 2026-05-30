@@ -544,6 +544,48 @@ export async function getTrustBadges(): Promise<TrustBadge[]> {
   }
 }
 
+// ── Payment settings (accepted card brands + wallets) ───────────────────
+// Pulled live from Shopify so the footer reflects exactly what's enabled in
+// Shopify Payments. Required by Google Merchant Center.
+
+export interface PaymentSettings {
+  cardBrands: string[]
+  digitalWallets: string[]
+}
+
+export const EMPTY_PAYMENT_SETTINGS: PaymentSettings = { cardBrands: [], digitalWallets: [] }
+
+export async function getPaymentSettings(): Promise<PaymentSettings> {
+  const query = /* GraphQL */ `
+    query PaymentSettings {
+      shop {
+        paymentSettings {
+          acceptedCardBrands
+          supportedDigitalWallets
+        }
+      }
+    }
+  `
+  try {
+    const data = await shopifyFetch<{
+      shop: {
+        paymentSettings: {
+          acceptedCardBrands: string[] | null
+          supportedDigitalWallets: string[] | null
+        } | null
+      }
+    }>({ query, next: { revalidate: 3600 } })
+    const ps = data.shop?.paymentSettings
+    return {
+      cardBrands: ps?.acceptedCardBrands ?? [],
+      digitalWallets: ps?.supportedDigitalWallets ?? [],
+    }
+  } catch (err) {
+    console.warn('[payment-settings] fetch failed', err)
+    return EMPTY_PAYMENT_SETTINGS
+  }
+}
+
 // ── Site Branding (logos + favicon) ─────────────────────────────────────
 
 export interface SiteBranding {

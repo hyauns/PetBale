@@ -36,3 +36,6 @@ yarn-error.log*
 
 # Test output
 coverage/
+
+# AI review generator (local tool — contains API key + generated CSV data)
+Review Ali/
