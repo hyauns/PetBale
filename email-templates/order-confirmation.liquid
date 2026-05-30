@@ -1,0 +1,190 @@
+{% capture email_title %}Thank you for your order{% endcapture %}
+{% capture email_body %}Hi {{ customer.first_name | default: 'friend' }}, we got it — order {{ order_name }} is in! 🎉{% endcapture %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ email_title }}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#FAF6F0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;color:#000000;">
+
+<div style="display:none;max-height:0;overflow:hidden;">
+  {{ email_body }} — View order details, track your shipment, or contact support. PetBale, US-based premium pet care.
+</div>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#FAF6F0;padding:24px 12px;">
+  <tr>
+    <td align="center">
+
+      <!-- Wrapper -->
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;">
+
+        <!-- Brand bar -->
+        <tr>
+          <td align="center" style="padding:0 0 16px 0;">
+            <a href="https://petbale.com" style="text-decoration:none;color:#000000;">
+              <span style="font-family:Georgia,'Times New Roman',serif;font-size:32px;font-weight:900;letter-spacing:-1px;color:#000000;">PETBALE</span>
+            </a>
+            <div style="font-size:10px;font-weight:800;letter-spacing:3px;color:#525252;margin-top:4px;text-transform:uppercase;">Premium pet care · US-based</div>
+          </td>
+        </tr>
+
+        <!-- Status bar -->
+        <tr>
+          <td style="background-color:#ffea79;border:2px solid #000000;border-radius:9999px;padding:12px 24px;text-align:center;">
+            <span style="font-size:12px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#000000;">✓ Order Confirmed · {{ order_name }}</span>
+          </td>
+        </tr>
+
+        <tr><td style="height:16px;line-height:16px;">&nbsp;</td></tr>
+
+        <!-- Main card -->
+        <tr>
+          <td style="background-color:#FFFFFF;border:2px solid #000000;border-radius:16px;padding:32px 28px;box-shadow:4px 4px 0 #000000;">
+
+            <h1 style="margin:0 0 8px 0;font-size:28px;font-weight:900;line-height:1.1;color:#000000;text-transform:uppercase;letter-spacing:-0.5px;">
+              Thanks, {{ customer.first_name | default: 'friend' }}! 🐾
+            </h1>
+            <p style="margin:0 0 24px 0;font-size:15px;line-height:1.5;color:#525252;">
+              We got your order and are putting it together right now. You'll get another email from us once it ships, with tracking info.
+            </p>
+
+            <!-- View order CTA -->
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 28px 0;">
+              <tr>
+                <td style="background-color:#000000;border:2px solid #000000;border-radius:9999px;padding:0;">
+                  <a href="{{ order.order_status_url }}" style="display:inline-block;padding:14px 32px;color:#FFFFFF;font-size:13px;font-weight:900;letter-spacing:2px;text-transform:uppercase;text-decoration:none;">
+                    View Your Order →
+                  </a>
+                </td>
+              </tr>
+            </table>
+
+            <!-- Order summary header -->
+            <div style="border-top:2px solid #000000;padding-top:20px;">
+              <div style="font-size:11px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase;color:#525252;margin-bottom:14px;">
+                Order Summary
+              </div>
+
+              <!-- Line items -->
+              {% for line in line_items %}
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:14px;">
+                <tr>
+                  <td valign="top" width="72" style="padding-right:14px;">
+                    {% if line.image %}
+                    <img src="{{ line | img_url: 'compact' }}" alt="{{ line.title | escape }}" width="64" height="64" style="display:block;width:64px;height:64px;border:1px solid #00000020;border-radius:8px;object-fit:cover;background:#FAF6F0;">
+                    {% endif %}
+                  </td>
+                  <td valign="top" style="font-size:14px;line-height:1.4;">
+                    <div style="font-weight:800;color:#000000;text-transform:uppercase;letter-spacing:0.5px;">{{ line.title }}</div>
+                    {% if line.variant.title and line.variant.title != 'Default Title' %}
+                    <div style="font-size:12px;color:#525252;margin-top:2px;">{{ line.variant.title }}</div>
+                    {% endif %}
+                    <div style="font-size:12px;color:#525252;margin-top:4px;">Qty {{ line.quantity }} · {{ line.line_price | money }}</div>
+                  </td>
+                </tr>
+              </table>
+              {% endfor %}
+
+              <!-- Totals -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid #00000015;margin-top:8px;padding-top:14px;font-size:13px;color:#000000;">
+                <tr>
+                  <td style="padding:4px 0;color:#525252;">Subtotal</td>
+                  <td align="right" style="padding:4px 0;">{{ subtotal_price | money }}</td>
+                </tr>
+                {% if shipping_price > 0 %}
+                <tr>
+                  <td style="padding:4px 0;color:#525252;">Shipping</td>
+                  <td align="right" style="padding:4px 0;">{{ shipping_price | money }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                  <td style="padding:4px 0;color:#525252;">Shipping</td>
+                  <td align="right" style="padding:4px 0;color:#16a34a;font-weight:800;">FREE</td>
+                </tr>
+                {% endif %}
+                {% if tax_price > 0 %}
+                <tr>
+                  <td style="padding:4px 0;color:#525252;">Tax</td>
+                  <td align="right" style="padding:4px 0;">{{ tax_price | money }}</td>
+                </tr>
+                {% endif %}
+                {% if total_discounts > 0 %}
+                <tr>
+                  <td style="padding:4px 0;color:#FF69B4;font-weight:800;">Discounts</td>
+                  <td align="right" style="padding:4px 0;color:#FF69B4;font-weight:800;">−{{ total_discounts | money }}</td>
+                </tr>
+                {% endif %}
+                <tr>
+                  <td style="padding:10px 0 0 0;border-top:1px solid #00000015;font-weight:900;font-size:15px;">Total</td>
+                  <td align="right" style="padding:10px 0 0 0;border-top:1px solid #00000015;font-weight:900;font-size:15px;">{{ total_price | money }}</td>
+                </tr>
+              </table>
+            </div>
+
+            <!-- Shipping address -->
+            {% if requires_shipping and shipping_address %}
+            <div style="margin-top:24px;padding-top:20px;border-top:2px solid #000000;">
+              <div style="font-size:11px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase;color:#525252;margin-bottom:10px;">
+                Shipping To
+              </div>
+              <div style="font-size:14px;line-height:1.5;color:#000000;">
+                <strong>{{ shipping_address.first_name }} {{ shipping_address.last_name }}</strong><br>
+                {{ shipping_address.street }}<br>
+                {{ shipping_address.city }}, {{ shipping_address.province_code }} {{ shipping_address.zip }}<br>
+                {{ shipping_address.country }}
+              </div>
+            </div>
+            {% endif %}
+
+          </td>
+        </tr>
+
+        <tr><td style="height:16px;line-height:16px;">&nbsp;</td></tr>
+
+        <!-- Support callout -->
+        <tr>
+          <td style="background-color:#FF69B4;border:2px solid #000000;border-radius:16px;padding:20px 24px;box-shadow:4px 4px 0 #000000;text-align:center;">
+            <div style="font-size:18px;font-weight:900;color:#000000;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">
+              Need a hand? 🐶
+            </div>
+            <div style="font-size:13px;line-height:1.5;color:#000000;">
+              Reply to this email or write to
+              <a href="mailto:cs@petbale.com" style="color:#000000;font-weight:900;text-decoration:underline;">cs@petbale.com</a>
+              — our team answers within one business day.
+            </div>
+          </td>
+        </tr>
+
+        <tr><td style="height:24px;line-height:24px;">&nbsp;</td></tr>
+
+        <!-- Footer NAP -->
+        <tr>
+          <td style="text-align:center;font-size:11px;line-height:1.6;color:#525252;padding:0 16px;">
+            <div style="font-weight:800;color:#000000;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">PetBale</div>
+            <div>Operated by DOG BOWL BAKERY LLC</div>
+            <div>3832 FESCUE ST, CLERMONT FL 34714, USA</div>
+            <div>+1 (651) 377-4420 · <a href="mailto:cs@petbale.com" style="color:#525252;text-decoration:underline;">cs@petbale.com</a></div>
+            <div style="margin-top:12px;">
+              <a href="https://petbale.com" style="color:#525252;text-decoration:underline;">petbale.com</a>
+              ·
+              <a href="https://petbale.com/shipping-policy" style="color:#525252;text-decoration:underline;">Shipping</a>
+              ·
+              <a href="https://petbale.com/refund-policy" style="color:#525252;text-decoration:underline;">Returns</a>
+              ·
+              <a href="{{ shop.url }}/unsubscribe" style="color:#525252;text-decoration:underline;">Unsubscribe</a>
+            </div>
+            <div style="margin-top:10px;color:#9ca3af;">© {{ 'now' | date: '%Y' }} PetBale. All rights reserved.</div>
+          </td>
+        </tr>
+
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

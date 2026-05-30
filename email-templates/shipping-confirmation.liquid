@@ -1,0 +1,180 @@
+{% capture email_title %}Your order is on the way{% endcapture %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ email_title }}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#FAF6F0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;color:#000000;">
+
+<div style="display:none;max-height:0;overflow:hidden;">
+  Order {{ order_name }} just shipped. Tracking included.
+</div>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#FAF6F0;padding:24px 12px;">
+  <tr>
+    <td align="center">
+
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;">
+
+        <!-- Brand bar -->
+        <tr>
+          <td align="center" style="padding:0 0 16px 0;">
+            <a href="https://petbale.com" style="text-decoration:none;color:#000000;">
+              <span style="font-family:Georgia,'Times New Roman',serif;font-size:32px;font-weight:900;letter-spacing:-1px;color:#000000;">PETBALE</span>
+            </a>
+            <div style="font-size:10px;font-weight:800;letter-spacing:3px;color:#525252;margin-top:4px;text-transform:uppercase;">Premium pet care · US-based</div>
+          </td>
+        </tr>
+
+        <!-- Status bar -->
+        <tr>
+          <td style="background-color:#6cd1ff;border:2px solid #000000;border-radius:9999px;padding:12px 24px;text-align:center;">
+            <span style="font-size:12px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#000000;">📦 Shipped · {{ order_name }}</span>
+          </td>
+        </tr>
+
+        <tr><td style="height:16px;line-height:16px;">&nbsp;</td></tr>
+
+        <!-- Main card -->
+        <tr>
+          <td style="background-color:#FFFFFF;border:2px solid #000000;border-radius:16px;padding:32px 28px;box-shadow:4px 4px 0 #000000;">
+
+            <h1 style="margin:0 0 8px 0;font-size:28px;font-weight:900;line-height:1.1;color:#000000;text-transform:uppercase;letter-spacing:-0.5px;">
+              On the way, {{ customer.first_name | default: 'friend' }}! 🚚
+            </h1>
+            <p style="margin:0 0 24px 0;font-size:15px;line-height:1.5;color:#525252;">
+              Your order just left our Florida facility. Estimated delivery is 3–7 business days. Tap below to follow it in real time.
+            </p>
+
+            <!-- Tracking CTA -->
+            {% if fulfillment.tracking_url %}
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 24px 0;">
+              <tr>
+                <td style="background-color:#000000;border:2px solid #000000;border-radius:9999px;padding:0;">
+                  <a href="{{ fulfillment.tracking_url }}" style="display:inline-block;padding:14px 32px;color:#FFFFFF;font-size:13px;font-weight:900;letter-spacing:2px;text-transform:uppercase;text-decoration:none;">
+                    Track Shipment →
+                  </a>
+                </td>
+              </tr>
+            </table>
+            {% endif %}
+
+            <!-- Tracking details -->
+            <div style="background-color:#FAF6F0;border:1px solid #00000020;border-radius:12px;padding:16px 18px;margin-bottom:24px;">
+              {% if fulfillment.tracking_company %}
+              <div style="font-size:11px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#525252;margin-bottom:4px;">Carrier</div>
+              <div style="font-size:14px;font-weight:800;color:#000000;margin-bottom:12px;">{{ fulfillment.tracking_company }}</div>
+              {% endif %}
+              {% if fulfillment.tracking_number %}
+              <div style="font-size:11px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#525252;margin-bottom:4px;">Tracking Number</div>
+              <div style="font-size:14px;font-weight:800;color:#000000;font-family:'Courier New',monospace;">{{ fulfillment.tracking_number }}</div>
+              {% endif %}
+              {% if fulfillment.tracking_company == blank and fulfillment.tracking_number == blank %}
+              <div style="font-size:13px;color:#525252;">Tracking details will appear here once the carrier scans your package — usually within 24 hours.</div>
+              {% endif %}
+            </div>
+
+            <!-- What shipped -->
+            <div style="border-top:2px solid #000000;padding-top:20px;">
+              <div style="font-size:11px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase;color:#525252;margin-bottom:14px;">
+                In This Shipment
+              </div>
+
+              {% for line in fulfillment.item_count_by_line_item %}
+              {% endfor %}
+              {% for line in line_items %}
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:14px;">
+                <tr>
+                  <td valign="top" width="72" style="padding-right:14px;">
+                    {% if line.image %}
+                    <img src="{{ line | img_url: 'compact' }}" alt="{{ line.title | escape }}" width="64" height="64" style="display:block;width:64px;height:64px;border:1px solid #00000020;border-radius:8px;object-fit:cover;background:#FAF6F0;">
+                    {% endif %}
+                  </td>
+                  <td valign="top" style="font-size:14px;line-height:1.4;">
+                    <div style="font-weight:800;color:#000000;text-transform:uppercase;letter-spacing:0.5px;">{{ line.title }}</div>
+                    {% if line.variant.title and line.variant.title != 'Default Title' %}
+                    <div style="font-size:12px;color:#525252;margin-top:2px;">{{ line.variant.title }}</div>
+                    {% endif %}
+                    <div style="font-size:12px;color:#525252;margin-top:4px;">Qty {{ line.quantity }}</div>
+                  </td>
+                </tr>
+              </table>
+              {% endfor %}
+            </div>
+
+            <!-- Shipping address -->
+            {% if shipping_address %}
+            <div style="margin-top:16px;padding-top:20px;border-top:1px solid #00000015;">
+              <div style="font-size:11px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase;color:#525252;margin-bottom:10px;">
+                Delivering To
+              </div>
+              <div style="font-size:14px;line-height:1.5;color:#000000;">
+                <strong>{{ shipping_address.first_name }} {{ shipping_address.last_name }}</strong><br>
+                {{ shipping_address.street }}<br>
+                {{ shipping_address.city }}, {{ shipping_address.province_code }} {{ shipping_address.zip }}<br>
+                {{ shipping_address.country }}
+              </div>
+            </div>
+            {% endif %}
+
+          </td>
+        </tr>
+
+        <tr><td style="height:16px;line-height:16px;">&nbsp;</td></tr>
+
+        <!-- View order link -->
+        <tr>
+          <td align="center" style="padding:0 0 24px 0;">
+            <a href="{{ order_status_url }}" style="font-size:13px;font-weight:800;color:#000000;text-decoration:underline;letter-spacing:1px;text-transform:uppercase;">
+              View full order details →
+            </a>
+          </td>
+        </tr>
+
+        <!-- Support callout -->
+        <tr>
+          <td style="background-color:#FF69B4;border:2px solid #000000;border-radius:16px;padding:20px 24px;box-shadow:4px 4px 0 #000000;text-align:center;">
+            <div style="font-size:18px;font-weight:900;color:#000000;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">
+              Package issue? 📭
+            </div>
+            <div style="font-size:13px;line-height:1.5;color:#000000;">
+              Tracking stuck or item missing? Write to
+              <a href="mailto:cs@petbale.com" style="color:#000000;font-weight:900;text-decoration:underline;">cs@petbale.com</a>
+              within 14 days of delivery.
+            </div>
+          </td>
+        </tr>
+
+        <tr><td style="height:24px;line-height:24px;">&nbsp;</td></tr>
+
+        <!-- Footer NAP -->
+        <tr>
+          <td style="text-align:center;font-size:11px;line-height:1.6;color:#525252;padding:0 16px;">
+            <div style="font-weight:800;color:#000000;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">PetBale</div>
+            <div>Operated by DOG BOWL BAKERY LLC</div>
+            <div>3832 FESCUE ST, CLERMONT FL 34714, USA</div>
+            <div>+1 (651) 377-4420 · <a href="mailto:cs@petbale.com" style="color:#525252;text-decoration:underline;">cs@petbale.com</a></div>
+            <div style="margin-top:12px;">
+              <a href="https://petbale.com" style="color:#525252;text-decoration:underline;">petbale.com</a>
+              ·
+              <a href="https://petbale.com/shipping-policy" style="color:#525252;text-decoration:underline;">Shipping</a>
+              ·
+              <a href="https://petbale.com/refund-policy" style="color:#525252;text-decoration:underline;">Returns</a>
+              ·
+              <a href="{{ shop.url }}/unsubscribe" style="color:#525252;text-decoration:underline;">Unsubscribe</a>
+            </div>
+            <div style="margin-top:10px;color:#9ca3af;">© {{ 'now' | date: '%Y' }} PetBale. All rights reserved.</div>
+          </td>
+        </tr>
+
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>
