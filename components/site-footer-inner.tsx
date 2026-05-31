@@ -45,6 +45,7 @@ const DEFAULT_LINKS: Record<string, { label: string; href: string }[]> = {
     { label: 'Payment Policy', href: '/payment-policy' },
     { label: 'Shipping Policy', href: '/shipping-policy' },
     { label: 'Refund Policy', href: '/refund-policy' },
+    { label: 'Disclaimer', href: '/disclaimer' },
   ],
 }
 

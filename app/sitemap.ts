@@ -19,6 +19,7 @@ const STATIC_PATHS: { path: string; priority: number; changeFrequency: MetadataR
   { path: '/shipping-policy', priority: 0.3, changeFrequency: 'yearly' },
   { path: '/cookie-policy', priority: 0.3, changeFrequency: 'yearly' },
   { path: '/payment-policy', priority: 0.3, changeFrequency: 'yearly' },
+  { path: '/disclaimer', priority: 0.3, changeFrequency: 'yearly' },
 ]
 
 /**
