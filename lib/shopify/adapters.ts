@@ -299,26 +299,41 @@ function pickPrimaryVariant(product: ShopifyProduct): ShopifyVariant | null {
   return product.variants.edges[0]?.node ?? null
 }
 
-function getWeightLabel(variant: ShopifyVariant): string {
+/** True when a value is only hex color code(s) — e.g. "#000000" or
+ *  "#8A4512,#2FB534". Bad catalog data dumped color hexes into the Size option. */
+export function isHexColorValue(value: string | null | undefined): boolean {
+  const v = (value ?? '').trim()
+  if (!v) return false
+  return v.split(',').every((t) => /^#[0-9a-fA-F]{3,8}$/.test(t.trim()))
+}
+
+/** Raw "size" value as Shopify provides it (option value or variant title). */
+function getSizeRaw(variant: ShopifyVariant): string {
   const sizeOption = variant.selectedOptions.find(
     (o) => /size|weight|pack/i.test(o.name)
   )
-  if (sizeOption) return decodeHtmlEntities(sizeOption.value)
-  if (variant.title && variant.title !== 'Default Title') return decodeHtmlEntities(variant.title)
-  return decodeHtmlEntities(variant.selectedOptions[0]?.value ?? '1 unit')
+  if (sizeOption) return sizeOption.value
+  if (variant.title && variant.title !== 'Default Title') return variant.title
+  return variant.selectedOptions[0]?.value ?? ''
 }
 
 function mapVariants(product: ShopifyProduct): CatalogVariant[] {
-  return product.variants.edges.map(({ node: v }) => ({
-    id: v.id,
-    weight: getWeightLabel(v),
-    price: Math.round(parseFloat(v.price.amount)),
-    comparePrice: v.compareAtPrice
-      ? Math.round(parseFloat(v.compareAtPrice.amount))
-      : undefined,
-    availableForSale: v.availableForSale,
-    sku: v.sku ?? null,
-  }))
+  return product.variants.edges.map(({ node: v }) => {
+    const raw = getSizeRaw(v)
+    const isHex = isHexColorValue(raw)
+    return {
+      id: v.id,
+      // Hex junk → no text label (UI hides it or shows a swatch instead).
+      weight: isHex ? '' : decodeHtmlEntities(raw) || '1 unit',
+      colorHex: isHex ? raw.split(',')[0].trim() : null,
+      price: Math.round(parseFloat(v.price.amount)),
+      comparePrice: v.compareAtPrice
+        ? Math.round(parseFloat(v.compareAtPrice.amount))
+        : undefined,
+      availableForSale: v.availableForSale,
+      sku: v.sku ?? null,
+    }
+  })
 }
 
 export function adaptShopifyProduct(product: ShopifyProduct): CatalogProduct {

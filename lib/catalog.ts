@@ -63,6 +63,9 @@ export interface CatalogProduct {
 export interface CatalogVariant {
   id: string
   weight: string
+  /** Set when the variant option value is a raw hex color (bad catalog data
+   *  that landed in the "Size" option). Drives a color swatch instead of text. */
+  colorHex: string | null
   price: number
   comparePrice?: number
   availableForSale: boolean

@@ -389,31 +389,61 @@ export function ProductClient({
                 {product.shortDescription}
               </p>
 
-              {variants.length > 0 && (
-                <div className="flex flex-col gap-2.5 pt-2">
-                  <span className="text-xs font-black text-zinc-500 uppercase tracking-widest">
-                    SELECT SIZE (PACK WEIGHT)
-                  </span>
-                  <div className="flex flex-wrap gap-3">
-                    {variants.map((v) => (
-                      <button
-                        key={v.id}
-                        onClick={() => setActiveVariantId(v.id)}
-                        disabled={!v.availableForSale}
-                        className={cn(
-                          'px-5 py-2.5 text-sm font-black border-2 border-black rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 cursor-pointer transition-all duration-200 uppercase',
-                          activeVariantId === v.id
-                            ? 'bg-[#6cd1ff] text-black border-3 -translate-y-0.5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
-                            : 'bg-white text-zinc-700',
-                          !v.availableForSale && 'opacity-40 cursor-not-allowed line-through'
-                        )}
-                      >
-                        {v.weight}
-                      </button>
-                    ))}
+              {(() => {
+                // Hide the selector when the only variant has no real label
+                // (bad catalog data dumped a hex color into "Size").
+                const showSelector =
+                  variants.length > 1 || (variants.length === 1 && !!variants[0].weight)
+                if (!showSelector) return null
+                const allColor = variants.every((v) => v.colorHex && !v.weight)
+                return (
+                  <div className="flex flex-col gap-2.5 pt-2">
+                    <span className="text-xs font-black text-zinc-500 uppercase tracking-widest">
+                      {allColor ? 'SELECT COLOR' : 'SELECT SIZE (PACK WEIGHT)'}
+                    </span>
+                    <div className="flex flex-wrap gap-3">
+                      {variants.map((v) => {
+                        const selected = activeVariantId === v.id
+                        // Color swatch for hex-only variants (e.g. carriers in
+                        // multiple colors mislabeled under "Size").
+                        if (v.colorHex && !v.weight) {
+                          return (
+                            <button
+                              key={v.id}
+                              onClick={() => setActiveVariantId(v.id)}
+                              disabled={!v.availableForSale}
+                              aria-label={`Color option ${v.colorHex}`}
+                              title={v.colorHex}
+                              style={{ backgroundColor: v.colorHex }}
+                              className={cn(
+                                'w-11 h-11 rounded-xl border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 cursor-pointer transition-all duration-200',
+                                selected && 'ring-4 ring-[#6cd1ff] ring-offset-2 -translate-y-0.5',
+                                !v.availableForSale && 'opacity-40 cursor-not-allowed'
+                              )}
+                            />
+                          )
+                        }
+                        return (
+                          <button
+                            key={v.id}
+                            onClick={() => setActiveVariantId(v.id)}
+                            disabled={!v.availableForSale}
+                            className={cn(
+                              'px-5 py-2.5 text-sm font-black border-2 border-black rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 cursor-pointer transition-all duration-200 uppercase',
+                              selected
+                                ? 'bg-[#6cd1ff] text-black border-3 -translate-y-0.5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
+                                : 'bg-white text-zinc-700',
+                              !v.availableForSale && 'opacity-40 cursor-not-allowed line-through'
+                            )}
+                          >
+                            {v.weight || 'Option'}
+                          </button>
+                        )
+                      })}
+                    </div>
                   </div>
-                </div>
-              )}
+                )
+              })()}
 
               <div ref={addToCartRef} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6 pt-6 border-t-2 border-dashed border-black/10 mt-2">
                 <div className="flex flex-col">

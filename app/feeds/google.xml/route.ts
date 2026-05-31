@@ -3,7 +3,7 @@ import { SITE_URL } from '@/lib/site'
 import { getAllShopifyProducts } from '@/lib/shopify/queries'
 import type { ShopifyProduct, ShopifyVariant } from '@/lib/shopify/types'
 import { resolveGoogleCategory } from '@/lib/feeds/google-taxonomy'
-import { decodeHtmlEntities } from '@/lib/shopify/adapters'
+import { decodeHtmlEntities, isHexColorValue } from '@/lib/shopify/adapters'
 
 /**
  * Google Merchant Center product feed (RSS 2.0 + g: namespace).
@@ -209,7 +209,10 @@ function buildItem(f: ItemFields): string {
   const hasIdentifiers = !!(f.brand && f.mpn)
 
   // Optional structured attributes
-  const size = variant.selectedOptions.find((o) => /size|weight|pack/i.test(o.name))?.value
+  const rawSize = variant.selectedOptions.find((o) => /size|weight|pack/i.test(o.name))?.value
+  // Skip hex-color junk that bad catalog data dumped into the Size option —
+  // Google rejects "#038DFF" as a size value.
+  const size = rawSize && !isHexColorValue(rawSize) ? rawSize : undefined
   const color = variant.selectedOptions.find((o) => /color/i.test(o.name))?.value
   const ageGroup = pickAgeGroup(product.tags)
   const material = getTagValue(product.tags, 'material')
