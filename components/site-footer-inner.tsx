@@ -169,16 +169,18 @@ export function SiteFooterInner({
                     const fallback = LOCAL_BADGE_FALLBACKS[badge.name]
                     const src = badge.imageUrl ?? fallback?.src
                     if (!src) return null
+                    // Fixed, equal-size boxes; image is contained + centered so
+                    // different badge aspect ratios all fit the same dimensions.
+                    const wrapper = 'relative w-28 h-16 flex-shrink-0 bg-white border-2 border-black rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 transition-all duration-200'
                     const inner = (
                       <Image
                         src={src}
                         alt={badge.imageAlt}
-                        width={badge.imageUrl ? 130 : fallback?.width ?? 130}
-                        height={badge.imageUrl ? 50 : fallback?.height ?? 50}
-                        className={fallback?.className ?? 'h-12 w-auto object-contain'}
+                        fill
+                        sizes="112px"
+                        className="object-contain p-2"
                       />
                     )
-                    const wrapper = 'bg-white border-2 border-black rounded-lg p-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 transition-all duration-200'
                     return badge.link ? (
                       <a
                         key={badge.name}
