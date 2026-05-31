@@ -60,17 +60,30 @@ export default async function ProductPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const [product, all] = await Promise.all([
+  const [productBase, all] = await Promise.all([
     getProductBySlug(slug),
     getAllProducts(),
   ])
-  if (!product) notFound()
+  if (!productBase) notFound()
 
-  const aliRaw = product.shopifyProductId
-    ? await getAliReviews(product.shopifyProductId, { limit: 30 })
+  const aliRaw = productBase.shopifyProductId
+    ? await getAliReviews(productBase.shopifyProductId, { limit: 30 })
     : []
   const reviews = adaptAliReviews(aliRaw)
   const related = all.filter((p) => p.slug !== slug).slice(0, 12)
+
+  // Ali doesn't always write the alireviews.rating_info metafield (esp. for
+  // CSV-imported reviews), leaving rating/reviewCount at 0 — which hides the
+  // whole review section even though reviews exist via the public API. When
+  // that happens, derive the aggregate from the fetched reviews instead.
+  const product =
+    productBase.reviewCount === 0 && aliRaw.length > 0
+      ? {
+          ...productBase,
+          reviewCount: aliRaw.length,
+          rating: aliRaw.reduce((sum, r) => sum + (r.star || 0), 0) / aliRaw.length,
+        }
+      : productBase
 
   const categoryLabel = CATEGORY_LABELS[product.category] ?? 'Shop'
   const inStock = product.variants.some((v) => v.availableForSale)

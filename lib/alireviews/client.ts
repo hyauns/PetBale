@@ -43,33 +43,44 @@ export async function getAliReviews(
   const numeric = typeof productId === 'string' ? extractShopifyId(productId) : productId
   if (!numeric) return []
 
-  const params = new URLSearchParams({
-    product_id: String(numeric),
-    sort: opts.sort ?? 'by_date',
-    direction: opts.direction ?? 'desc',
-  })
-  if (opts.cursor) params.set('cursor', opts.cursor)
+  const limit = opts.limit ?? 100
+  const all: AliReview[] = []
+  let cursor = opts.cursor
 
   try {
-    const res = await fetch(`${BASE}/reviews?${params}`, {
-      headers: {
-        Authorization: `Bearer ${API_KEY}`,
-        Accept: 'application/json',
-      },
-      next: { revalidate: 300 },
-    })
-    if (!res.ok) {
-      console.warn(`[alireviews] HTTP ${res.status} for product ${numeric}`)
-      return []
+    // The public API is cursor-paginated (~9 reviews/page). Follow the cursor
+    // until it's empty or we've collected enough, so products with many reviews
+    // aren't truncated to the first page.
+    for (let page = 0; page < 12; page++) {
+      const params = new URLSearchParams({
+        product_id: String(numeric),
+        sort: opts.sort ?? 'by_date',
+        direction: opts.direction ?? 'desc',
+      })
+      if (cursor) params.set('cursor', cursor)
+
+      const res = await fetch(`${BASE}/reviews?${params}`, {
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+          Accept: 'application/json',
+        },
+        next: { revalidate: 300 },
+      })
+      if (!res.ok) {
+        console.warn(`[alireviews] HTTP ${res.status} for product ${numeric}`)
+        break
+      }
+      const body = (await res.json()) as AliReviewsResponse
+      if (!body.status || !body.data?.reviews) break
+      all.push(...body.data.reviews)
+      cursor = body.data.cursor || undefined
+      if (!cursor || all.length >= limit) break
     }
-    const body = (await res.json()) as AliReviewsResponse
-    if (!body.status || !body.data?.reviews) return []
-    const reviews = body.data.reviews
-    return opts.limit ? reviews.slice(0, opts.limit) : reviews
   } catch (err) {
     console.warn('[alireviews] fetch failed', err)
-    return []
   }
+
+  return all.slice(0, limit)
 }
 
 export function extractShopifyId(gid: string): number | null {
