@@ -4,7 +4,7 @@ import React, { useRef, useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { ShoppingBag, ChevronLeft, ChevronRight } from 'lucide-react'
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -57,6 +57,36 @@ export function ProductClient({
     variants.find((v) => v.id === activeVariantId) ?? initialVariant
   const activePrice = activeVariant?.price ?? product.price
   const activeComparePrice = activeVariant?.comparePrice ?? product.comparePrice
+
+  // Mobile sticky Add-to-Cart bar: visible whenever the real in-page Add-to-Cart
+  // button is NOT in the viewport (so it shows on load while the gallery is up
+  // top, hides when the buy box is reached, and reappears once scrolled past).
+  const addToCartRef = useRef<HTMLDivElement>(null)
+  const [showStickyBar, setShowStickyBar] = useState(false)
+  useEffect(() => {
+    const check = () => {
+      const el = addToCartRef.current
+      if (!el) return
+      const r = el.getBoundingClientRect()
+      const inView = r.top < window.innerHeight && r.bottom > 0
+      setShowStickyBar(!inView)
+    }
+    check()
+    // capture=true so it also catches scrolls from any nested scroll container
+    window.addEventListener('scroll', check, { passive: true, capture: true })
+    window.addEventListener('resize', check)
+    // re-check once layout settles after images load
+    const t = setTimeout(check, 500)
+    return () => {
+      window.removeEventListener('scroll', check, { capture: true } as EventListenerOptions)
+      window.removeEventListener('resize', check)
+      clearTimeout(t)
+    }
+  }, [])
+
+  const handleAddToCart = (e: { clientX: number; clientY: number }) => {
+    if (activeVariantId) addToCart(activeVariantId, 1, e.clientX, e.clientY)
+  }
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const target = e.currentTarget
@@ -311,7 +341,7 @@ export function ProductClient({
                     BEST SELLER
                   </span>
                 </div>
-                <h1 className="text-4xl sm:text-5xl font-black text-black tracking-tight leading-none uppercase">
+                <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-black tracking-tight leading-tight sm:leading-none uppercase">
                   {product.name}
                 </h1>
                 <div className="text-sm font-black text-[#ff990a] uppercase tracking-widest -mt-1.5 mb-0.5">
@@ -368,7 +398,7 @@ export function ProductClient({
                 </div>
               )}
 
-              <div className="flex items-center justify-between gap-6 pt-6 border-t-2 border-dashed border-black/10 mt-2">
+              <div ref={addToCartRef} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6 pt-6 border-t-2 border-dashed border-black/10 mt-2">
                 <div className="flex flex-col">
                   <span className="text-[10px] font-black text-zinc-400 uppercase tracking-wider">TOTAL PRICE</span>
                   <div className="flex items-baseline gap-2">
@@ -387,10 +417,8 @@ export function ProductClient({
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.95 }}
                   disabled={!activeVariantId}
-                  onClick={(e) => {
-                    if (activeVariantId) addToCart(activeVariantId, 1, e.clientX, e.clientY)
-                  }}
-                  className="flex-1 py-4 px-6 rounded-xl bg-[#6cd1ff] text-black font-black text-base border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:bg-black hover:text-white hover:border-[#6cd1ff] active:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-colors duration-300 cursor-pointer flex items-center justify-center gap-2 uppercase tracking-wide disabled:opacity-60 disabled:cursor-not-allowed"
+                  onClick={handleAddToCart}
+                  className="w-full sm:flex-1 py-4 px-6 rounded-xl bg-[#6cd1ff] text-black font-black text-base border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:bg-black hover:text-white hover:border-[#6cd1ff] active:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-colors duration-300 cursor-pointer flex items-center justify-center gap-2 uppercase tracking-wide whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   <ShoppingBag className="w-5 h-5 flex-shrink-0" />
                   <span>ADD TO CART</span>
@@ -724,6 +752,36 @@ export function ProductClient({
           .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         `}</style>
       </section>
+
+      {/* Mobile sticky Add-to-Cart bar — shows whenever the in-page button is off-screen */}
+      <AnimatePresence>
+        {showStickyBar && (
+          <motion.div
+            initial={{ y: '110%' }}
+            animate={{ y: 0 }}
+            exit={{ y: '110%' }}
+            transition={{ type: 'spring', damping: 22, stiffness: 240 }}
+            className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t-3 border-black shadow-[0_-4px_0px_0px_rgba(0,0,0,1)] px-4 pt-3"
+            style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 0.75rem)' }}
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex flex-col leading-none shrink-0">
+                <span className="text-[9px] font-black text-zinc-400 uppercase tracking-wider">TOTAL</span>
+                <span className="text-2xl font-black text-black select-none">${activePrice}</span>
+              </div>
+              <motion.button
+                whileTap={{ scale: 0.96 }}
+                disabled={!activeVariantId}
+                onClick={handleAddToCart}
+                className="flex-1 py-3.5 px-5 rounded-xl bg-[#6cd1ff] text-black font-black text-base border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer flex items-center justify-center gap-2 uppercase tracking-wide whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                <ShoppingBag className="w-5 h-5 flex-shrink-0" />
+                <span>ADD TO CART</span>
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </main>
   )
