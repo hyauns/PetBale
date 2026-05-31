@@ -84,6 +84,27 @@ export function ProductClient({
     }
   }, [])
 
+  // Mobile browsers pin position:fixed to the layout viewport, so when the URL
+  // bar hides on scroll-down the bar floats above the real bottom (a gap below).
+  // Follow the VisualViewport so the bar's bottom edge always sits at the bottom
+  // of the actually-visible area. No-op on desktop (offset stays 0).
+  const [vvBottom, setVvBottom] = useState(0)
+  useEffect(() => {
+    const vv = window.visualViewport
+    if (!vv) return
+    const update = () => {
+      const offset = document.documentElement.clientHeight - (vv.height + vv.offsetTop)
+      setVvBottom(offset)
+    }
+    update()
+    vv.addEventListener('resize', update)
+    vv.addEventListener('scroll', update)
+    return () => {
+      vv.removeEventListener('resize', update)
+      vv.removeEventListener('scroll', update)
+    }
+  }, [])
+
   const handleAddToCart = (e: { clientX: number; clientY: number }) => {
     if (activeVariantId) addToCart(activeVariantId, 1, e.clientX, e.clientY)
   }
@@ -762,7 +783,7 @@ export function ProductClient({
             exit={{ y: '110%' }}
             transition={{ type: 'spring', damping: 22, stiffness: 240 }}
             className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t-3 border-black shadow-[0_-4px_0px_0px_rgba(0,0,0,1)] px-4 pt-3"
-            style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 0.75rem)' }}
+            style={{ bottom: vvBottom, paddingBottom: 'calc(env(safe-area-inset-bottom) + 0.75rem)' }}
           >
             <div className="flex items-center gap-3">
               <div className="flex flex-col leading-none shrink-0">
