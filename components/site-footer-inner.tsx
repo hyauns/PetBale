@@ -218,6 +218,18 @@ export function SiteFooterInner({
                     </Link>
                   </li>
                 ))}
+                {/* Your Privacy Choices — sits under "Contact" in the Company column */}
+                {heading.trim().toLowerCase() === 'company' && (
+                  <li>
+                    <Link
+                      href="/data-sharing-opt-out"
+                      className="inline-flex items-center gap-1.5 text-white/60 hover:text-[#6cd1ff] font-extrabold text-xs tracking-wider transition-colors duration-150 uppercase"
+                    >
+                      <PrivacyChoicesIcon />
+                      <span>Your Privacy Choices</span>
+                    </Link>
+                  </li>
+                )}
               </ul>
             </div>
           ))}
@@ -298,17 +310,6 @@ export function SiteFooterInner({
                 </div>
               )
             })()}
-
-            {/* Your Privacy Choices (CCPA/CPRA data-sharing opt-out) */}
-            <div className="mt-6 pt-5 border-t border-white/10">
-              <Link
-                href="/data-sharing-opt-out"
-                className="inline-flex items-center gap-2 text-white/60 hover:text-[#6cd1ff] font-extrabold text-xs tracking-wider transition-colors duration-150 uppercase"
-              >
-                <PrivacyChoicesIcon />
-                <span>Your Privacy Choices</span>
-              </Link>
-            </div>
           </div>
         </div>
 
