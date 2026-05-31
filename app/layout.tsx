@@ -103,11 +103,6 @@ const ORGANIZATION_SCHEMA = {
     areaServed: 'US',
     availableLanguage: ['English'],
   },
-  sameAs: [
-    'https://instagram.com',
-    'https://facebook.com',
-    'https://youtube.com',
-  ],
 }
 
 const WEBSITE_SCHEMA = {

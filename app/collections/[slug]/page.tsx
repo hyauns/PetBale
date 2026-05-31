@@ -12,11 +12,11 @@ export const revalidate = 60
 const CATEGORY_LABELS: Record<string, { title: string; description: string }> = {
   'dog-food': {
     title: 'Dog Food',
-    description: 'Premium dry & wet dog food from trusted brands. Free shipping over $49 — fast US delivery.',
+    description: 'Premium dry & wet dog food from trusted brands. Free shipping over $40 — fast US delivery.',
   },
   'cat-food': {
     title: 'Cat Food',
-    description: 'Wet, dry, and prescription cat food. Premium brands, vet-approved formulas.',
+    description: 'Wet, dry, and prescription cat food from premium brands, including veterinary diets.',
   },
   'dog-treats': {
     title: 'Dog Treats',

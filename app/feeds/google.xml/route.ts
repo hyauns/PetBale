@@ -83,33 +83,6 @@ function getTagValues(tags: string[], prefix: string): string[] {
     .map((t) => t.slice(prefix.length + 1).trim())
 }
 
-function pickMetafield(
-  metafields: ShopifyProduct['metafields'],
-  namespace: string,
-  key: string
-): string | null {
-  return metafields.find((m) => m?.namespace === namespace && m?.key === key)?.value ?? null
-}
-
-interface RatingInfo {
-  ratingValue: number
-  reviewCount: number
-}
-
-function parseRating(product: ShopifyProduct): RatingInfo | null {
-  const raw = pickMetafield(product.metafields, 'alireviews', 'rating_info')
-  if (!raw) return null
-  try {
-    const parsed = JSON.parse(raw) as { ratingValue?: number; reviewCount?: number }
-    const v = typeof parsed.ratingValue === 'number' ? parsed.ratingValue : 0
-    const c = typeof parsed.reviewCount === 'number' ? parsed.reviewCount : 0
-    if (c <= 0 || v <= 0) return null
-    return { ratingValue: v, reviewCount: c }
-  } catch {
-    return null
-  }
-}
-
 function pickAgeGroup(tags: string[]): string | null {
   const lifestage = getTagValue(tags, 'lifestage')
   if (!lifestage) return null
@@ -241,11 +214,6 @@ function buildItem(f: ItemFields): string {
   const ageGroup = pickAgeGroup(product.tags)
   const material = getTagValue(product.tags, 'material')
   const flavor = getTagValue(product.tags, 'flavor')
-  const breedSize = getTagValue(product.tags, 'breed-size')
-
-  // Reviews (inline aggregate — Google reads these for sellers in Product
-  // Ratings program; still useful as a hint for non-PR fields).
-  const rating = parseRating(product)
 
   // Custom labels for campaign targeting in Google Ads (optional).
   const customLabel0 = pet ?? ''
@@ -272,15 +240,14 @@ ${f.mpn ? `      <g:mpn>${xmlEscape(f.mpn)}</g:mpn>\n` : ''}      <g:identifier_
       <g:condition>${f.condition}</g:condition>
       <g:google_product_category>${googleCat.id}</g:google_product_category>
       <g:product_type>${xmlEscape(productType || googleCat.path)}</g:product_type>
-${size ? `      <g:size>${xmlEscape(size)}</g:size>\n` : ''}${color ? `      <g:color>${xmlEscape(color)}</g:color>\n` : ''}${ageGroup ? `      <g:age_group>${ageGroup}</g:age_group>\n` : ''}${material ? `      <g:material>${xmlEscape(material)}</g:material>\n` : ''}${flavor ? `      <g:flavor>${xmlEscape(flavor)}</g:flavor>\n` : ''}${breedSize ? `      <g:size_system>${xmlEscape(breedSize)}</g:size_system>\n` : ''}${rating ? `      <g:product_review_count>${rating.reviewCount}</g:product_review_count>
-      <g:product_review_average>${rating.ratingValue.toFixed(1)}</g:product_review_average>\n` : ''}      <g:custom_label_0>${xmlEscape(customLabel0)}</g:custom_label_0>
+${size ? `      <g:size>${xmlEscape(size)}</g:size>\n` : ''}${color ? `      <g:color>${xmlEscape(color)}</g:color>\n` : ''}${ageGroup ? `      <g:age_group>${ageGroup}</g:age_group>\n` : ''}${material ? `      <g:material>${xmlEscape(material)}</g:material>\n` : ''}${flavor ? `      <g:flavor>${xmlEscape(flavor)}</g:flavor>\n` : ''}      <g:custom_label_0>${xmlEscape(customLabel0)}</g:custom_label_0>
       <g:custom_label_1>${xmlEscape(customLabel1)}</g:custom_label_1>
       <g:custom_label_2>${xmlEscape(customLabel2)}</g:custom_label_2>
       <g:custom_label_3>${xmlEscape(customLabel3)}</g:custom_label_3>
 ${customLabel4 ? `      <g:custom_label_4>${xmlEscape(customLabel4)}</g:custom_label_4>\n` : ''}      <g:shipping>
         <g:country>US</g:country>
         <g:service>Standard</g:service>
-        <g:price>0.00 USD</g:price>
+        <g:price>8.99 USD</g:price>
         <g:min_handling_time>1</g:min_handling_time>
         <g:max_handling_time>2</g:max_handling_time>
         <g:min_transit_time>3</g:min_transit_time>
