@@ -84,30 +84,26 @@ export function ProductClient({
     }
   }, [])
 
-  // Mobile browsers pin position:fixed to the layout viewport, so when the URL
-  // bar hides on scroll-down the bar floats above the real bottom (a gap below).
-  // Follow the VisualViewport so the bar's bottom edge always sits at the bottom
-  // of the actually-visible area. No-op on desktop (offset stays 0).
+  const handleAddToCart = (e: { clientX: number; clientY: number }) => {
+    if (activeVariantId) addToCart(activeVariantId, 1, e.clientX, e.clientY)
+  }
+
+  // Mobile address bar quirk: when it hides on scroll-down the visible area
+  // grows but a fixed bottom:0 bar stays at the (shorter) layout-viewport
+  // bottom, leaving a gap. Only listen to visualViewport RESIZE (fires when the
+  // URL bar toggles, not during scroll → no jitter) and clamp to <=0 so we can
+  // only nudge the bar DOWN to close a gap, never lift it (safe no-op otherwise).
   const [vvBottom, setVvBottom] = useState(0)
   useEffect(() => {
     const vv = window.visualViewport
     if (!vv) return
     const update = () => {
-      const offset = document.documentElement.clientHeight - (vv.height + vv.offsetTop)
-      setVvBottom(offset)
+      setVvBottom(Math.min(0, document.documentElement.clientHeight - vv.height))
     }
     update()
     vv.addEventListener('resize', update)
-    vv.addEventListener('scroll', update)
-    return () => {
-      vv.removeEventListener('resize', update)
-      vv.removeEventListener('scroll', update)
-    }
+    return () => vv.removeEventListener('resize', update)
   }, [])
-
-  const handleAddToCart = (e: { clientX: number; clientY: number }) => {
-    if (activeVariantId) addToCart(activeVariantId, 1, e.clientX, e.clientY)
-  }
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const target = e.currentTarget
