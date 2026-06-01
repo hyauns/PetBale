@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { SITE_URL } from '@/lib/site'
-import { getAllShopifyProducts } from '@/lib/shopify/queries'
+import { getProductHandlesForSitemap } from '@/lib/shopify/queries'
 import { CATEGORY_TO_SHOPIFY_HANDLES } from '@/lib/shopify/category-map'
 
 export const revalidate = 3600
@@ -91,10 +91,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   let productEntries: MetadataRoute.Sitemap = []
   try {
-    const products = await getAllShopifyProducts()
+    const products = await getProductHandlesForSitemap()
     productEntries = products.map((p) => ({
       url: `${SITE_URL}/products/${p.handle}`,
-      lastModified: now,
+      // Real per-product timestamp from Shopify, so Google sees genuine change
+      // dates instead of every URL sharing the build time.
+      lastModified: p.updatedAt ? new Date(p.updatedAt) : now,
       changeFrequency: 'weekly' as const,
       priority: 0.7,
     }))

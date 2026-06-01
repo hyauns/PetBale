@@ -73,6 +73,57 @@ export async function getAllShopifyProducts(): Promise<ShopifyProduct[]> {
   return all
 }
 
+export interface SitemapProduct {
+  handle: string
+  updatedAt: string
+}
+
+/**
+ * Minimal product list for the XML sitemap: just handle + updatedAt, 250 per
+ * page. Deliberately avoids the full PRODUCT_FRAGMENT (images, variants,
+ * metafields, descriptions) that getAllShopifyProducts pulls — fetching all
+ * that for ~3.5k products only to read the handle is wasteful, and it gives us
+ * a real <lastmod> per product instead of the build timestamp.
+ */
+export async function getProductHandlesForSitemap(): Promise<SitemapProduct[]> {
+  const query = /* GraphQL */ `
+    query SitemapProducts($cursor: String) {
+      products(first: 250, after: $cursor) {
+        edges {
+          node {
+            handle
+            updatedAt
+          }
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+      }
+    }
+  `
+
+  type Page = {
+    products: {
+      edges: { node: SitemapProduct }[]
+      pageInfo: { hasNextPage: boolean; endCursor: string | null }
+    }
+  }
+
+  const all: SitemapProduct[] = []
+  let cursor: string | null = null
+  do {
+    const data: Page = await shopifyFetch<Page>({
+      query,
+      variables: { cursor },
+      next: { revalidate: REVALIDATE },
+    })
+    all.push(...data.products.edges.map((e) => e.node))
+    cursor = data.products.pageInfo.hasNextPage ? data.products.pageInfo.endCursor : null
+  } while (cursor)
+  return all
+}
+
 export async function getShopifyProductByHandle(handle: string): Promise<ShopifyProduct | null> {
   const query = /* GraphQL */ `
     ${PRODUCT_FRAGMENT}
