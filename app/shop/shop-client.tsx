@@ -8,6 +8,7 @@ import { ShoppingBag, ChevronDown, SlidersHorizontal, ArrowUpDown } from 'lucide
 import type { CatalogProduct } from '@/lib/catalog'
 import { useCart } from '@/hooks/use-cart'
 import { RatingStars } from '@/components/rating-stars'
+import { CardLinkSpinner } from '@/components/card-link-spinner'
 import { ActiveFilterChips, FilterSidebar, type BrandOption } from '@/components/filters/filter-sidebar'
 import { MobileFilterDrawer, MobileSortByAccordion, MobileCategoriesAccordion } from '@/components/filters/mobile-filter-drawer'
 import { Pagination } from '@/components/pagination'
@@ -280,7 +281,8 @@ export function ShopClient({
                       </div>
                     ) : null}
 
-                    <Link href={`/products/${product.slug}`} className="flex-1 flex flex-col justify-start cursor-pointer">
+                    <Link href={`/products/${product.slug}`} className="relative flex-1 flex flex-col justify-start cursor-pointer">
+                      <CardLinkSpinner />
                       <div className="w-full h-60 bg-white rounded-lg overflow-hidden flex items-center justify-center p-3 select-none">
                         <Image
                           src={product.imageSrc}

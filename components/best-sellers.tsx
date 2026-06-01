@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useTransition } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { motion, useMotionValue, useSpring, useTransform, animate } from 'framer-motion'
@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 import { TextRotate } from '@/components/ui/text-rotate'
 import { useCart } from '@/hooks/use-cart'
 import { RatingStars } from '@/components/rating-stars'
+import { PawLoader } from '@/components/paw-loader'
 
 export type PricingPlan = {
   name: string;
@@ -151,6 +152,7 @@ const PricingCard = ({
   index: number
 }) => {
   const router = useRouter();
+  const [isNavigating, startNavigation] = useTransition();
   const { addToCart } = useCart();
   const cardRef = useRef<HTMLDivElement>(null);
   const mouseX = useMotionValue(0);
@@ -189,7 +191,11 @@ const PricingCard = ({
     const target = e.target as HTMLElement;
     if (target.closest('button')) return;
     if (!hasDragged.current) {
-      router.push(`/products/${plan.slug}`);
+      // useTransition keeps isNavigating true until the destination is ready,
+      // so the paw overlay shows for the whole client-side navigation.
+      startNavigation(() => {
+        router.push(`/products/${plan.slug}`);
+      });
     }
   };
 
@@ -214,6 +220,16 @@ const PricingCard = ({
       }}
       className="relative w-full h-[500px] flex flex-col justify-between bg-white rounded-xl p-5 border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,0.9)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.9)] transition-all duration-200 select-none font-tbj-interval cursor-pointer"
     >
+      {/* Navigation feedback — paw spinner while the product page loads */}
+      {isNavigating && (
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 z-40 flex items-center justify-center rounded-xl bg-white/70 backdrop-blur-[1px] pointer-events-none"
+        >
+          <PawLoader size={56} count={4} />
+        </span>
+      )}
+
       {/* Best Seller / Sales Badge Sticker */}
       {plan.isPopular ? (
         <div className="absolute -top-3 -right-2 bg-[#ffea79] text-black border border-black px-2.5 py-1 rounded font-black text-[9px] uppercase shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)] select-none rotate-[3deg] z-20">

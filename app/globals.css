@@ -232,3 +232,27 @@
 
   .opacity-0-init { opacity: 0; }
 }
+
+/* ---------------------------------------------------------------------------
+ * Paw loader — pet-themed navigation/loading spinner.
+ * A ring of paw prints orbits while each paw fades in sequence to read as a
+ * "walking in a circle" trail. Reuses the brand paw used by the add-to-cart
+ * fly animation. Pure CSS so it can render inside server components (loading.tsx).
+ * ------------------------------------------------------------------------- */
+.paw-loader {
+  animation: paw-loader-spin 1.1s linear infinite;
+}
+.paw-loader__paw {
+  animation: paw-loader-trail 1.1s ease-in-out infinite;
+}
+@keyframes paw-loader-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes paw-loader-trail {
+  0%, 100% { opacity: 0.25; }
+  50%      { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .paw-loader { animation-duration: 2.4s; }
+  .paw-loader__paw { animation: none; opacity: 0.7; }
+}

@@ -7,6 +7,7 @@ import { ShoppingBag } from 'lucide-react'
 import type { CatalogProduct } from '@/lib/catalog'
 import { useCart } from '@/hooks/use-cart'
 import { RatingStars } from '@/components/rating-stars'
+import { CardLinkSpinner } from '@/components/card-link-spinner'
 
 export function SearchResultsClient({ products }: { products: CatalogProduct[] }) {
   const { addToCart } = useCart()
@@ -44,7 +45,8 @@ export function SearchResultsClient({ products }: { products: CatalogProduct[] }
             </div>
           ) : null}
 
-          <Link href={`/products/${product.slug}`} className="flex-1 flex flex-col justify-start cursor-pointer">
+          <Link href={`/products/${product.slug}`} className="relative flex-1 flex flex-col justify-start cursor-pointer">
+            <CardLinkSpinner />
             <div className="w-full h-60 bg-white rounded-lg overflow-hidden flex items-center justify-center p-3 select-none">
               <Image
                 src={product.imageSrc}
