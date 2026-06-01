@@ -88,6 +88,12 @@ export default async function ProductPage({
   const categoryLabel = CATEGORY_LABELS[product.category] ?? 'Shop'
   const inStock = product.variants.some((v) => v.availableForSale)
 
+  // Google Merchant / Rich Results expects a future priceValidUntil on offers.
+  // Roll it ~1 year out; the page revalidates (60s) so it never goes stale.
+  const priceValidUntil = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .slice(0, 10)
+
   const productSchema: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -104,6 +110,7 @@ export default async function ProductPage({
       url: `${SITE_URL}/products/${slug}`,
       priceCurrency: 'USD',
       price: product.price.toFixed(2),
+      priceValidUntil,
       availability: inStock
         ? 'https://schema.org/InStock'
         : 'https://schema.org/OutOfStock',
