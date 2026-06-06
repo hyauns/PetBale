@@ -128,6 +128,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="bg-background">
       <head>
+        {/* Every product/hero/logo image is served from Shopify's CDN — open the
+            connection early so the LCP hero isn't stuck waiting on TLS handshake. */}
+        <link rel="preconnect" href="https://cdn.shopify.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://cdn.shopify.com" />
         {/* Preload the two fonts on the critical render path: the default body
             face (applied to *) and the hero headline face — cuts FOUT on LCP text. */}
         <link

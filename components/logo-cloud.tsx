@@ -1,5 +1,6 @@
 'use client'
 
+import Image from "next/image";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
 import { ProgressiveBlur } from "@/components/ui/progressive-blur";
 import type { HomeLogo } from '@/lib/shopify/content';
@@ -36,10 +37,11 @@ export function LogoCloud({ logos = brandLogos, className = "", ...props }: Logo
       <InfiniteSlider gap={96} reverse speed={40} speedOnHover={20}>
         {resolved.map((logo) => (
           <div key={`logo-container-${logo.alt}`} className="relative h-16 w-48 sm:h-20 sm:w-56 md:h-24 md:w-64 flex items-center justify-center px-4">
-            <img
+            <Image
               alt={logo.alt}
-              className="pointer-events-none max-h-full max-w-full select-none object-contain opacity-100 transition-all duration-300 filter-none grayscale-0"
-              loading="lazy"
+              className="pointer-events-none select-none object-contain opacity-100 transition-all duration-300 filter-none grayscale-0"
+              fill
+              sizes="(min-width: 768px) 256px, (min-width: 640px) 224px, 192px"
               src={logo.src}
             />
           </div>

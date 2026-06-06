@@ -22,6 +22,7 @@ const FreeShippingGraphic = () => (
         alt="Free Shipping"
         width={280}
         height={280}
+        sizes="(min-width: 1536px) 380px, (min-width: 1280px) 260px, (min-width: 768px) 320px, 240px"
         className="max-w-full max-h-full object-contain filter drop-shadow-[6px_6px_0px_rgba(0,0,0,0.15)] 2xl:drop-shadow-[10px_10px_0px_rgba(0,0,0,0.15)]"
       />
     </motion.div>
@@ -42,6 +43,7 @@ const TopBrandsGraphic = () => (
         alt="Top Pet Brands"
         width={280}
         height={280}
+        sizes="(min-width: 1536px) 380px, (min-width: 1280px) 260px, (min-width: 768px) 320px, 240px"
         className="max-w-full max-h-full object-contain filter drop-shadow-[6px_6px_0px_rgba(0,0,0,0.15)] 2xl:drop-shadow-[10px_10px_0px_rgba(0,0,0,0.15)]"
       />
     </motion.div>
@@ -62,6 +64,7 @@ const ReorderGraphic = () => (
         alt="Reorder Made Easy"
         width={280}
         height={280}
+        sizes="(min-width: 1536px) 380px, (min-width: 1280px) 260px, (min-width: 768px) 320px, 240px"
         className="max-w-full max-h-full object-contain filter drop-shadow-[6px_6px_0px_rgba(0,0,0,0.15)] 2xl:drop-shadow-[10px_10px_0px_rgba(0,0,0,0.15)]"
       />
     </motion.div>
@@ -82,6 +85,7 @@ const DeliveredGraphic = () => (
         alt="Pet Food, Delivered"
         width={280}
         height={280}
+        sizes="(min-width: 1536px) 380px, (min-width: 1280px) 260px, (min-width: 768px) 320px, 240px"
         className="max-w-full max-h-full object-contain filter drop-shadow-[6px_6px_0px_rgba(0,0,0,0.15)] 2xl:drop-shadow-[10px_10px_0px_rgba(0,0,0,0.15)]"
       />
     </motion.div>
@@ -212,6 +216,7 @@ function FeatureImage({ src, alt }: { src: string; alt: string }) {
           alt={alt}
           width={280}
           height={280}
+          sizes="(min-width: 1536px) 380px, (min-width: 1280px) 260px, (min-width: 768px) 320px, 240px"
           className="max-w-full max-h-full object-contain filter drop-shadow-[6px_6px_0px_rgba(0,0,0,0.15)] 2xl:drop-shadow-[10px_10px_0px_rgba(0,0,0,0.15)]"
         />
       </motion.div>

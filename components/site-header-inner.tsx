@@ -142,6 +142,7 @@ export function SiteHeaderInner({
                 alt={b.wordmarkLogoAlt}
                 width={200}
                 height={40}
+                sizes="(min-width: 640px) 221px, 154px"
                 className="h-7 sm:h-10 w-auto object-contain group-hover:scale-102 transition-transform"
                 priority
               />

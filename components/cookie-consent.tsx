@@ -47,8 +47,9 @@ export function CookieConsent() {
               </div>
               <h3 className="font-whisker-bites text-sm font-black uppercase tracking-wide">Cookie Notice</h3>
             </div>
-            <button 
+            <button
               onClick={() => setShowBanner(false)}
+              aria-label="Dismiss cookie notice"
               className="p-1 hover:bg-zinc-100 rounded border border-transparent active:border-black active:bg-[#ffea79] cursor-pointer"
             >
               <X className="w-4 h-4 text-black" />
