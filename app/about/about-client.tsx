@@ -10,14 +10,14 @@ import type { AboutContent, AboutValue } from '@/lib/shopify/content'
 const FALLBACK_VALUES: AboutValue[] = [
   {
     title: 'PETS FIRST 🐶',
-    description: 'Every single organic recipe and selected brand is vet-approved and tested for core nutritional health.',
+    description: 'We hand-pick trusted brands so you can shop quality pet care with confidence.',
     icon: 'Heart',
     colorHex: '#FF69B4',
     sortOrder: 1,
   },
   {
-    title: '100% AUTHENTIC 🛡️',
-    description: 'Direct-from-source relationship guarantees 100% genuine feeds. No synthetic fillers, ever.',
+    title: 'AUTHENTIC & SEALED 🛡️',
+    description: 'We ship brand-new, sealed products sourced through verified US supply channels.',
     icon: 'Shield',
     colorHex: '#6cd1ff',
     sortOrder: 2,
@@ -31,7 +31,7 @@ const FALLBACK_VALUES: AboutValue[] = [
   },
   {
     title: 'ECO-FRIENDLY 🌱',
-    description: 'Committed to carbon-neutral shipping and fully recyclable pet packaging for a healthier planet.',
+    description: 'Thoughtful packaging and fast, reliable US shipping on every order.',
     icon: 'Sparkles',
     colorHex: '#4AD395',
     sortOrder: 4,
@@ -50,14 +50,14 @@ const DEFAULTS = {
   establishedYear: '2024',
   establishedLabel: 'ESTABLISHED',
   storyTitle: 'OUR STORY & PHILOSOPHY 🚀',
-  storyParagraph1: 'We believe that pets are more than just animals—they are members of the family who deserve the absolute best care. Unfortunately, the modern pet food market is loaded with heavily processed kibbles, low-moisture feeds, and toxic preservatives that damage urinary tract and canine gut health.',
+  storyParagraph1: 'We believe that pets are more than just animals—they are members of the family who deserve great care. Finding the right food and supplies across dozens of brands can be overwhelming, so we make it easy to shop quality options from names you already trust.',
   storyParagraph2: "That is why we started PetBale. We curate a 100+ brand catalog from leading US pet nutrition makers — Blue Buffalo, Purina, Royal Canin, Hill's Science Diet, Wellness, and more — and ship every order brand-new, sealed, and within shelf life from our Florida facility.",
   storyCtaLabel: 'SHOP OUR PRODUCTS',
   storyCtaUrl: '/shop',
   mascotEmojiBg: '🐱',
   mascotEmoji: '🐶',
   mascotTitle: 'PAW-PERFECT STANDARD',
-  mascotQuote: 'WE STAND BY OUR DOUBLE GUARANTEE: 100% HAPPY PETS & 100% GENUINE BRANDS ONLY.',
+  mascotQuote: 'BRAND-NEW, SEALED PRODUCTS AND FRIENDLY US SUPPORT ON EVERY ORDER.',
   valuesSectionTitle: 'OUR CORE PHILOSOPHIES',
 }
 

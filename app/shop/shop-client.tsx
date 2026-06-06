@@ -115,7 +115,7 @@ export function ShopClient({
               Shop All Products
             </h1>
             <p className="text-black/60 font-extrabold text-xs uppercase max-w-md tracking-wider leading-relaxed">
-              Premium multi-brand pet essentials, grass-fed organic feeds, and verified treats delivered right to your doorstep.
+              Premium multi-brand pet essentials — food, treats, litter, and care — delivered across the US.
             </p>
           </div>
 

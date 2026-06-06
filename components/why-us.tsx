@@ -197,7 +197,7 @@ const VerticalWindingTube = () => (
 const DEFAULT_STEPS = [
   { number: 1, title: 'Free Shipping $40+', imageUrl: null as string | null, imageAlt: 'Free Shipping' },
   { number: 2, title: 'Top Pet Brands', imageUrl: null as string | null, imageAlt: 'Top Pet Brands' },
-  { number: 3, title: '100% AUTHENTIC ONLY', imageUrl: null as string | null, imageAlt: 'Authentic' },
+  { number: 3, title: 'AUTHENTIC & SEALED', imageUrl: null as string | null, imageAlt: 'Authentic' },
   { number: 4, title: 'Pet Food, Delivered', imageUrl: null as string | null, imageAlt: 'Delivered' },
 ];
 

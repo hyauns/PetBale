@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     title: 'Shop All Pet Brands | PetBale',
-    description: 'Browse every premium pet brand at PetBale — authorized US distributor.',
+    description: 'Browse every pet brand at PetBale — a US-based multi-brand pet store.',
     url: '/brands',
   },
 }

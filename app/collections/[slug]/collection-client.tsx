@@ -30,7 +30,7 @@ const COLLECTIONS_MAP: Record<string, CollectionDetails> = {
   'dog-food': {
     title: 'Dog Food Collection',
     emoji: '🐶',
-    description: '100% grass-fed organic beef, free-range turkey, and rabbit feeds formulated to replicate an ancestral canine raw diet.',
+    description: 'Dry, wet, and raw dog food from trusted brands like Blue Buffalo, Purina, and Royal Canin — shipped fast across the US.',
     accentClass: 'bg-[#ffea79]',
     colorHex: '#ffea79',
     badgeText: 'CANINE PREMIUM'
@@ -38,15 +38,15 @@ const COLLECTIONS_MAP: Record<string, CollectionDetails> = {
   'cat-food': {
     title: 'Cat Food Blends',
     emoji: '🐱',
-    description: 'Taurine-rich organic chicken, Atlantic salmon, and wild-caught tuna recipes loaded with core moisture to protect urinary tract wellness.',
+    description: 'Wet, dry, and veterinary-diet cat food from leading brands, with recipes for every life stage.',
     accentClass: 'bg-[#FF69B4]',
     colorHex: '#FF69B4',
-    badgeText: 'FELINE HEALTHY'
+    badgeText: 'FELINE FAVORITES'
   },
   'dog-treats': {
     title: 'Dehydrated Treats',
     emoji: '🦴',
-    description: 'Pasture-raised farm pork rewards and plaque-scrubbing bone-in dental crunch bites. Pure single-ingredient chews with zero preservatives.',
+    description: 'Dehydrated chews, dental treats, and single-ingredient rewards from quality pet brands.',
     accentClass: 'bg-[#4AD395]',
     colorHex: '#4AD395',
     badgeText: 'HIGH-VALUE TREATS'
@@ -54,23 +54,23 @@ const COLLECTIONS_MAP: Record<string, CollectionDetails> = {
   'flea-tick': {
     title: 'Flea & Tick Shield',
     emoji: '🛡️',
-    description: '100% natural, toxicologist-tested cedarwood and lemongrass repellent oil drops to defend your pets safely with zero synthetic chemicals.',
+    description: 'Flea and tick prevention, treatment, and shampoos for dogs and cats from trusted brands.',
     accentClass: 'bg-[#6cd1ff]',
     colorHex: '#6cd1ff',
-    badgeText: 'ORGANIC IMMUNOLOGY'
+    badgeText: 'FLEA & TICK'
   },
   'cat-litter': {
     title: 'Cat Litter & Carbon',
     emoji: '🧹',
-    description: 'Sodium bentonite solid-clumping clay liter infused with organic carbon particles to instantly lock and neutralize litter box ammonia odors.',
+    description: 'Clumping, crystal, and natural cat litter that locks in odor and keeps boxes fresh.',
     accentClass: 'bg-[#B19FFB]',
     colorHex: '#B19FFB',
-    badgeText: 'DUST-FREE HYGIENE'
+    badgeText: 'ODOR CONTROL'
   },
   'deals': {
     title: 'Special Deals & Offers',
     emoji: '🎁',
-    description: 'Massive limited-time price markdowns and verified packages on our highest-rated organic meals and treats catalog.',
+    description: 'Limited-time markdowns on pet food, treats, and supplies across our catalog.',
     accentClass: 'bg-[#ffb224]',
     colorHex: '#ffb224',
     badgeText: 'USA SUMMER DEALS'
@@ -124,7 +124,7 @@ export function CollectionClient({
       COLLECTIONS_MAP[slug] || {
         title: slug.replace(/-/g, ' ').toUpperCase(),
         emoji: '🐾',
-        description: 'Explore our premium selection of certified multi-brand pet care feeds, treats, litter, and repellent shields.',
+        description: 'Explore our multi-brand selection of pet food, treats, litter, and care essentials.',
         accentClass: 'bg-[#ffea79]',
         colorHex: '#ffea79',
         badgeText: 'PETBALE STORE',
