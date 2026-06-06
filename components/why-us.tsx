@@ -18,7 +18,7 @@ const FreeShippingGraphic = () => (
       className="relative z-10 w-[240px] h-[240px] md:w-[320px] md:h-[320px] xl:w-[260px] xl:h-[260px] 2xl:w-[380px] 2xl:h-[380px] flex items-center justify-center"
     >
       <Image
-        src="/images/1.png"
+        src="/images/1.webp"
         alt="Free Shipping"
         width={280}
         height={280}
@@ -38,7 +38,7 @@ const TopBrandsGraphic = () => (
       className="relative z-10 w-[240px] h-[240px] md:w-[320px] md:h-[320px] xl:w-[260px] xl:h-[260px] 2xl:w-[380px] 2xl:h-[380px] flex items-center justify-center"
     >
       <Image
-        src="/images/2.png"
+        src="/images/2.webp"
         alt="Top Pet Brands"
         width={280}
         height={280}
@@ -58,7 +58,7 @@ const ReorderGraphic = () => (
       className="relative z-10 w-[240px] h-[240px] md:w-[320px] md:h-[320px] xl:w-[260px] xl:h-[260px] 2xl:w-[380px] 2xl:h-[380px] flex items-center justify-center"
     >
       <Image
-        src="/images/3.png"
+        src="/images/3.webp"
         alt="Reorder Made Easy"
         width={280}
         height={280}
@@ -78,7 +78,7 @@ const DeliveredGraphic = () => (
       className="relative z-10 w-[240px] h-[240px] md:w-[320px] md:h-[320px] xl:w-[260px] xl:h-[260px] 2xl:w-[380px] 2xl:h-[380px] flex items-center justify-center"
     >
       <Image
-        src="/images/4.png"
+        src="/images/4.webp"
         alt="Pet Food, Delivered"
         width={280}
         height={280}

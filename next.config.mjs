@@ -10,6 +10,8 @@ const nextConfig = {
   compress: true,
 
   images: {
+    // Prefer AVIF, then WebP — both far smaller than the source PNG/JPEG.
+    formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       { protocol: 'https', hostname: 'cdn.shopify.com' },
       { protocol: 'https', hostname: '**.shopifycdn.com' },
@@ -17,6 +19,25 @@ const nextConfig = {
       { protocol: 'https', hostname: 'widget-hub-api.alireviews.io' },
       { protocol: 'https', hostname: '**.alireviews.io' },
     ],
+  },
+
+  // Immutable, year-long caching for self-hosted fonts and static images.
+  // These assets are content-addressed by filename and never mutate in place.
+  async headers() {
+    return [
+      {
+        source: '/fonts/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        source: '/images/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+    ]
   },
 }
 

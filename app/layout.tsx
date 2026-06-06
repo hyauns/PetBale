@@ -127,6 +127,24 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="bg-background">
+      <head>
+        {/* Preload the two fonts on the critical render path: the default body
+            face (applied to *) and the hero headline face — cuts FOUT on LCP text. */}
+        <link
+          rel="preload"
+          href="/fonts/TBJInterval-Regular.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/WhiskerBites.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className="font-sans antialiased">
         <JsonLd data={ORGANIZATION_SCHEMA} />
         <JsonLd data={WEBSITE_SCHEMA} />

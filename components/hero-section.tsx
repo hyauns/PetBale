@@ -15,7 +15,7 @@ const DEFAULT: HomeHero = {
   ctaSecondaryLabel: 'SHOP CAT FOOD',
   ctaSecondaryUrl: '/collections/cat-food',
   floatingStickerText: 'FREE SHIPPING $40+',
-  imageUrl: '/images/ramen-hero-products.png',
+  imageUrl: '/images/ramen-hero-products.webp',
   imageAlt: 'PetBale products',
 }
 
@@ -164,13 +164,12 @@ export function HeroSection({ content }: { content?: HomeHero | null }) {
           {/* Main 3D Product Podium Image */}
           <div className="relative w-full max-w-[820px] aspect-[4/3] drop-shadow-2xl hover:scale-[1.01] transition-transform duration-500">
             <Image
-              src={c.imageUrl ?? '/images/ramen-hero-products.png'}
+              src={c.imageUrl ?? '/images/ramen-hero-products.webp'}
               alt={c.imageAlt || 'Hero image'}
               fill
               priority
               className="object-contain"
               sizes="(max-width: 1024px) 100vw, 50vw"
-              unoptimized={!!c.imageUrl && c.imageUrl.startsWith('http')}
             />
           </div>
 

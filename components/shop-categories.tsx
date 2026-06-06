@@ -27,7 +27,7 @@ const defaultCategories: CategoryTier[] = [
   {
     name: "Dog Food",
     icon: "🐕",
-    imageSrc: "/images/category/1.png",
+    imageSrc: "/images/category/1.webp",
     slug: "dog-food",
     popular: true,
     color: "pink",
@@ -37,7 +37,7 @@ const defaultCategories: CategoryTier[] = [
   {
     name: "Dog Flea & Tick",
     icon: "🪱",
-    imageSrc: "/images/category/2.png",
+    imageSrc: "/images/category/2.webp",
     slug: "flea-tick",
     popular: false,
     color: "orange",
@@ -47,7 +47,7 @@ const defaultCategories: CategoryTier[] = [
   {
     name: "Dog Treats",
     icon: "🥩",
-    imageSrc: "/images/category/3.png",
+    imageSrc: "/images/category/3.webp",
     slug: "dog-treats",
     popular: false,
     color: "teal",
@@ -57,7 +57,7 @@ const defaultCategories: CategoryTier[] = [
   {
     name: "Cat Food",
     icon: "🐈",
-    imageSrc: "/images/category/4.png",
+    imageSrc: "/images/category/4.webp",
     slug: "cat-food",
     popular: true,
     color: "blue",
@@ -67,7 +67,7 @@ const defaultCategories: CategoryTier[] = [
   {
     name: "Cat Litter",
     icon: "📦",
-    imageSrc: "/images/category/5.png",
+    imageSrc: "/images/category/5.webp",
     slug: "cat-litter",
     popular: false,
     color: "purple",
@@ -77,7 +77,7 @@ const defaultCategories: CategoryTier[] = [
   {
     name: "Deals",
     icon: "🔥",
-    imageSrc: "/images/category/6.png",
+    imageSrc: "/images/category/6.webp",
     slug: "deals",
     popular: false,
     color: "yellow",
