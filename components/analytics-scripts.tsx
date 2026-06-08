@@ -2,22 +2,28 @@ import Script from 'next/script'
 
 export function AnalyticsScripts() {
   const ga4Id = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID
+  const adsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID
   const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID
+
+  // gtag.js is a single shared library for GA4 + Google Ads. Load it once if
+  // either ID is set, then `config` each product on the same gtag instance.
+  const gtagLoaderId = ga4Id || adsId
 
   return (
     <>
-      {ga4Id && (
+      {gtagLoaderId && (
         <>
           <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`}
+            src={`https://www.googletagmanager.com/gtag/js?id=${gtagLoaderId}`}
             strategy="afterInteractive"
           />
-          <Script id="ga4-init" strategy="afterInteractive">
+          <Script id="gtag-init" strategy="afterInteractive">
             {`
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', '${ga4Id}', { send_page_view: true });
+              ${ga4Id ? `gtag('config', '${ga4Id}', { send_page_view: true });` : ''}
+              ${adsId ? `gtag('config', '${adsId}');` : ''}
             `}
           </Script>
         </>

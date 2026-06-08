@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { X, Minus, Plus, Trash2, ShoppingBag } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useCart } from '@/hooks/use-cart'
+import { trackBeginCheckout } from '@/lib/gtag'
 
 export function CartDrawer() {
   const {
@@ -202,7 +203,17 @@ export function CartDrawer() {
                   whileTap={{ scale: 0.98 }}
                   disabled={!checkoutUrl || isPending}
                   onClick={() => {
-                    if (checkoutUrl) window.location.href = checkoutUrl
+                    if (!checkoutUrl) return
+                    trackBeginCheckout({
+                      value: cartSubtotal,
+                      items: cartItems.map((i) => ({
+                        item_id: i.merchandiseId,
+                        item_name: i.name,
+                        price: i.price,
+                        quantity: i.quantity,
+                      })),
+                    })
+                    window.location.href = checkoutUrl
                   }}
                   className="w-full py-4 bg-[#ffea79] text-black font-black uppercase text-base border border-black rounded-xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-black hover:text-white hover:border-black active:translate-x-0.5 active:translate-y-0.5 transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                 >

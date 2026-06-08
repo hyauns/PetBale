@@ -39,3 +39,6 @@ coverage/
 
 # AI review generator (local tool — contains API key + generated CSV data)
 Review Ali/
+
+# bulk price-discount working files (rollback data)
+.price-discount/

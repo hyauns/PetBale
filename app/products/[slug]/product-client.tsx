@@ -24,6 +24,7 @@ import type { CatalogProduct } from '@/lib/catalog'
 import type { DisplayReview } from '@/lib/alireviews/adapters'
 import { cn } from '@/lib/utils'
 import { useCart } from '@/hooks/use-cart'
+import { trackViewItem } from '@/lib/gtag'
 import { RatingStars } from '@/components/rating-stars'
 
 export function ProductClient({
@@ -116,6 +117,18 @@ export function ProductClient({
   useEffect(() => {
     setImageIndex(0)
     setSlideDirection(0)
+  }, [activeSlug])
+
+  // Fire a GA4/Google-Ads view_item once per product (remarketing signal).
+  useEffect(() => {
+    trackViewItem({
+      id: product.defaultVariantId ?? activeVariantId ?? product.slug,
+      name: product.name,
+      price: product.price,
+      brand: product.brand,
+      category: product.category,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeSlug])
 
   // 3D tilt

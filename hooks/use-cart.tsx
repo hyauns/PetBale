@@ -10,6 +10,7 @@ import {
   getCart,
 } from '@/lib/shopify/mutations'
 import type { ShopifyCart, ShopifyCartLine } from '@/lib/shopify/types'
+import { trackAddToCart } from '@/lib/gtag'
 
 export interface CartItem {
   id: string // Shopify cart line ID
@@ -145,11 +146,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       // Execute cart mutation in parallel to avoid network-blocking latency
       const apiPromise = (async () => {
         try {
+          let resultCart: ShopifyCart
           if (!cart) {
-            await ensureCart(merchandiseId, quantity)
+            resultCart = await ensureCart(merchandiseId, quantity)
           } else {
-            const updated = await cartLinesAdd(cart.id, [{ merchandiseId, quantity }])
-            applyCart(updated)
+            resultCart = await cartLinesAdd(cart.id, [{ merchandiseId, quantity }])
+            applyCart(resultCart)
+          }
+          // GA4/Google-Ads add_to_cart — pull price/name from the updated line.
+          const added = mapCart(resultCart).find((i) => i.merchandiseId === merchandiseId)
+          if (added) {
+            trackAddToCart({ id: merchandiseId, name: added.name, price: added.price, quantity })
           }
         } catch (err) {
           console.error('[cart] addToCart failed', err)
