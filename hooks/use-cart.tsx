@@ -4,6 +4,7 @@ import React, { createContext, useCallback, useContext, useEffect, useState } fr
 import { motion } from 'framer-motion'
 import {
   cartCreate,
+  cartDiscountCodesUpdate,
   cartLinesAdd,
   cartLinesRemove,
   cartLinesUpdate,
@@ -35,6 +36,16 @@ interface CartContextType {
   cartSubtotal: number
   checkoutUrl: string | null
   isPending: boolean
+  /** Code of the currently-applied (applicable) discount, if any. */
+  appliedDiscountCode: string | null
+  /** Total discount in whole dollars (rounded to match the cart UI). */
+  discountAmount: number
+  /** Order total after discount, whole dollars. */
+  cartTotal: number
+  /** Apply a discount code. Resolves true if it stuck (applicable), false otherwise. */
+  applyDiscount: (code: string) => Promise<boolean>
+  removeDiscount: () => Promise<void>
+  isDiscountPending: boolean
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
@@ -83,6 +94,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [isPending, setIsPending] = useState(false)
+  const [isDiscountPending, setIsDiscountPending] = useState(false)
   const [activePaws, setActivePaws] = useState<ActivePaw[]>([])
 
   const applyCart = useCallback((next: ShopifyCart | null) => {
@@ -229,9 +241,56 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, [cart, applyCart])
 
+  const applyDiscount = useCallback(
+    async (code: string): Promise<boolean> => {
+      const trimmed = code.trim()
+      if (!trimmed || !cart) return false
+      setIsDiscountPending(true)
+      try {
+        const updated = await cartDiscountCodesUpdate(cart.id, [trimmed])
+        const stuck = updated.discountCodes?.some((d) => d.applicable) ?? false
+        if (!stuck) {
+          // Don't leave a dead/non-applicable code on the cart → checkout.
+          applyCart(await cartDiscountCodesUpdate(cart.id, []))
+          return false
+        }
+        applyCart(updated)
+        return true
+      } catch (err) {
+        console.error('[cart] applyDiscount failed', err)
+        return false
+      } finally {
+        setIsDiscountPending(false)
+      }
+    },
+    [cart, applyCart]
+  )
+
+  const removeDiscount = useCallback(async () => {
+    if (!cart) return
+    setIsDiscountPending(true)
+    try {
+      applyCart(await cartDiscountCodesUpdate(cart.id, []))
+    } catch (err) {
+      console.error('[cart] removeDiscount failed', err)
+    } finally {
+      setIsDiscountPending(false)
+    }
+  }, [cart, applyCart])
+
   const cartCount = cart?.totalQuantity ?? 0
   const cartSubtotal = cart ? Math.round(parseFloat(cart.cost.subtotalAmount.amount)) : 0
   const checkoutUrl = cart?.checkoutUrl ?? null
+  const appliedDiscountCode = cart?.discountCodes?.find((d) => d.applicable)?.code ?? null
+  const discountAmount = cart
+    ? Math.round(
+        (cart.discountAllocations ?? []).reduce(
+          (sum, a) => sum + parseFloat(a.discountedAmount.amount),
+          0
+        )
+      )
+    : 0
+  const cartTotal = cart ? Math.round(parseFloat(cart.cost.totalAmount.amount)) : 0
 
   return (
     <CartContext.Provider
@@ -247,6 +306,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         cartSubtotal,
         checkoutUrl,
         isPending,
+        appliedDiscountCode,
+        discountAmount,
+        cartTotal,
+        applyDiscount,
+        removeDiscount,
+        isDiscountPending,
       }}
     >
       {children}

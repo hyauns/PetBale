@@ -1,9 +1,9 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { X, Minus, Plus, Trash2, ShoppingBag } from 'lucide-react'
+import { X, Minus, Plus, Trash2, ShoppingBag, Tag } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useCart } from '@/hooks/use-cart'
 import { trackBeginCheckout } from '@/lib/gtag'
@@ -18,7 +18,27 @@ export function CartDrawer() {
     cartSubtotal,
     checkoutUrl,
     isPending,
+    appliedDiscountCode,
+    discountAmount,
+    cartTotal,
+    applyDiscount,
+    removeDiscount,
+    isDiscountPending,
   } = useCart()
+
+  const [couponInput, setCouponInput] = useState('')
+  const [couponError, setCouponError] = useState(false)
+
+  const handleApplyCoupon = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const ok = await applyDiscount(couponInput)
+    if (ok) {
+      setCouponInput('')
+      setCouponError(false)
+    } else {
+      setCouponError(true)
+    }
+  }
 
   return (
     <AnimatePresence>
@@ -164,14 +184,74 @@ export function CartDrawer() {
             {/* Footer Summary Block */}
             {cartItems.length > 0 && (
               <div className="p-6 border-t border-black bg-white space-y-4 shadow-[0px_-4px_12px_rgba(0,0,0,0.03)]">
-                {/* Calculations Row */}
-                <div className="flex items-center justify-between">
-                  <span className="font-tbj-interval font-extrabold text-sm text-black/60 uppercase tracking-wider">
-                    Subtotal
-                  </span>
-                  <span className="font-whisker-bites text-3xl font-black text-black">
-                    ${cartSubtotal}
-                  </span>
+                {/* Discount code */}
+                <div className="space-y-1.5">
+                  {appliedDiscountCode ? (
+                    <div className="flex items-center justify-between gap-2 p-2.5 bg-[#4AD395]/15 border-2 border-black rounded-xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                      <span className="flex items-center gap-1.5 text-[11px] font-black uppercase text-black truncate">
+                        <Tag className="w-3.5 h-3.5 flex-shrink-0" />
+                        <span className="truncate">{appliedDiscountCode}</span>
+                        <span className="text-[#1a7f52]">applied</span>
+                      </span>
+                      <button
+                        onClick={removeDiscount}
+                        disabled={isDiscountPending}
+                        aria-label="Remove discount code"
+                        className="w-7 h-7 flex-shrink-0 bg-white border border-black rounded-md flex items-center justify-center hover:bg-black hover:text-white transition-colors cursor-pointer disabled:opacity-50"
+                      >
+                        <X className="w-4 h-4 stroke-[2.5]" />
+                      </button>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleApplyCoupon} className="flex items-center gap-2">
+                      <input
+                        value={couponInput}
+                        onChange={(e) => {
+                          setCouponInput(e.target.value)
+                          setCouponError(false)
+                        }}
+                        placeholder="DISCOUNT CODE"
+                        aria-label="Discount code"
+                        className="flex-1 min-w-0 px-3 py-2.5 bg-white border-2 border-black rounded-xl text-xs font-black uppercase tracking-wide placeholder:text-black/30 focus:outline-none focus:bg-[#ffea79]/10"
+                      />
+                      <button
+                        type="submit"
+                        disabled={isDiscountPending || !couponInput.trim()}
+                        className="px-4 py-2.5 bg-black text-white border-2 border-black rounded-xl text-xs font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
+                      >
+                        {isDiscountPending ? '…' : 'Apply'}
+                      </button>
+                    </form>
+                  )}
+                  {couponError && (
+                    <p className="text-[10px] font-black uppercase text-red-500 tracking-wide">
+                      Invalid or expired code.
+                    </p>
+                  )}
+                </div>
+
+                {/* Calculations */}
+                <div className="space-y-1.5">
+                  {appliedDiscountCode && (
+                    <>
+                      <div className="flex items-center justify-between text-xs font-black uppercase text-black/60">
+                        <span>Subtotal</span>
+                        <span>${cartSubtotal}</span>
+                      </div>
+                      <div className="flex items-center justify-between text-xs font-black uppercase text-[#1a7f52]">
+                        <span>Discount</span>
+                        <span>−${discountAmount}</span>
+                      </div>
+                    </>
+                  )}
+                  <div className="flex items-center justify-between">
+                    <span className="font-tbj-interval font-extrabold text-sm text-black/60 uppercase tracking-wider">
+                      {appliedDiscountCode ? 'Total' : 'Subtotal'}
+                    </span>
+                    <span className="font-whisker-bites text-3xl font-black text-black">
+                      ${appliedDiscountCode ? cartTotal : cartSubtotal}
+                    </span>
+                  </div>
                 </div>
                 
                 {/* Free Shipping Alert Banner */}

@@ -100,6 +100,39 @@ export async function cartLinesUpdate(
   return data.cartLinesUpdate.cart
 }
 
+/**
+ * Replace the full set of discount codes on the cart. Pass [code] to apply,
+ * [] to clear. Note: an invalid/non-applicable code still succeeds (no
+ * userError) but comes back with `applicable: false` on the returned cart —
+ * callers must check that to tell the user the code didn't stick.
+ */
+export async function cartDiscountCodesUpdate(
+  cartId: string,
+  discountCodes: string[]
+): Promise<ShopifyCart> {
+  const mutation = /* GraphQL */ `
+    ${CART_FRAGMENT}
+    mutation CartDiscountCodesUpdate($cartId: ID!, $discountCodes: [String!]) {
+      cartDiscountCodesUpdate(cartId: $cartId, discountCodes: $discountCodes) {
+        cart {
+          ...CartFields
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+  `
+  const data = await shopifyFetch<{
+    cartDiscountCodesUpdate: { cart: ShopifyCart; userErrors: { message: string }[] }
+  }>({ query: mutation, variables: { cartId, discountCodes }, cache: 'no-store' })
+  if (data.cartDiscountCodesUpdate.userErrors.length) {
+    throw new Error(data.cartDiscountCodesUpdate.userErrors.map((e) => e.message).join('; '))
+  }
+  return data.cartDiscountCodesUpdate.cart
+}
+
 export async function cartLinesRemove(cartId: string, lineIds: string[]): Promise<ShopifyCart> {
   const mutation = /* GraphQL */ `
     ${CART_FRAGMENT}

@@ -69,10 +69,17 @@ export interface ShopifyCartLine {
   }
 }
 
+export interface ShopifyCartDiscountCode {
+  applicable: boolean
+  code: string
+}
+
 export interface ShopifyCart {
   id: string
   checkoutUrl: string
   totalQuantity: number
+  discountCodes: ShopifyCartDiscountCode[]
+  discountAllocations: { discountedAmount: ShopifyMoney }[]
   cost: {
     subtotalAmount: ShopifyMoney
     totalAmount: ShopifyMoney
