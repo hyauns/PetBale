@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useMemo } from 'react'
-import Image from 'next/image'
+import { ProductImage } from '@/components/product-image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
@@ -327,7 +327,7 @@ export function CollectionClient({
                     <Link href={`/products/${product.slug}`} className="relative flex-1 flex flex-col justify-start cursor-pointer">
                       <CardLinkSpinner />
                       <div className="w-full h-60 bg-white rounded-lg overflow-hidden flex items-center justify-center p-3 select-none">
-                        <Image
+                        <ProductImage
                           src={product.imageSrc}
                           alt={product.name}
                           width={400}

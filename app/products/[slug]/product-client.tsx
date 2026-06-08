@@ -2,6 +2,9 @@
 
 import React, { useRef, useState, useEffect } from 'react'
 import Image from 'next/image'
+import { ProductImage } from '@/components/product-image'
+import { PawLoader } from '@/components/paw-loader'
+import { shopifyImageUrl } from '@/lib/shopify-image-loader'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion'
@@ -46,6 +49,9 @@ export function ProductClient({
 
   const [imageIndex, setImageIndex] = useState(0)
   const [slideDirection, setSlideDirection] = useState(0)
+  // Track which gallery src has finished loading so the PawLoader shows until the
+  // (Shopify-CDN-resized) main image is ready, then fades in.
+  const [loadedMainSrc, setLoadedMainSrc] = useState<string | null>(null)
   const variants = product.variants
   const initialVariant = variants[0] ?? null
   const [activeVariantId, setActiveVariantId] = useState<string | null>(
@@ -266,11 +272,25 @@ export function ProductClient({
                   </div>
                 )}
 
+                {/* PawLoader fills the frame until the main photo's bytes arrive. */}
+                {loadedMainSrc !== galleryImages[imageIndex].src && (
+                  <span
+                    className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none"
+                    aria-hidden="true"
+                  >
+                    <PawLoader count={4} size={60} />
+                  </span>
+                )}
+
                 {/* Highly sensitive spring-sliding image supporting direction-aware motion */}
                 <motion.img
                   key={imageIndex}
-                  src={galleryImages[imageIndex].src}
+                  src={shopifyImageUrl(galleryImages[imageIndex].src, 1000)}
                   alt={galleryImages[imageIndex].alt || product.name}
+                  onLoad={() => setLoadedMainSrc(galleryImages[imageIndex].src)}
+                  ref={(img) => {
+                    if (img?.complete) setLoadedMainSrc(galleryImages[imageIndex].src)
+                  }}
                   initial={{ opacity: 0.8, x: slideDirection * 35 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ type: 'spring', stiffness: 300, damping: 26 }}
@@ -354,7 +374,7 @@ export function ProductClient({
                         imageIndex === i && 'border-3 border-[#ff990a] -translate-y-1 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)]'
                       )}
                     >
-                      <Image src={img.src} alt={img.alt} width={120} height={120} className="max-w-full max-h-full object-contain pointer-events-none" />
+                      <ProductImage src={img.src} alt={img.alt} width={120} height={120} pawSize={22} className="max-w-full max-h-full object-contain pointer-events-none" />
                     </button>
                   ))}
                 </div>
@@ -778,7 +798,7 @@ export function ProductClient({
             >
               <div className="flex-1 flex flex-col justify-start">
                 <div className="w-full h-56 bg-white rounded-lg overflow-hidden relative mb-3 flex items-center justify-center p-3">
-                  <Image src={plan.imageSrc} alt={plan.name} width={400} height={400} sizes="(min-width: 1024px) 25vw, 50vw" className="max-w-full max-h-full object-contain" />
+                  <ProductImage src={plan.imageSrc} alt={plan.name} width={400} height={400} sizes="(min-width: 1024px) 25vw, 50vw" className="max-w-full max-h-full object-contain" />
                 </div>
                 <h3 className="text-lg font-black text-black mb-1.5 truncate leading-snug">{plan.name}</h3>
 

@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useRef, useState, useTransition } from 'react'
-import Image from 'next/image'
+import { ProductImage } from '@/components/product-image'
 import { useRouter } from 'next/navigation'
 import { motion, useMotionValue, useSpring, useTransform, animate } from 'framer-motion'
 import { cn } from '@/lib/utils'
@@ -245,7 +245,7 @@ const PricingCard = ({
       <div className="flex-1 flex flex-col justify-start">
         {/* Product Image */}
         <div className="w-full h-72 bg-white rounded-lg overflow-hidden relative mb-3 flex items-center justify-center p-3 flex-shrink-0">
-          <Image
+          <ProductImage
             src={plan.imageSrc}
             alt={plan.name}
             width={400}
