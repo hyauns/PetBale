@@ -223,16 +223,22 @@ function buildItem(f: ItemFields): string {
   const customLabel1 = catRoot ?? ''
   const customLabel2 = catLeaf ?? ''
   const customLabel3 = product.vendor ? decodeHtmlEntities(product.vendor) : ''
-  // custom_label_4: price bucket for Google Ads targeting. We only advertise
-  // products selling for $1–150, so they get `ads_1_150`; everything else gets
-  // `over_150` (so campaigns can both target and exclude). Uses the current
-  // selling price (the sale price when on sale). Replaces the old `sale` flag —
-  // sale status is still derivable from the <g:sale_price> field.
+  // custom_label_4: which products we advertise on Google Ads. We only run ads
+  // on IN-STOCK products selling for $1–150 → `ads_1_150`. Out-of-stock items in
+  // that price range go to `oos_1_150` (so they're excluded from ads but re-enter
+  // `ads_1_150` automatically once back in stock); anything above $150 is
+  // `over_150`. Campaigns target only `ads_1_150`. Uses the current selling price
+  // (the sale price when on sale). Replaces the old `sale` flag — sale status is
+  // still derivable from the <g:sale_price> field.
   const sellingPrice = parseFloat(variant.price.amount)
-  const customLabel4 =
+  const inPriceRange =
     Number.isFinite(sellingPrice) && sellingPrice >= 1 && sellingPrice <= 150
-      ? 'ads_1_150'
-      : 'over_150'
+  let customLabel4: string
+  if (inPriceRange) {
+    customLabel4 = f.availability === 'in_stock' ? 'ads_1_150' : 'oos_1_150'
+  } else {
+    customLabel4 = 'over_150'
+  }
 
   const additional = f.additionalImages
     .map((u) => `      <g:additional_image_link>${xmlEscape(u)}</g:additional_image_link>`)
