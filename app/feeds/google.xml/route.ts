@@ -223,7 +223,16 @@ function buildItem(f: ItemFields): string {
   const customLabel1 = catRoot ?? ''
   const customLabel2 = catLeaf ?? ''
   const customLabel3 = product.vendor ? decodeHtmlEntities(product.vendor) : ''
-  const customLabel4 = variant.compareAtPrice && parseFloat(variant.compareAtPrice.amount) > parseFloat(variant.price.amount) ? 'sale' : ''
+  // custom_label_4: price bucket for Google Ads targeting. We only advertise
+  // products selling for $1–150, so they get `ads_1_150`; everything else gets
+  // `over_150` (so campaigns can both target and exclude). Uses the current
+  // selling price (the sale price when on sale). Replaces the old `sale` flag —
+  // sale status is still derivable from the <g:sale_price> field.
+  const sellingPrice = parseFloat(variant.price.amount)
+  const customLabel4 =
+    Number.isFinite(sellingPrice) && sellingPrice >= 1 && sellingPrice <= 150
+      ? 'ads_1_150'
+      : 'over_150'
 
   const additional = f.additionalImages
     .map((u) => `      <g:additional_image_link>${xmlEscape(u)}</g:additional_image_link>`)
