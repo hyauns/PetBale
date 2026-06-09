@@ -93,6 +93,14 @@
   font-family: 'TBJInterval-Regular', sans-serif !important;
 }
 
+/* Re-enable text selection site-wide. Many components carry Tailwind's
+ * `select-none` (user-select:none); this unlayered rule overrides the utility
+ * layer so shoppers can highlight/copy product names, policies, FAQs, etc. */
+*, *::before, *::after {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 .font-golent, .font-golent *, .font-tbj-interval, .font-tbj-interval * {
   font-family: 'TBJInterval-Regular', sans-serif !important;
 }
