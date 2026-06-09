@@ -491,11 +491,11 @@ export function ProductClient({
                   <span className="text-[10px] font-black text-zinc-400 uppercase tracking-wider">TOTAL PRICE</span>
                   <div className="flex items-baseline gap-2">
                     <span className="text-4xl sm:text-5xl font-black text-black select-none">
-                      ${activePrice}
+                      ${activePrice.toFixed(2)}
                     </span>
                     {activeComparePrice && activeComparePrice > activePrice && (
                       <span className="text-xl sm:text-2xl font-bold text-zinc-400 line-through select-none">
-                        ${activeComparePrice}
+                        ${activeComparePrice.toFixed(2)}
                       </span>
                     )}
                   </div>
@@ -821,7 +821,7 @@ export function ProductClient({
               </div>
 
               <div className="flex items-center justify-between gap-4 mt-4 pt-3 border-t border-black/10">
-                <span className="text-2xl font-black text-black">${plan.price}</span>
+                <span className="text-2xl font-black text-black">${plan.price.toFixed(2)}</span>
                 <button className="py-2 px-4 rounded-lg bg-[#ffea79] text-black font-black text-xs border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,0.9)]">
                   VIEW DETAILS
                 </button>
@@ -857,7 +857,7 @@ export function ProductClient({
             <div className="flex items-center gap-3">
               <div className="flex flex-col leading-none shrink-0">
                 <span className="text-[9px] font-black text-zinc-400 uppercase tracking-wider">TOTAL</span>
-                <span className="text-2xl font-black text-black select-none">${activePrice}</span>
+                <span className="text-2xl font-black text-black select-none">${activePrice.toFixed(2)}</span>
               </div>
               <motion.button
                 whileTap={{ scale: 0.96 }}

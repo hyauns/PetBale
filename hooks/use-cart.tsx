@@ -38,9 +38,9 @@ interface CartContextType {
   isPending: boolean
   /** Code of the currently-applied (applicable) discount, if any. */
   appliedDiscountCode: string | null
-  /** Total discount in whole dollars (rounded to match the cart UI). */
+  /** Total discount amount, in USD. */
   discountAmount: number
-  /** Order total after discount, whole dollars. */
+  /** Order total after discount, in USD. */
   cartTotal: number
   /** Apply a discount code. Resolves true if it stuck (applicable), false otherwise. */
   applyDiscount: (code: string) => Promise<boolean>
@@ -279,18 +279,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [cart, applyCart])
 
   const cartCount = cart?.totalQuantity ?? 0
-  const cartSubtotal = cart ? Math.round(parseFloat(cart.cost.subtotalAmount.amount)) : 0
+  const cartSubtotal = cart ? parseFloat(cart.cost.subtotalAmount.amount) : 0
   const checkoutUrl = cart?.checkoutUrl ?? null
   const appliedDiscountCode = cart?.discountCodes?.find((d) => d.applicable)?.code ?? null
   const discountAmount = cart
-    ? Math.round(
-        (cart.discountAllocations ?? []).reduce(
-          (sum, a) => sum + parseFloat(a.discountedAmount.amount),
-          0
-        )
+    ? (cart.discountAllocations ?? []).reduce(
+        (sum, a) => sum + parseFloat(a.discountedAmount.amount),
+        0
       )
     : 0
-  const cartTotal = cart ? Math.round(parseFloat(cart.cost.totalAmount.amount)) : 0
+  const cartTotal = cart ? parseFloat(cart.cost.totalAmount.amount) : 0
 
   return (
     <CartContext.Provider

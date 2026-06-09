@@ -163,7 +163,7 @@ export function CartDrawer() {
 
                         {/* Price display label */}
                         <span className="font-tbj-interval font-black text-sm text-black select-none">
-                          ${item.price * item.quantity}
+                          ${(item.price * item.quantity).toFixed(2)}
                         </span>
                       </div>
                     </div>
@@ -236,11 +236,11 @@ export function CartDrawer() {
                     <>
                       <div className="flex items-center justify-between text-xs font-black uppercase text-black/60">
                         <span>Subtotal</span>
-                        <span>${cartSubtotal}</span>
+                        <span>${cartSubtotal.toFixed(2)}</span>
                       </div>
                       <div className="flex items-center justify-between text-xs font-black uppercase text-[#1a7f52]">
                         <span>Discount</span>
-                        <span>−${discountAmount}</span>
+                        <span>−${discountAmount.toFixed(2)}</span>
                       </div>
                     </>
                   )}
@@ -249,7 +249,7 @@ export function CartDrawer() {
                       {appliedDiscountCode ? 'Total' : 'Subtotal'}
                     </span>
                     <span className="font-whisker-bites text-3xl font-black text-black">
-                      ${appliedDiscountCode ? cartTotal : cartSubtotal}
+                      ${(appliedDiscountCode ? cartTotal : cartSubtotal).toFixed(2)}
                     </span>
                   </div>
                 </div>
@@ -268,7 +268,7 @@ export function CartDrawer() {
                 ) : (
                   <div className="p-3 bg-[#ffea79]/10 border border-dashed border-black rounded-xl text-black/60 font-black text-[10px] uppercase text-center select-none flex items-center justify-center gap-1.5">
                     <span>🚚</span>
-                    <span>ADD <strong className="text-black">${40 - cartSubtotal}</strong> MORE TO UNLOCK FREE SHIPPING!</span>
+                    <span>ADD <strong className="text-black">${(40 - cartSubtotal).toFixed(2)}</strong> MORE TO UNLOCK FREE SHIPPING!</span>
                   </div>
                 )}
 

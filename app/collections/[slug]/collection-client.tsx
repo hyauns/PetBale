@@ -355,9 +355,9 @@ export function CollectionClient({
                         </div>
 
                         <div className="flex items-baseline gap-2 mt-3 select-none">
-                          <span className="text-2xl font-black text-black">${product.price}</span>
+                          <span className="text-2xl font-black text-black">${product.price.toFixed(2)}</span>
                           {product.comparePrice && product.comparePrice > product.price && (
-                            <span className="text-base font-bold text-zinc-400 line-through">${product.comparePrice}</span>
+                            <span className="text-base font-bold text-zinc-400 line-through">${product.comparePrice.toFixed(2)}</span>
                           )}
                         </div>
                       </div>

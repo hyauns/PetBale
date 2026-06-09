@@ -326,9 +326,9 @@ function mapVariants(product: ShopifyProduct): CatalogVariant[] {
       // Hex junk → no text label (UI hides it or shows a swatch instead).
       weight: isHex ? '' : decodeHtmlEntities(raw) || '1 unit',
       colorHex: isHex ? raw.split(',')[0].trim() : null,
-      price: Math.round(parseFloat(v.price.amount)),
+      price: parseFloat(v.price.amount),
       comparePrice: v.compareAtPrice
-        ? Math.round(parseFloat(v.compareAtPrice.amount))
+        ? parseFloat(v.compareAtPrice.amount)
         : undefined,
       availableForSale: v.availableForSale,
       sku: v.sku ?? null,
@@ -338,9 +338,9 @@ function mapVariants(product: ShopifyProduct): CatalogVariant[] {
 
 export function adaptShopifyProduct(product: ShopifyProduct): CatalogProduct {
   const variant = pickPrimaryVariant(product)
-  const price = variant ? Math.round(parseFloat(variant.price.amount)) : 0
+  const price = variant ? parseFloat(variant.price.amount) : 0
   const compareAt = variant?.compareAtPrice
-    ? Math.round(parseFloat(variant.compareAtPrice.amount))
+    ? parseFloat(variant.compareAtPrice.amount)
     : undefined
   const onSale = !!(compareAt && compareAt > price)
 

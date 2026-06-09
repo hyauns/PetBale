@@ -177,10 +177,10 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
                               </div>
                             </div>
                             <div className="flex flex-col items-end flex-shrink-0">
-                              <span className="text-sm font-black text-black">${hit.price}</span>
+                              <span className="text-sm font-black text-black">${hit.price.toFixed(2)}</span>
                               {hit.comparePrice && hit.comparePrice > hit.price && (
                                 <span className="text-[10px] font-bold text-zinc-400 line-through">
-                                  ${hit.comparePrice}
+                                  ${hit.comparePrice.toFixed(2)}
                                 </span>
                               )}
                             </div>

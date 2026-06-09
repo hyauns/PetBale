@@ -271,9 +271,9 @@ const PricingCard = ({
 
           {/* Price Display BELOW Star Ratings */}
           <div className="flex items-baseline gap-2 mt-2 select-none">
-            <span className="text-2xl font-black text-black">${plan.price}</span>
+            <span className="text-2xl font-black text-black">${plan.price.toFixed(2)}</span>
             {plan.comparePrice && plan.comparePrice > plan.price && (
-              <span className="text-base font-bold text-zinc-400 line-through">${plan.comparePrice}</span>
+              <span className="text-base font-bold text-zinc-400 line-through">${plan.comparePrice.toFixed(2)}</span>
             )}
           </div>
         </div>
