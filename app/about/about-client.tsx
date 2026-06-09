@@ -51,7 +51,7 @@ const DEFAULTS = {
   establishedLabel: 'ESTABLISHED',
   storyTitle: 'OUR STORY & PHILOSOPHY 🚀',
   storyParagraph1: 'We believe that pets are more than just animals—they are members of the family who deserve great care. Finding the right food and supplies across dozens of brands can be overwhelming, so we make it easy to shop quality options from names you already trust.',
-  storyParagraph2: "That is why we started PetBale. We curate a 100+ brand catalog from leading US pet nutrition makers — Blue Buffalo, Purina, Royal Canin, Hill's Science Diet, Wellness, and more — and ship every order brand-new, sealed, and within shelf life from our Florida facility.",
+  storyParagraph2: "That is why we started PetBale. We curate a 100+ brand catalog from leading US pet nutrition makers — Blue Buffalo, Purina, Royal Canin, Hill's Science Diet, Wellness, and more — and ship every order brand-new, sealed, and within shelf life directly from our US-based brand and distributor fulfillment partners.",
   storyCtaLabel: 'SHOP OUR PRODUCTS',
   storyCtaUrl: '/shop',
   mascotEmojiBg: '🐱',

@@ -11,7 +11,7 @@ export const revalidate = 300 // 5 minutes — brand list is slow-changing.
 export const metadata: Metadata = {
   title: 'Shop All Pet Brands',
   description:
-    'Browse every pet brand at PetBale — Blue Buffalo, Purina, Royal Canin, Hill\'s Science Diet, Wellness, and more. Shipped brand-new, sealed, from our Florida facility.',
+    'Browse every pet brand at PetBale — Blue Buffalo, Purina, Royal Canin, Hill\'s Science Diet, Wellness, and more. Shipped brand-new, sealed, from our US-based brand and distributor partners.',
   alternates: { canonical: '/brands' },
   openGraph: {
     type: 'website',

@@ -71,7 +71,7 @@ Open the Preview tab in Shopify after pasting:
 - [ ] All money values display with `$` sign
 - [ ] Shipping address block renders if order requires shipping
 - [ ] CTA button is large, black, with white uppercase text
-- [ ] Footer shows full NAP: DOG BOWL BAKERY LLC + 3832 FESCUE ST CLERMONT FL 34714 + +1 (651) 377-4420 + cs@petbale.com
+- [ ] Footer shows full NAP: DOG BOWL BAKERY LLC + 3832 FESCUE ST CLERMONT FL 34714 + +1 (888) 984-6318 + cs@petbale.com
 - [ ] Unsubscribe link present (compliance)
 
 Send a test to yourself + check on:

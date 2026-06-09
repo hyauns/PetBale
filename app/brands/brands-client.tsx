@@ -78,7 +78,7 @@ export function BrandsClient({
               Shop By Brand
             </h1>
             <p className="text-black/85 font-extrabold text-xs sm:text-sm uppercase tracking-wider leading-relaxed">
-              Every pet brand in our catalog — shipped brand-new, sealed, and within shelf life from our Florida facility.
+              Every pet brand in our catalog — shipped brand-new, sealed, and within shelf life from our US-based brand and distributor partners.
             </p>
           </div>
           <div className="flex flex-col gap-3 flex-shrink-0">

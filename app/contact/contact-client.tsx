@@ -85,7 +85,7 @@ export function ContactClient() {
               OUR CHANNELS 🐶
             </h2>
             <p className="text-zinc-500 font-extrabold text-xs uppercase tracking-wide leading-relaxed">
-              Feel free to connect directly through our official hotlines, support emails, or visit our primary warehouse and fulfillment headquarters.
+              Feel free to connect directly through our official hotlines and support emails. The Florida address below is our registered business and returns office.
             </p>
 
             <div className="flex flex-col gap-5 pt-2">
@@ -108,7 +108,7 @@ export function ContactClient() {
                 </div>
                 <div>
                   <h3 className="text-xs font-black text-zinc-400 uppercase tracking-widest leading-none">CALL HOTLINE</h3>
-                  <p className="text-sm font-black text-black uppercase mt-1">+1 (651) 377-4420</p>
+                  <p className="text-sm font-black text-black uppercase mt-1">+1 (888) 984-6318</p>
                 </div>
               </div>
 
@@ -118,7 +118,7 @@ export function ContactClient() {
                   <MapPin className="w-5 h-5 stroke-[2.5]" />
                 </div>
                 <div>
-                  <h3 className="text-xs font-black text-zinc-400 uppercase tracking-widest leading-none">VISIT HQ</h3>
+                  <h3 className="text-xs font-black text-zinc-400 uppercase tracking-widest leading-none">BUSINESS &amp; RETURNS</h3>
                   <p className="text-sm font-black text-black uppercase mt-1 leading-snug">
                     3832 FESCUE ST, CLERMONT, FL 34714
                   </p>

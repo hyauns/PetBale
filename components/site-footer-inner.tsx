@@ -17,8 +17,8 @@ const LOCAL_BADGE_FALLBACKS: Record<string, { src: string; width: number; height
 const BUSINESS_INFO = {
   address: '3832 Fescue St, Clermont, FL 34714',
   email: 'cs@petbale.com',
-  phone: '+1 (651) 377-4420',
-  phoneTel: '+16513774420',
+  phone: '+1 (888) 984-6318',
+  phoneTel: '+18889846318',
   mapsUrl: 'https://www.google.com/maps/search/?api=1&query=3832+Fescue+St+Clermont+FL+34714',
 }
 
