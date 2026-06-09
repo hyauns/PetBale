@@ -31,6 +31,11 @@ const CATEGORY_LABELS: Record<string, string> = {
 // labels once reviews are order-backed (anh wants this re-enabled later).
 const SHOW_VERIFIED_LABELS = false
 
+// Minimum review count for the "BEST SELLER" badge. The badge used to render on
+// every product unconditionally; gate it on real popularity (review volume is
+// our best proxy for sales). Tune this threshold as the catalog grows.
+const BEST_SELLER_MIN_REVIEWS = 15
+
 import type { CatalogProduct } from '@/lib/catalog'
 import type { DisplayReview } from '@/lib/alireviews/adapters'
 import { cn } from '@/lib/utils'
@@ -394,11 +399,13 @@ export function ProductClient({
             <div className="bg-white border-3 border-black rounded-2xl p-6 sm:p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col gap-6">
 
               <div className="flex flex-col gap-2.5">
-                <div className="flex flex-wrap gap-2">
-                  <span className="px-3 py-0.5 text-[10px] font-black uppercase border-2 border-black rounded bg-[#FFEA79] text-black shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)]">
-                    BEST SELLER
-                  </span>
-                </div>
+                {product.reviewCount >= BEST_SELLER_MIN_REVIEWS && (
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-3 py-0.5 text-[10px] font-black uppercase border-2 border-black rounded bg-[#FFEA79] text-black shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)]">
+                      BEST SELLER
+                    </span>
+                  </div>
+                )}
                 <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-black tracking-tight leading-tight sm:leading-none uppercase">
                   {product.name}
                 </h1>
