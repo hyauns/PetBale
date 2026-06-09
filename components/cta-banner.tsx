@@ -14,8 +14,8 @@ const DEFAULT: HomeCtaBanner = {
   card1Body: "If your dog or cat doesn't absolutely love the food, we'll swap it for another brand or refund your purchase. No questions asked, no hassle.",
   card1Bottom: '🔒 RISK-FREE BUYING',
   card2Title: 'Authentic & Sealed Products',
-  card2Body: 'Every item we ship is brand-new, sealed, and within shelf life. We source through verified US supply channels and never sell gray-market or imported goods.',
-  card2Bottom: '🩺 VET RECOMMENDED',
+  card2Body: 'Every item we ship is brand-new, factory-sealed, and within shelf life.',
+  card2Bottom: '📦 FACTORY SEALED',
   ctaButtonLabel: 'EXPLORE ALL BRANDS 🐾',
   ctaButtonUrl: '/#shop-categories',
 }

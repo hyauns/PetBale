@@ -23,6 +23,14 @@ const CATEGORY_LABELS: Record<string, string> = {
   'bird-supplies': 'BIRD SUPPLIES',
   'reptile-supplies': 'REPTILE SUPPLIES',
 }
+
+// Toggle for review trust labels ("Verified Buyer" / "verified purchases").
+// Set to false during the Google Merchant compliance period because the
+// imported AliReviews are not tied to verifiable on-store purchases — calling
+// them "verified" is a misrepresentation risk. Flip back to true to restore the
+// labels once reviews are order-backed (anh wants this re-enabled later).
+const SHOW_VERIFIED_LABELS = false
+
 import type { CatalogProduct } from '@/lib/catalog'
 import type { DisplayReview } from '@/lib/alireviews/adapters'
 import { cn } from '@/lib/utils'
@@ -701,7 +709,7 @@ export function ProductClient({
                   </div>
                 </div>
                 <div className="text-xs font-black text-zinc-500 uppercase tracking-wide leading-snug">
-                  Based on {product.reviewCount} verified purchases
+                  Based on {product.reviewCount} {SHOW_VERIFIED_LABELS ? 'verified purchases' : 'reviews'}
                 </div>
               </div>
             </div>
@@ -756,12 +764,14 @@ export function ProductClient({
                       )}
                     </div>
 
-                    <div className="mt-4 pt-3 border-t border-black/10 flex items-center gap-1.5 text-[10px] font-black text-[#4AD395] uppercase">
-                      <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      Verified Buyer
-                    </div>
+                    {SHOW_VERIFIED_LABELS && (
+                      <div className="mt-4 pt-3 border-t border-black/10 flex items-center gap-1.5 text-[10px] font-black text-[#4AD395] uppercase">
+                        <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        Verified Buyer
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
