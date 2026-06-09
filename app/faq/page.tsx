@@ -37,7 +37,9 @@ export default async function FaqPage() {
 
   return (
     <>
-      <JsonLd data={faqSchema} />
+      {/* Only emit FAQPage schema when populated — an empty mainEntity is invalid
+          and triggers Google's "Missing field mainEntity" rich-result error. */}
+      {content.items.length > 0 && <JsonLd data={faqSchema} />}
       <SiteHeader />
       <FaqClient content={content} />
       <SiteFooter />
