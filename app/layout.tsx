@@ -83,6 +83,7 @@ const ORGANIZATION_SCHEMA = {
   '@type': 'OnlineStore',
   name: SITE_NAME,
   legalName: 'DOG BOWL BAKERY LLC',
+  foundingDate: '2025',
   url: SITE_URL,
   logo: `${SITE_URL}/icon.svg`,
   image: DEFAULT_OG_IMAGE,
