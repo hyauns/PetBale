@@ -67,7 +67,7 @@ export function ContactClient() {
               CONTACT US
             </h1>
             <p className="text-black/85 font-extrabold text-xs sm:text-sm uppercase tracking-wider leading-relaxed">
-              Got clarifying questions about raw feeding transition schedules? Or seeking direct assistance with bulk e-commerce packaging? Send us a message below!
+              Have a question about your order, a product, or shipping? Send us a message — we reply within 1 business day.
             </p>
           </div>
           <div className="bg-white border-2 border-black px-6 py-4 rounded-xl text-center shadow-[2.5px_2.5px_0px_0px_rgba(0,0,0,1)] min-w-[120px] select-none flex-shrink-0">
@@ -131,7 +131,7 @@ export function ContactClient() {
             <div className="bg-[#FAF6F0] border border-black rounded-xl p-4 mt-2">
               <h4 className="text-xs font-black uppercase text-black mb-1.5">⏰ REPLY TIME</h4>
               <p className="text-[10px] font-extrabold uppercase text-zinc-500 tracking-wider leading-relaxed">
-                MONDAY–FRIDAY: BUSINESS HOURS<br />
+                MON–FRI: 9:00 AM – 6:00 PM ET<br />
                 WE REPLY WITHIN 1 BUSINESS DAY
               </p>
             </div>
