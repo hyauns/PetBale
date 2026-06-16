@@ -3,11 +3,14 @@ import Script from 'next/script'
 export function AnalyticsScripts() {
   const ga4Id = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID
   const adsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID
+  const adsId2 = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID_2
   const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID
 
   // gtag.js is a single shared library for GA4 + Google Ads. Load it once if
-  // either ID is set, then `config` each product on the same gtag instance.
-  const gtagLoaderId = ga4Id || adsId
+  // any ID is set, then `config` each product on the same gtag instance. A
+  // second Ads account (adsId2) can be configured alongside the first — events
+  // fired without an explicit send_to broadcast to every configured target.
+  const gtagLoaderId = ga4Id || adsId || adsId2
 
   return (
     <>
@@ -24,6 +27,7 @@ export function AnalyticsScripts() {
               gtag('js', new Date());
               ${ga4Id ? `gtag('config', '${ga4Id}', { send_page_view: true });` : ''}
               ${adsId ? `gtag('config', '${adsId}');` : ''}
+              ${adsId2 ? `gtag('config', '${adsId2}');` : ''}
             `}
           </Script>
         </>
