@@ -3,6 +3,7 @@ import { SITE_URL } from '@/lib/site'
 import { getAllShopifyProducts } from '@/lib/shopify/queries'
 import type { ShopifyProduct, ShopifyVariant } from '@/lib/shopify/types'
 import { resolveGoogleCategory } from '@/lib/feeds/google-taxonomy'
+import { FEED_EXCLUDED_HANDLES } from '@/lib/feeds/excluded-products'
 import { decodeHtmlEntities, isHexColorValue } from '@/lib/shopify/adapters'
 
 /**
@@ -289,6 +290,9 @@ export async function GET() {
   const items: string[] = []
   for (const product of products) {
     if (!product.availableForSale) continue
+    // Skip products disapproved by Google Merchant under the Healthcare &
+    // Medicine policy (pet pharmaceuticals / prescription drugs / health claims).
+    if (FEED_EXCLUDED_HANDLES.has(product.handle)) continue
     for (const edge of product.variants.edges) {
       items.push(renderVariant(product, edge.node))
     }
