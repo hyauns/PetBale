@@ -4,6 +4,12 @@ import { getAllShopifyProducts } from '@/lib/shopify/queries'
 import type { ShopifyProduct, ShopifyVariant } from '@/lib/shopify/types'
 import { resolveGoogleCategory } from '@/lib/feeds/google-taxonomy'
 import { FEED_EXCLUDED_HANDLES } from '@/lib/feeds/excluded-products'
+import {
+  isBarkControlDevice,
+  assignCategory,
+  assignPetType,
+  assignAdsEligibility,
+} from '@/lib/feeds/categorization'
 import { decodeHtmlEntities, isHexColorValue } from '@/lib/shopify/adapters'
 
 /**
@@ -219,27 +225,14 @@ function buildItem(f: ItemFields): string {
   const material = getTagValue(product.tags, 'material')
   const flavor = getTagValue(product.tags, 'flavor')
 
-  // Custom labels for campaign targeting in Google Ads (optional).
-  const customLabel0 = pet ?? ''
-  const customLabel1 = catRoot ?? ''
-  const customLabel2 = catLeaf ?? ''
-  const customLabel3 = product.vendor ? decodeHtmlEntities(product.vendor) : ''
-  // custom_label_4: which products we advertise on Google Ads. We only run ads
-  // on IN-STOCK products selling for $1–150 → `ads_1_150`. Out-of-stock items in
-  // that price range go to `oos_1_150` (so they're excluded from ads but re-enter
-  // `ads_1_150` automatically once back in stock); anything above $150 is
-  // `over_150`. Campaigns target only `ads_1_150`. Uses the current selling price
-  // (the sale price when on sale). Replaces the old `sale` flag — sale status is
-  // still derivable from the <g:sale_price> field.
-  const sellingPrice = parseFloat(variant.price.amount)
-  const inPriceRange =
-    Number.isFinite(sellingPrice) && sellingPrice >= 1 && sellingPrice <= 150
-  let customLabel4: string
-  if (inPriceRange) {
-    customLabel4 = f.availability === 'in_stock' ? 'ads_1_150' : 'oos_1_150'
-  } else {
-    customLabel4 = 'over_150'
-  }
+  // Custom labels — title-based classification (docs/pet_feed_categorization_spec.md).
+  //   0 = ads eligibility (only Dog/Cat food run paid campaigns)
+  //   1, 2 = reserved (left empty for future price banding)
+  //   3 = pet type, 4 = detailed category
+  const title = decodeHtmlEntities(product.title)
+  const customLabel4 = assignCategory(title)
+  const customLabel3 = assignPetType(title)
+  const customLabel0 = assignAdsEligibility(customLabel4)
 
   const additional = f.additionalImages
     .map((u) => `      <g:additional_image_link>${xmlEscape(u)}</g:additional_image_link>`)
@@ -260,10 +253,9 @@ ${f.mpn ? `      <g:mpn>${xmlEscape(f.mpn)}</g:mpn>\n` : ''}      <g:identifier_
       <g:google_product_category>${googleCat.id}</g:google_product_category>
       <g:product_type>${xmlEscape(productType || googleCat.path)}</g:product_type>
 ${size ? `      <g:size>${xmlEscape(size)}</g:size>\n` : ''}${color ? `      <g:color>${xmlEscape(color)}</g:color>\n` : ''}${ageGroup ? `      <g:age_group>${ageGroup}</g:age_group>\n` : ''}${material ? `      <g:material>${xmlEscape(material)}</g:material>\n` : ''}${flavor ? `      <g:flavor>${xmlEscape(flavor)}</g:flavor>\n` : ''}      <g:custom_label_0>${xmlEscape(customLabel0)}</g:custom_label_0>
-      <g:custom_label_1>${xmlEscape(customLabel1)}</g:custom_label_1>
-      <g:custom_label_2>${xmlEscape(customLabel2)}</g:custom_label_2>
       <g:custom_label_3>${xmlEscape(customLabel3)}</g:custom_label_3>
-${customLabel4 ? `      <g:custom_label_4>${xmlEscape(customLabel4)}</g:custom_label_4>\n` : ''}      <g:shipping>
+      <g:custom_label_4>${xmlEscape(customLabel4)}</g:custom_label_4>
+      <g:shipping>
         <g:country>US</g:country>
         <g:service>Standard</g:service>
         <g:price>8.99 USD</g:price>
@@ -293,8 +285,16 @@ export async function GET() {
     // Skip products disapproved by Google Merchant under the Healthcare &
     // Medicine policy (pet pharmaceuticals / prescription drugs / health claims).
     if (FEED_EXCLUDED_HANDLES.has(product.handle)) continue
+    // Spec §1a: bark-control / shock-collar devices burn ad spend on mismatched
+    // search intent — drop the whole product.
+    if (isBarkControlDevice(decodeHtmlEntities(product.title))) continue
     for (const edge of product.variants.edges) {
-      items.push(renderVariant(product, edge.node))
+      const variant = edge.node
+      // Spec §1b: in-stock only.
+      if (!variant.availableForSale) continue
+      // Spec §1c: margin too thin under $20 to cover CPC — exclude.
+      if (parseFloat(variant.price.amount) < 20) continue
+      items.push(renderVariant(product, variant))
     }
   }
 
