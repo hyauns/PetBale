@@ -23,10 +23,22 @@ export function isBarkControlDevice(title: string): boolean {
 export function assignCategory(title: string): string {
   const t = title.toLowerCase()
 
-  // 1: Food (focus)
-  if (/dry dog food|wet dog food|dog food/.test(t) && !t.includes('topper')) return 'DogFood'
-  if (/dry cat food|wet cat food|cat food|kitten food/.test(t) && !t.includes('topper'))
-    return 'CatFood'
+  // 1: Food (focus). Covers both "dry dog food" and the dominant retailer word
+  // order "...adult dog dry food" / "...puppy food". The dog/cat token is what
+  // qualifies it — fish/parrot/small-animal food carries neither token and falls
+  // through to Other on its own, so no need to enumerate other animals (which
+  // would wrongly drop fish-/rabbit-flavored dog & cat food). Only guard against
+  // food *accessories* (storage, dispensers, bowls) and toppers (→ treats).
+  if (
+    /\bfood\b/.test(t) &&
+    !t.includes('topper') &&
+    !/container|dispenser|storage|vault|feeder|bowl|food mat/.test(t)
+  ) {
+    const dog = /\bdogs?\b|puppy/.test(t)
+    const cat = /\bcats?\b|kitten/.test(t)
+    if (dog && !cat) return 'DogFood'
+    if (cat && !dog) return 'CatFood'
+  }
 
   // 2: Treats
   if (/dog treat|dog dental|food topper/.test(t) && !t.includes('cat')) return 'DogTreats'

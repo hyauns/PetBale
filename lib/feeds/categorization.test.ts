@@ -28,6 +28,16 @@ for (const t of ['Anti-Bark Collar', 'Bark Deterrent Device', 'Pet Shock Collar'
 }
 assert.equal(isBarkControlDevice('Reflective Nylon Dog Collar'), false)
 
+// retailer word order "...dog dry food" / "...cat dry food" / "puppy food"
+assert.equal(assignCategory('Royal Canin Breed Health Nutrition Bulldog Adult Dog Dry Food'), 'DogFood')
+assert.equal(assignCategory('Purina ONE Tender Selects Adult Cat Dry Food - Salmon'), 'CatFood')
+assert.equal(assignCategory('Wellness Complete Health Puppy Food - Natural'), 'DogFood')
+assert.equal(assignCategory('Blue Buffalo Tastefuls Kitten Dry Food - Chicken'), 'CatFood')
+// not dog/cat food: containers + other-animal food stay out of DogFood/CatFood
+assert.equal(assignCategory('Vittles Vault Stackable Pet Food Container'), 'Other')
+assert.equal(assignCategory('Tetra TetraMin Tropical Flakes Fish Food'), 'Other') // not dog/cat
+assert.equal(assignCategory('Kaytee Fiesta Parrot Food'), 'Other') // not dog/cat
+
 // priority: food beats topper exclusion / treats
 assert.equal(assignCategory('Chicken Food Topper for Dogs'), 'DogTreats')
 assert.equal(assignCategory('Wholesome Dry Dog Food Topper'), 'DogTreats') // topper → not DogFood
