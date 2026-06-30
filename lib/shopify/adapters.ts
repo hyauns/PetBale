@@ -381,6 +381,7 @@ export function adaptShopifyProduct(product: ShopifyProduct): CatalogProduct {
     benefits: [],
     badges: deriveBadges(product, metafields),
     defaultVariantId: variant?.id ?? null,
+    availableForSale: product.availableForSale,
     variants: mapVariants(product),
     ...parseRating(metafields),
   }

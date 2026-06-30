@@ -19,6 +19,7 @@ export type PricingPlan = {
   accent: string;
   slug: string;
   merchandiseId: string | null;
+  availableForSale?: boolean;
   onSale?: boolean;
   comparePrice?: number;
   rating: number;
@@ -283,9 +284,9 @@ const PricingCard = ({
       <motion.button
         onClick={(e) => {
           e.stopPropagation();
-          if (plan.merchandiseId) addToCart(plan.merchandiseId, 1, e.clientX, e.clientY);
+          if (plan.merchandiseId && plan.availableForSale !== false) addToCart(plan.merchandiseId, 1, e.clientX, e.clientY);
         }}
-        disabled={!plan.merchandiseId}
+        disabled={!plan.merchandiseId || plan.availableForSale === false}
         className="w-full py-3.5 rounded-lg bg-[#ffea79] text-black font-black text-base border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,0.9)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.9)] active:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.9)] transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 mt-auto disabled:opacity-60 disabled:cursor-not-allowed"
         whileHover={{
           scale: 1.02,
@@ -303,7 +304,7 @@ const PricingCard = ({
           <circle cx="17.5" cy="11.5" r="2" />
           <path d="M12 13.5c-1.8 0-3.5 1-4 2.8-.4 1.3.2 2.7 1.5 3.2 1 .4 3 .5 5 0 1.3-.5 1.9-1.9 1.5-3.2-.5-1.8-2.2-2.8-4-2.8z" />
         </svg>
-        <span>ADD TO CART</span>
+        <span>{plan.availableForSale === false ? 'OUT OF STOCK' : 'ADD TO CART'}</span>
       </motion.button>
     </motion.div>
   );

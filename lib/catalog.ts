@@ -55,6 +55,8 @@ export interface CatalogProduct {
   benefits: { title: string; description: string }[]
   badges: string[]
   defaultVariantId: string | null
+  /** Product-level stock: false when every variant is out of stock. */
+  availableForSale: boolean
   variants: CatalogVariant[]
   rating: number
   reviewCount: number

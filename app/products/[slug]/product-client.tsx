@@ -75,6 +75,7 @@ export function ProductClient({
 
   const activeVariant =
     variants.find((v) => v.id === activeVariantId) ?? initialVariant
+  const soldOut = !activeVariant?.availableForSale
   const activePrice = activeVariant?.price ?? product.price
   const activeComparePrice = activeVariant?.comparePrice ?? product.comparePrice
 
@@ -105,7 +106,7 @@ export function ProductClient({
   }, [])
 
   const handleAddToCart = (e: { clientX: number; clientY: number }) => {
-    if (activeVariantId) addToCart(activeVariantId, 1, e.clientX, e.clientY)
+    if (activeVariantId && !soldOut) addToCart(activeVariantId, 1, e.clientX, e.clientY)
   }
 
   // Mobile address bar quirk: when it hides on scroll-down the visible area
@@ -511,12 +512,12 @@ export function ProductClient({
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.95 }}
-                  disabled={!activeVariantId}
+                  disabled={!activeVariantId || soldOut}
                   onClick={handleAddToCart}
                   className="w-full sm:flex-1 py-4 px-6 rounded-xl bg-[#6cd1ff] text-black font-black text-base border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:bg-black hover:text-white hover:border-[#6cd1ff] active:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-colors duration-300 cursor-pointer flex items-center justify-center gap-2 uppercase tracking-wide whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   <ShoppingBag className="w-5 h-5 flex-shrink-0" />
-                  <span>ADD TO CART</span>
+                  <span>{soldOut ? 'OUT OF STOCK' : 'ADD TO CART'}</span>
                 </motion.button>
               </div>
 
@@ -868,12 +869,12 @@ export function ProductClient({
               </div>
               <motion.button
                 whileTap={{ scale: 0.96 }}
-                disabled={!activeVariantId}
+                disabled={!activeVariantId || soldOut}
                 onClick={handleAddToCart}
                 className="flex-1 py-3.5 px-5 rounded-xl bg-[#6cd1ff] text-black font-black text-base border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer flex items-center justify-center gap-2 uppercase tracking-wide whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 <ShoppingBag className="w-5 h-5 flex-shrink-0" />
-                <span>ADD TO CART</span>
+                <span>{soldOut ? 'OUT OF STOCK' : 'ADD TO CART'}</span>
               </motion.button>
             </div>
           </motion.div>

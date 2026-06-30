@@ -87,15 +87,15 @@ export function SearchResultsClient({ products }: { products: CatalogProduct[] }
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.95 }}
-            disabled={!product.defaultVariantId}
+            disabled={!product.defaultVariantId || !product.availableForSale}
             onClick={(e) => {
               e.stopPropagation()
-              if (product.defaultVariantId) addToCart(product.defaultVariantId)
+              if (product.defaultVariantId && product.availableForSale) addToCart(product.defaultVariantId)
             }}
             className="w-full py-3 bg-[#ffea79] text-black font-black text-sm border border-black rounded-lg shadow-[2.5px_2.5px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 transition-all duration-150 cursor-pointer flex items-center justify-center gap-1.5 mt-4 disabled:opacity-60 disabled:cursor-not-allowed"
           >
             <ShoppingBag className="w-4 h-4 flex-shrink-0 text-black" />
-            <span>ADD TO CART</span>
+            <span>{product.availableForSale ? 'ADD TO CART' : 'OUT OF STOCK'}</span>
           </motion.button>
         </div>
       ))}

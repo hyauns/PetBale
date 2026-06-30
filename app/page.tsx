@@ -38,6 +38,7 @@ export default async function HomePage() {
     accent: p.accent,
     slug: p.slug,
     merchandiseId: p.defaultVariantId,
+    availableForSale: p.availableForSale,
     onSale: p.onSale,
     comparePrice: p.comparePrice,
     rating: p.rating,
