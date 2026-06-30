@@ -18,9 +18,9 @@ export function AnalyticsScripts() {
         <>
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${gtagLoaderId}`}
-            strategy="afterInteractive"
+            strategy="lazyOnload"
           />
-          <Script id="gtag-init" strategy="afterInteractive">
+          <Script id="gtag-init" strategy="lazyOnload">
             {`
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
@@ -35,7 +35,7 @@ export function AnalyticsScripts() {
 
       {pixelId && (
         <>
-          <Script id="meta-pixel" strategy="afterInteractive">
+          <Script id="meta-pixel" strategy="lazyOnload">
             {`
               !function(f,b,e,v,n,t,s)
               {if(f.fbq)return;n=f.fbq=function(){n.callMethod?

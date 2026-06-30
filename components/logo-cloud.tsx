@@ -1,6 +1,7 @@
 'use client'
 
 import Image from "next/image";
+import shopifyImageLoader from '@/lib/shopify-image-loader';
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
 import { ProgressiveBlur } from "@/components/ui/progressive-blur";
 import type { HomeLogo } from '@/lib/shopify/content';
@@ -41,6 +42,7 @@ export function LogoCloud({ logos = brandLogos, className = "", ...props }: Logo
               alt={logo.alt}
               className="pointer-events-none select-none object-contain opacity-100 transition-all duration-300 filter-none grayscale-0"
               fill
+              loader={shopifyImageLoader}
               sizes="(min-width: 768px) 256px, (min-width: 640px) 224px, 192px"
               src={logo.src}
             />

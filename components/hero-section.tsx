@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import shopifyImageLoader from '@/lib/shopify-image-loader'
 import type { HomeHero } from '@/lib/shopify/content'
 
 const DEFAULT: HomeHero = {
@@ -168,6 +169,7 @@ export function HeroSection({ content }: { content?: HomeHero | null }) {
               alt={c.imageAlt || 'Hero image'}
               fill
               priority
+              loader={shopifyImageLoader}
               className="object-contain"
               sizes="(max-width: 1024px) 100vw, 50vw"
             />

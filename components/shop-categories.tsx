@@ -3,6 +3,7 @@
 import React, { useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import shopifyImageLoader from '@/lib/shopify-image-loader'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { TextRotate } from '@/components/ui/text-rotate'
@@ -329,6 +330,7 @@ export default function ShopCategories({ categories }: { categories?: HomeCatego
                       alt={tier.name}
                       width={400}
                       height={400}
+                      loader={shopifyImageLoader}
                       sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                       className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105 select-none pointer-events-none"
                     />
