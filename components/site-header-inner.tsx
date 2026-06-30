@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import shopifyImageLoader from '@/lib/shopify-image-loader'
 import { Menu, X, Search, User, ShoppingBag, ChevronDown, ChevronUp } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useCart } from '@/hooks/use-cart'
@@ -106,6 +107,7 @@ export function SiteHeaderInner({
                 alt={b.mascotLogoAlt}
                 width={64}
                 height={64}
+                loader={shopifyImageLoader}
                 className="w-7 h-7 sm:w-11 sm:h-11 md:w-13 md:h-13 object-contain"
                 priority
               />
@@ -143,6 +145,7 @@ export function SiteHeaderInner({
                 width={200}
                 height={40}
                 sizes="(min-width: 640px) 221px, 154px"
+                loader={shopifyImageLoader}
                 className="h-7 sm:h-10 w-auto object-contain group-hover:scale-102 transition-transform"
                 priority
               />

@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
+import shopifyImageLoader from '@/lib/shopify-image-loader'
 import { Instagram, Facebook, Youtube, Music2, Twitter, Mail, Phone, MapPin } from 'lucide-react'
 import { motion } from 'framer-motion'
 import type { HomeFooterLink, SiteBranding, TrustBadge } from '@/lib/shopify/content'
@@ -147,6 +148,7 @@ export function SiteFooterInner({
                   alt={wordmarkAlt}
                   width={220}
                   height={48}
+                  loader={shopifyImageLoader}
                   className="h-8 sm:h-10 w-auto object-contain"
                 />
               ) : (
