@@ -9,6 +9,12 @@ const nextConfig = {
   // Compress HTTP responses via Next's built-in gzip.
   compress: true,
 
+  // Tree-shake framer-motion to per-route chunks instead of the full barrel.
+  // (lucide-react is already on Next's default optimize list.)
+  experimental: {
+    optimizePackageImports: ['framer-motion'],
+  },
+
   images: {
     // Prefer AVIF, then WebP — both far smaller than the source PNG/JPEG.
     formats: ['image/avif', 'image/webp'],

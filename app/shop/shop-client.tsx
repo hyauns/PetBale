@@ -269,7 +269,7 @@ export function ShopClient({
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-                {visibleProducts.map((product) => (
+                {visibleProducts.map((product, i) => (
                   <div
                     key={product.slug}
                     className="relative bg-white border border-black rounded-xl p-4 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4.5px_4.5px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[-1.5px] transition-all duration-150 flex flex-col justify-between h-[490px]"
@@ -289,6 +289,7 @@ export function ShopClient({
                           alt={product.name}
                           width={400}
                           height={400}
+                          priority={i < 4}
                           sizes="(min-width: 1280px) 20vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
                           className="max-w-full max-h-full object-contain pointer-events-none"
                         />

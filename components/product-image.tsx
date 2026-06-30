@@ -25,6 +25,11 @@ export function ProductImage({
 }: ImageProps & { pawSize?: number }) {
   const [loaded, setLoaded] = useState(false)
 
+  // LCP images (above-the-fold, passed priority/eager) must paint immediately:
+  // the opacity-0 fade gate would hide the pixel until hydration + onLoad + the
+  // 300ms transition, delaying LCP. Skip the loader and fade for those.
+  const eager = props.priority || props.loading === 'eager'
+
   // Cached images can finish loading before React attaches onLoad, which would
   // leave the loader stuck. Catch that via the ref's `complete` flag on mount.
   const imgRef = useCallback((img: HTMLImageElement | null) => {
@@ -33,7 +38,7 @@ export function ProductImage({
 
   return (
     <span className="relative flex h-full w-full items-center justify-center">
-      {!loaded && (
+      {!loaded && !eager && (
         <span className="absolute inset-0 flex items-center justify-center" aria-hidden="true">
           <PawLoader count={4} size={pawSize} />
         </span>
@@ -42,7 +47,11 @@ export function ProductImage({
         {...props}
         ref={imgRef}
         loader={shopifyImageLoader}
-        className={cn(className, 'transition-opacity duration-300', loaded ? 'opacity-100' : 'opacity-0')}
+        className={cn(
+          className,
+          !eager && 'transition-opacity duration-300',
+          loaded || eager ? 'opacity-100' : 'opacity-0',
+        )}
         onLoad={(e) => {
           setLoaded(true)
           onLoad?.(e)
