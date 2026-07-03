@@ -285,6 +285,10 @@ export async function GET() {
     // Skip products disapproved by Google Merchant under the Healthcare &
     // Medicine policy (pet pharmaceuticals / prescription drugs / health claims).
     if (FEED_EXCLUDED_HANDLES.has(product.handle)) continue
+    // PetSmart Rx / veterinary-diet items need vet authorization to buy — the
+    // sync marks them out of stock and tags them 'vet-authorization'; drop them
+    // from the feed entirely.
+    if (product.tags.some((t) => t.toLowerCase() === 'vet-authorization')) continue
     // Spec §1a: bark-control / shock-collar devices burn ad spend on mismatched
     // search intent — drop the whole product.
     if (isBarkControlDevice(decodeHtmlEntities(product.title))) continue
