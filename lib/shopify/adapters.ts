@@ -299,6 +299,15 @@ function pickPrimaryVariant(product: ShopifyProduct): ShopifyVariant | null {
   return product.variants.edges[0]?.node ?? null
 }
 
+// Rx / vet-authorization products must never be orderable on the storefront,
+// regardless of Shopify stock or inventory policy (which the PetSmart sync can
+// flip back to CONTINUE / restock). Hard-block by tag here — the single choke
+// point every product passes through. ponytail: tag match, revisit if Rx ever
+// gets a real prescription-checkout flow.
+function isPrescriptionOnly(product: ShopifyProduct): boolean {
+  return product.tags.some((t) => t.toLowerCase() === 'vet-authorization')
+}
+
 /** True when a value is only hex color code(s) — e.g. "#000000" or
  *  "#8A4512,#2FB534". Bad catalog data dumped color hexes into the Size option. */
 export function isHexColorValue(value: string | null | undefined): boolean {
@@ -318,6 +327,7 @@ function getSizeRaw(variant: ShopifyVariant): string {
 }
 
 function mapVariants(product: ShopifyProduct): CatalogVariant[] {
+  const rx = isPrescriptionOnly(product)
   return product.variants.edges.map(({ node: v }) => {
     const raw = getSizeRaw(v)
     const isHex = isHexColorValue(raw)
@@ -330,7 +340,7 @@ function mapVariants(product: ShopifyProduct): CatalogVariant[] {
       comparePrice: v.compareAtPrice
         ? parseFloat(v.compareAtPrice.amount)
         : undefined,
-      availableForSale: v.availableForSale,
+      availableForSale: rx ? false : v.availableForSale,
       sku: v.sku ?? null,
     }
   })
@@ -381,7 +391,7 @@ export function adaptShopifyProduct(product: ShopifyProduct): CatalogProduct {
     benefits: [],
     badges: deriveBadges(product, metafields),
     defaultVariantId: variant?.id ?? null,
-    availableForSale: product.availableForSale,
+    availableForSale: isPrescriptionOnly(product) ? false : product.availableForSale,
     variants: mapVariants(product),
     ...parseRating(metafields),
   }
