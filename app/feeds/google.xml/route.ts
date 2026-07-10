@@ -227,12 +227,14 @@ function buildItem(f: ItemFields): string {
 
   // Custom labels — title-based classification (docs/pet_feed_categorization_spec.md).
   //   0 = ads eligibility (only Dog/Cat food run paid campaigns)
-  //   1, 2 = reserved (left empty for future price banding)
+  //   1 = price band ('over_300' → exclude from ads via a campaign filter)
+  //   2 = reserved
   //   3 = pet type, 4 = detailed category
   const title = decodeHtmlEntities(product.title)
   const customLabel4 = assignCategory(title)
   const customLabel3 = assignPetType(title)
   const customLabel0 = assignAdsEligibility(customLabel4)
+  const customLabel1 = parseFloat(variant.price.amount) > 300 ? 'over_300' : ''
 
   const additional = f.additionalImages
     .map((u) => `      <g:additional_image_link>${xmlEscape(u)}</g:additional_image_link>`)
@@ -253,7 +255,7 @@ ${f.mpn ? `      <g:mpn>${xmlEscape(f.mpn)}</g:mpn>\n` : ''}      <g:identifier_
       <g:google_product_category>${googleCat.id}</g:google_product_category>
       <g:product_type>${xmlEscape(productType || googleCat.path)}</g:product_type>
 ${size ? `      <g:size>${xmlEscape(size)}</g:size>\n` : ''}${color ? `      <g:color>${xmlEscape(color)}</g:color>\n` : ''}${ageGroup ? `      <g:age_group>${ageGroup}</g:age_group>\n` : ''}${material ? `      <g:material>${xmlEscape(material)}</g:material>\n` : ''}${flavor ? `      <g:flavor>${xmlEscape(flavor)}</g:flavor>\n` : ''}      <g:custom_label_0>${xmlEscape(customLabel0)}</g:custom_label_0>
-      <g:custom_label_3>${xmlEscape(customLabel3)}</g:custom_label_3>
+${customLabel1 ? `      <g:custom_label_1>${xmlEscape(customLabel1)}</g:custom_label_1>\n` : ''}      <g:custom_label_3>${xmlEscape(customLabel3)}</g:custom_label_3>
       <g:custom_label_4>${xmlEscape(customLabel4)}</g:custom_label_4>
       <g:shipping>
         <g:country>US</g:country>
