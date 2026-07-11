@@ -25,7 +25,6 @@ const CATEGORIES = [
   { id: 'dog-treats', name: 'Dog Treats 🦴' },
   { id: 'flea-tick', name: 'Flea & Tick 🛡️' },
   { id: 'cat-litter', name: 'Cat Litter 🧹' },
-  { id: 'deals', name: 'Deals & Offers 🎁' },
 ]
 
 const PAGE_SIZE = 24
@@ -58,12 +57,7 @@ export function ShopClient({
     let result = [...products]
     if (selectedCategories.length > 0) {
       result = result.filter(product =>
-        selectedCategories.some(catId => {
-          if (catId === 'deals') {
-            return product.onSale && product.comparePrice && product.comparePrice > product.price
-          }
-          return product.category === catId
-        })
+        selectedCategories.some(catId => product.category === catId)
       )
     }
     if (selectedFilters?.pet) {

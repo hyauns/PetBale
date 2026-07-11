@@ -75,16 +75,6 @@ const defaultCategories: CategoryTier[] = [
     accentColor: "#B19FFB",
     ctaText: "EXPLORE ➔",
   },
-  {
-    name: "Deals",
-    icon: "🔥",
-    imageSrc: "/images/category/6.webp",
-    slug: "deals",
-    popular: false,
-    color: "yellow",
-    accentColor: "#FFEA79",
-    ctaText: "EXPLORE ➔",
-  },
 ];
 
 function fromHomeCategory(c: HomeCategory): CategoryTier {

@@ -31,7 +31,6 @@ const STATIC_PATHS: { path: string; priority: number; changeFrequency: MetadataR
 const COLLECTION_SLUGS: string[] = [
   // UI category slugs
   ...Object.keys(CATEGORY_TO_SHOPIFY_HANDLES),
-  'deals',
   // Dog smart collections
   'dog-dry-food',
   'dog-vet-diets',
