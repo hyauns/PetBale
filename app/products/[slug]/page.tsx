@@ -4,8 +4,7 @@ import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { JsonLd } from '@/components/json-ld'
 import { getAllProducts, getProductBySlug } from '@/lib/catalog'
-import { getAliReviews } from '@/lib/alireviews/client'
-import { adaptAliReviews } from '@/lib/alireviews/adapters'
+import type { DisplayReview } from '@/lib/alireviews/adapters'
 import { ProductClient } from './product-client'
 import { SITE_URL } from '@/lib/site'
 
@@ -66,24 +65,13 @@ export default async function ProductPage({
   ])
   if (!productBase) notFound()
 
-  const aliRaw = productBase.shopifyProductId
-    ? await getAliReviews(productBase.shopifyProductId, { limit: 30 })
-    : []
-  const reviews = adaptAliReviews(aliRaw)
+  // Reviews hidden site-wide during the Merchant compliance period — the
+  // AliReviews are AI-generated (see HIDE_REVIEWS in lib/shopify/adapters.ts).
+  // Skip the API fetch and never resurrect the aggregate from it.
+  const reviews: DisplayReview[] = []
   const related = all.filter((p) => p.slug !== slug).slice(0, 12)
 
-  // Ali doesn't always write the alireviews.rating_info metafield (esp. for
-  // CSV-imported reviews), leaving rating/reviewCount at 0 — which hides the
-  // whole review section even though reviews exist via the public API. When
-  // that happens, derive the aggregate from the fetched reviews instead.
-  const product =
-    productBase.reviewCount === 0 && aliRaw.length > 0
-      ? {
-          ...productBase,
-          reviewCount: aliRaw.length,
-          rating: aliRaw.reduce((sum, r) => sum + (r.star || 0), 0) / aliRaw.length,
-        }
-      : productBase
+  const product = productBase
 
   const categoryLabel = CATEGORY_LABELS[product.category] ?? 'Shop'
   const inStock = product.variants.some((v) => v.availableForSale)

@@ -31,7 +31,16 @@ function pickMetafieldByNs(
   )
 }
 
+// Compliance kill-switch (Google Merchant): the AliReviews are AI-generated, so
+// presenting them as genuine customer ratings is a misrepresentation risk. This
+// is the single source feeding every product card, PDP header, BEST SELLER
+// badge, review section, and AggregateRating JSON-LD — forcing it to zero hides
+// all ratings/reviews site-wide. Flip back to false to restore once reviews are
+// order-backed (anh wants this re-enabled later).
+const HIDE_REVIEWS = true
+
 function parseRating(metafields: (ShopifyMetafield | null)[]): { rating: number; reviewCount: number } {
+  if (HIDE_REVIEWS) return { rating: 0, reviewCount: 0 }
   const raw = pickMetafieldByNs(metafields, 'alireviews', 'rating_info')
   const data = safeJsonParse<{ ratingValue?: number; reviewCount?: number }>(raw, {})
   return {

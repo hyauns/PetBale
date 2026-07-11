@@ -11,6 +11,10 @@ const SIZE_CLASS = {
 } as const
 
 export function RatingStars({ rating, size = 'sm', className }: RatingStarsProps) {
+  // No rating → render nothing (empty stars read as a real "0/5" score). Ratings
+  // are hidden site-wide during the Merchant compliance period (see HIDE_REVIEWS
+  // in lib/shopify/adapters.ts).
+  if (!(rating > 0)) return null
   const filledCount = Math.round(rating)
   return (
     <div className={`flex items-center gap-0.5 ${className ?? ''}`}>
