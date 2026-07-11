@@ -254,8 +254,11 @@ export default function ShopCategories({ categories }: { categories?: HomeCatego
         onMouseLeave={handleMouseLeave}
         onMouseUp={handleMouseUp}
         onMouseMove={handleMouseMove}
-        className="w-full max-w-[96%] mx-auto flex justify-start xl:justify-center gap-6 overflow-x-auto py-6 px-4 z-10 relative cursor-grab active:cursor-grabbing hide-scrollbar"
+        className="w-full max-w-[96%] mx-auto overflow-x-auto py-6 px-4 z-10 relative cursor-grab active:cursor-grabbing hide-scrollbar"
       >
+        {/* Inner track: w-max + mx-auto centers the cards when they fit and
+            scrolls from the left when they overflow (no clipped first card). */}
+        <div className="flex gap-6 w-max mx-auto">
         {items.map((tier, index) => (
           <div key={tier.name} className="w-[280px] sm:w-[320px] flex-shrink-0">
             <motion.div
@@ -345,8 +348,9 @@ export default function ShopCategories({ categories }: { categories?: HomeCatego
             </motion.div>
           </div>
         ))}
+        </div>
       </div>
-      
+
       {/* Decorative badges at the bottom of the section */}
       <div className="absolute -z-10 inset-0 overflow-hidden pointer-events-none opacity-20">
         <div className="absolute top-40 left-12 text-4xl rotate-12">

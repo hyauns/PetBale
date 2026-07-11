@@ -241,7 +241,13 @@ export async function getHomeContent(): Promise<HomeContent> {
       ctaBanner: adaptCta(data.cta),
       logos: sortBy(data.logos.edges.map((e) => adaptLogo(e.node))),
       features: sortBy(data.features.edges.map((e) => adaptFeature(e.node))),
-      categories: sortBy(data.categories.edges.map((e) => adaptCategory(e.node))),
+      // Drop the removed "deals" category (its /collections/deals target 404s
+      // now that sale pricing is gone). Orphan metaobject can be deleted in admin.
+      categories: sortBy(
+        data.categories.edges
+          .map((e) => adaptCategory(e.node))
+          .filter((c) => c.targetSlug !== 'deals')
+      ),
       footerLinks: sortBy(data.footerLinks.edges.map((e) => adaptFooterLink(e.node))),
     }
   } catch (err) {
