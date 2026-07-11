@@ -30,7 +30,6 @@ const DEFAULT_LINKS: Record<string, { label: string; href: string }[]> = {
     { label: 'Dog Treats', href: '/collections/dog-treats' },
     { label: 'Flea & Tick', href: '/collections/flea-tick' },
     { label: 'Cat Litter', href: '/collections/cat-litter' },
-    { label: 'Deals', href: '/collections/deals' },
   ],
   Company: [
     { label: 'About PetBale', href: '/about' },
