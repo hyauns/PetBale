@@ -12,9 +12,9 @@ import { EMPTY_BRANDING, type HomeAnnouncement, type SiteBranding } from '@/lib/
 import { MENU } from '@/lib/menu'
 
 const DEFAULT_ANNOUNCEMENT: HomeAnnouncement = {
-  text: 'SUMMER SALE 🎁 5% OFF USE CODE',
-  highlightLabel: 'SUMMER',
-  codeValue: 'SUMMER',
+  text: 'Free shipping on orders $40+ · Ships within the contiguous U.S.',
+  highlightLabel: '',
+  codeValue: '',
 }
 
 const PET_ACCENTS: Record<string, string> = {
@@ -69,7 +69,7 @@ export function SiteHeaderInner({
       {/* Announcement Bar */}
       <div className="w-full bg-black py-2 px-4 flex items-center justify-center text-center z-50 border-b border-neutral-800">
         <span className="font-sans font-extrabold text-[10px] md:text-xs tracking-[0.2em] text-white uppercase select-none">
-          {ann.text} <span className="text-[#ffea79]">&quot;{ann.codeValue}&quot;</span>
+          {ann.text}{ann.codeValue ? <> <span className="text-[#ffea79]">&quot;{ann.codeValue}&quot;</span></> : null}
         </span>
       </div>
 

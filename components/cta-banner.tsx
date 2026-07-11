@@ -8,11 +8,11 @@ import type { HomeCtaBanner } from '@/lib/shopify/content'
 
 const DEFAULT: HomeCtaBanner = {
   subtitle: 'Shop with confidence',
-  title: 'OUR DOUBLE GUARANTEE',
-  description: 'We dissolve all the risk so you can focus on what matters most — keeping your beloved pets happy, active, and healthy.',
-  card1Title: '100% Happiness Guarantee',
-  card1Body: "If your dog or cat doesn't absolutely love the food, we'll swap it for another brand or refund your purchase. No questions asked, no hassle.",
-  card1Bottom: '🔒 RISK-FREE BUYING',
+  title: 'WHY SHOP WITH PETBALE',
+  description: 'Brand-new products from trusted brands, with friendly customer support for eligible returns and order issues.',
+  card1Title: 'Food Acceptability Support',
+  card1Body: "If your dog or cat won't eat the food, contact us within 30 days — up to one opened bag per order may be eligible for a swap or refund on eligible items.",
+  card1Bottom: '↩️ 30-DAY RETURNS',
   card2Title: 'Authentic & Sealed Products',
   card2Body: 'Every item we ship is brand-new, factory-sealed, and within shelf life.',
   card2Bottom: '📦 FACTORY SEALED',

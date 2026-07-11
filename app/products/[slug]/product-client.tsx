@@ -520,6 +520,13 @@ export function ProductClient({
                 </motion.button>
               </div>
 
+              {/* Shipping & returns summary (Google Merchant transparency) */}
+              <div className="mt-4 rounded-xl border-2 border-black/10 bg-zinc-50 p-4 text-xs font-semibold text-zinc-700 leading-relaxed">
+                <p><span aria-hidden="true">📦</span> Ships within the contiguous U.S. Processing 2–4 business days, transit 3–7 business days (estimated delivery 5–11 business days).</p>
+                <p className="mt-1"><span aria-hidden="true">🚚</span> Free shipping on orders $40+; $8.99 flat rate under $40.</p>
+                <p className="mt-1"><span aria-hidden="true">↩️</span> 30-day returns on eligible items.</p>
+              </div>
+
             </div>
           </div>
 
