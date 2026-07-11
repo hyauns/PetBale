@@ -67,14 +67,6 @@ const COLLECTIONS_MAP: Record<string, CollectionDetails> = {
     colorHex: '#B19FFB',
     badgeText: 'ODOR CONTROL'
   },
-  'deals': {
-    title: 'Special Deals & Offers',
-    emoji: '🎁',
-    description: 'Limited-time markdowns on pet food, treats, and supplies across our catalog.',
-    accentClass: 'bg-[#ffb224]',
-    colorHex: '#ffb224',
-    badgeText: 'USA SUMMER DEALS'
-  }
 }
 
 const CATEGORIES = [
@@ -83,7 +75,6 @@ const CATEGORIES = [
   { id: 'dog-treats', name: 'Dog Treats 🦴' },
   { id: 'flea-tick', name: 'Flea & Tick 🛡️' },
   { id: 'cat-litter', name: 'Cat Litter 🧹' },
-  { id: 'deals', name: 'Deals & Offers 🎁' },
 ]
 
 export function CollectionClient({

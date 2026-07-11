@@ -35,7 +35,6 @@ export interface CatalogProduct {
     | 'dog-treats'
     | 'flea-tick'
     | 'cat-litter'
-    | 'deals'
     | 'dog-supplies'
     | 'cat-supplies'
     | 'fish-supplies'
@@ -85,10 +84,6 @@ export async function getProductBySlug(slug: string): Promise<CatalogProduct | n
 }
 
 export async function getProductsByCategory(category: string): Promise<CatalogProduct[]> {
-  if (category === 'deals') {
-    const all = await getAllProducts()
-    return all.filter((p) => p.onSale && p.comparePrice && p.comparePrice > p.price)
-  }
   const handles = getShopifyHandlesForCategory(category)
   const collections = await Promise.all(handles.map(getShopifyCollectionByHandle))
   const seen = new Set<string>()
@@ -120,12 +115,6 @@ export async function getFilteredCategoryProducts(
   selected: SelectedFilters,
   opts: { sortKey?: ShopifySortKey; reverse?: boolean; first?: number; after?: string | null } = {}
 ): Promise<FilteredCategoryResult> {
-  // The "deals" pseudo-category is handled in code (no Shopify collection for it).
-  if (category === 'deals') {
-    const all = await getAllProducts()
-    const sale = all.filter((p) => p.onSale && p.comparePrice && p.comparePrice > p.price)
-    return { products: sale, facets: [], pageInfo: { hasNextPage: false, endCursor: null } }
-  }
   const handles = getShopifyHandlesForCategory(category)
   const productFilters = toShopifyProductFilters(selected)
   // Fetch first matching collection only (most narrow). Map fallback for legacy slugs.

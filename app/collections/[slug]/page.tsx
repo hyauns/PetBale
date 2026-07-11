@@ -31,10 +31,6 @@ const CATEGORY_LABELS: Record<string, { title: string; description: string }> = 
     title: 'Cat Litter',
     description: 'Clumping, non-clumping, and natural cat litter from leading brands.',
   },
-  deals: {
-    title: 'Deals & Sale',
-    description: 'Save big on premium pet food, treats, and supplies. Limited-time offers.',
-  },
 
   // Dog smart collections
   'dog-dry-food': {

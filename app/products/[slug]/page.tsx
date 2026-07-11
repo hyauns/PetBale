@@ -16,7 +16,6 @@ const CATEGORY_LABELS: Record<string, string> = {
   'dog-treats': 'Dog Treats',
   'flea-tick': 'Flea & Tick',
   'cat-litter': 'Cat Litter',
-  deals: 'Deals',
 }
 
 export async function generateMetadata({

@@ -7,7 +7,6 @@ const CATEGORY_ACCENTS: Record<CatalogProduct['category'], { accent: string; col
   'dog-treats': { accent: 'bg-[#4AD395]', colorHex: '#4AD395' },
   'flea-tick': { accent: 'bg-[#6cd1ff]', colorHex: '#6cd1ff' },
   'cat-litter': { accent: 'bg-[#B19FFB]', colorHex: '#B19FFB' },
-  deals: { accent: 'bg-[#ffb224]', colorHex: '#ffb224' },
   'dog-supplies': { accent: 'bg-[#ffea79]', colorHex: '#ffea79' },
   'cat-supplies': { accent: 'bg-[#FF69B4]', colorHex: '#FF69B4' },
   'fish-supplies': { accent: 'bg-[#6cd1ff]', colorHex: '#6cd1ff' },
@@ -91,7 +90,9 @@ function pickCategory(product: ShopifyProduct): CatalogProduct['category'] {
   if (pt.includes('flea') || pt.includes('tick')) return 'flea-tick'
   if (pt.includes('litter')) return 'cat-litter'
   if (pt.includes('treat')) return 'dog-treats'
-  return 'deals'
+  // No pet tag and no recognizable type — bucket into generic dog supplies
+  // (was the now-removed 'deals' pseudo-category).
+  return 'dog-supplies'
 }
 
 const NAMED_ENTITIES: Record<string, string> = {
