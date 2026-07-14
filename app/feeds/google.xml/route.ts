@@ -260,9 +260,9 @@ ${customLabel1 ? `      <g:custom_label_1>${xmlEscape(customLabel1)}</g:custom_l
       <g:shipping>
         <g:country>US</g:country>
         <g:service>Standard</g:service>
-        <g:price>8.99 USD</g:price>
-        <g:min_handling_time>1</g:min_handling_time>
-        <g:max_handling_time>2</g:max_handling_time>
+        <g:price>${parseFloat(variant.price.amount) >= 40 ? '0.00' : '8.99'} USD</g:price>
+        <g:min_handling_time>2</g:min_handling_time>
+        <g:max_handling_time>4</g:max_handling_time>
         <g:min_transit_time>3</g:min_transit_time>
         <g:max_transit_time>7</g:max_transit_time>
       </g:shipping>
