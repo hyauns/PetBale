@@ -10,17 +10,6 @@ import { SITE_URL } from '@/lib/site'
 
 export const revalidate = 60
 
-const FREE_SHIPPING_THRESHOLD = 40
-
-// 48 contiguous states + DC (shipping policy: no Alaska, Hawaii).
-const CONTIGUOUS_US_STATES = [
-  'AL', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA',
-  'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA',
-  'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM',
-  'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD',
-  'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY',
-]
-
 const CATEGORY_LABELS: Record<string, string> = {
   'dog-food': 'Dog Food',
   'cat-food': 'Cat Food',
@@ -117,38 +106,9 @@ export default async function ProductPage({
         '@type': 'Organization',
         name: 'PetBale',
       },
-      shippingDetails: {
-        '@type': 'OfferShippingDetails',
-        shippingRate: {
-          '@type': 'MonetaryAmount',
-          // Free shipping on orders $40+; $8.99 flat under $40. Per-item rate
-          // = what a single-item order of this product costs to ship.
-          value: product.price >= FREE_SHIPPING_THRESHOLD ? '0.00' : '8.99',
-          currency: 'USD',
-        },
-        shippingDestination: {
-          '@type': 'DefinedRegion',
-          addressCountry: 'US',
-          // Contiguous US only — no AK/HI (PO Box / APO/FPO exclusions are not
-          // expressible in schema.org; stated in the shipping policy instead).
-          addressRegion: CONTIGUOUS_US_STATES,
-        },
-        deliveryTime: {
-          '@type': 'ShippingDeliveryTime',
-          handlingTime: {
-            '@type': 'QuantitativeValue',
-            minValue: 2,
-            maxValue: 4,
-            unitCode: 'DAY',
-          },
-          transitTime: {
-            '@type': 'QuantitativeValue',
-            minValue: 3,
-            maxValue: 7,
-            unitCode: 'DAY',
-          },
-        },
-      },
+      // No shippingDetails here: free shipping depends on ORDER total ($40+),
+      // which per-product OfferShippingDetails can't express. Shipping lives in
+      // the Organization-level ShippingService (layout.tsx) + GMC settings.
       hasMerchantReturnPolicy: {
         '@type': 'MerchantReturnPolicy',
         applicableCountry: 'US',

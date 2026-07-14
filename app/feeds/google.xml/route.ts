@@ -19,7 +19,11 @@ import { decodeHtmlEntities, isHexColorValue } from '@/lib/shopify/adapters'
  *
  * Each product variant is emitted as its own <item>, grouped together by
  * <g:item_group_id> = the product handle. This is required for variant-level
- * pricing, availability, and shipping.
+ * pricing and availability.
+ *
+ * No item-level <g:shipping>: free shipping depends on ORDER total ($40+),
+ * which per-item overrides can't express — GMC account shipping settings are
+ * the single source of truth (free $40+, else $8.99, contiguous US only).
  *
  * Regenerated on a 6-hour schedule (revalidate below). Google's scheduled
  * fetch should be configured to re-pull every 24 h, so the freshness budget
@@ -257,15 +261,6 @@ ${f.mpn ? `      <g:mpn>${xmlEscape(f.mpn)}</g:mpn>\n` : ''}      <g:identifier_
 ${size ? `      <g:size>${xmlEscape(size)}</g:size>\n` : ''}${color ? `      <g:color>${xmlEscape(color)}</g:color>\n` : ''}${ageGroup ? `      <g:age_group>${ageGroup}</g:age_group>\n` : ''}${material ? `      <g:material>${xmlEscape(material)}</g:material>\n` : ''}${flavor ? `      <g:flavor>${xmlEscape(flavor)}</g:flavor>\n` : ''}      <g:custom_label_0>${xmlEscape(customLabel0)}</g:custom_label_0>
 ${customLabel1 ? `      <g:custom_label_1>${xmlEscape(customLabel1)}</g:custom_label_1>\n` : ''}      <g:custom_label_3>${xmlEscape(customLabel3)}</g:custom_label_3>
       <g:custom_label_4>${xmlEscape(customLabel4)}</g:custom_label_4>
-      <g:shipping>
-        <g:country>US</g:country>
-        <g:service>Standard</g:service>
-        <g:price>${parseFloat(variant.price.amount) >= 40 ? '0.00' : '8.99'} USD</g:price>
-        <g:min_handling_time>2</g:min_handling_time>
-        <g:max_handling_time>4</g:max_handling_time>
-        <g:min_transit_time>3</g:min_transit_time>
-        <g:max_transit_time>7</g:max_transit_time>
-      </g:shipping>
     </item>`
 }
 

@@ -78,6 +78,31 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
+// 48 contiguous states + DC (shipping policy: no Alaska, Hawaii).
+const CONTIGUOUS_US_STATES = [
+  'AL', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA',
+  'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA',
+  'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM',
+  'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD',
+  'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY',
+]
+
+const SHIPPING_DESTINATION = {
+  '@type': 'DefinedRegion',
+  addressCountry: 'US',
+  addressRegion: CONTIGUOUS_US_STATES,
+}
+
+const TRANSIT_TIME = {
+  '@type': 'ServicePeriod',
+  duration: {
+    '@type': 'QuantitativeValue',
+    minValue: 3,
+    maxValue: 7,
+    unitCode: 'DAY',
+  },
+}
+
 const ORGANIZATION_SCHEMA = {
   '@context': 'https://schema.org',
   '@type': 'OnlineStore',
@@ -103,6 +128,62 @@ const ORGANIZATION_SCHEMA = {
     telephone: '+1-888-984-6318',
     areaServed: 'US',
     availableLanguage: ['English'],
+  },
+  // Site-wide shipping policy: order-value-based (free $40+), so it lives here
+  // at Organization level — per-product OfferShippingDetails can't express an
+  // order-total threshold. GMC shipping settings are the authoritative source.
+  hasShippingService: {
+    '@type': 'ShippingService',
+    name: 'Standard shipping',
+    handlingTime: {
+      '@type': 'ServicePeriod',
+      duration: {
+        '@type': 'QuantitativeValue',
+        minValue: 2,
+        maxValue: 4,
+        unitCode: 'DAY',
+      },
+      businessDays: [
+        'https://schema.org/Monday',
+        'https://schema.org/Tuesday',
+        'https://schema.org/Wednesday',
+        'https://schema.org/Thursday',
+        'https://schema.org/Friday',
+      ],
+    },
+    shippingConditions: [
+      {
+        '@type': 'ShippingConditions',
+        shippingDestination: SHIPPING_DESTINATION,
+        orderValue: {
+          '@type': 'MonetaryAmount',
+          minValue: 0,
+          maxValue: 39.99,
+          currency: 'USD',
+        },
+        shippingRate: {
+          '@type': 'MonetaryAmount',
+          value: 8.99,
+          currency: 'USD',
+        },
+        transitTime: TRANSIT_TIME,
+      },
+      {
+        '@type': 'ShippingConditions',
+        shippingDestination: SHIPPING_DESTINATION,
+        orderValue: {
+          '@type': 'MonetaryAmount',
+          minValue: 40,
+          currency: 'USD',
+        },
+        shippingRate: {
+          '@type': 'MonetaryAmount',
+          value: 0,
+          currency: 'USD',
+        },
+        transitTime: TRANSIT_TIME,
+      },
+    ],
   },
 }
 
