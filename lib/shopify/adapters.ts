@@ -305,8 +305,12 @@ function deriveBadges(product: ShopifyProduct, metafields: (ShopifyMetafield | n
   return badges.slice(0, 4)
 }
 
+// First IN-STOCK variant, falling back to the first variant. Quick-add cards
+// (home/shop/search/collections) add this variant directly — a sold-out DENY
+// variant gets its quantity clamped to 0 by the Cart API and shows as $0.00.
 function pickPrimaryVariant(product: ShopifyProduct): ShopifyVariant | null {
-  return product.variants.edges[0]?.node ?? null
+  const edges = product.variants.edges
+  return edges.find((e) => e.node.availableForSale)?.node ?? edges[0]?.node ?? null
 }
 
 // Rx / vet-authorization products must never be orderable on the storefront,

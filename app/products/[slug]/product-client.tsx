@@ -65,7 +65,9 @@ export function ProductClient({
   // (Shopify-CDN-resized) main image is ready, then fades in.
   const [loadedMainSrc, setLoadedMainSrc] = useState<string | null>(null)
   const variants = product.variants
-  const initialVariant = variants[0] ?? null
+  // Default to the first in-stock variant so PDP opens on a purchasable size
+  // (and matches the price quick-add cards show), not a sold-out one.
+  const initialVariant = variants.find((v) => v.availableForSale) ?? variants[0] ?? null
   const [activeVariantId, setActiveVariantId] = useState<string | null>(
     initialVariant?.id ?? product.defaultVariantId
   )

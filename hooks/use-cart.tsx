@@ -56,7 +56,7 @@ const LEGACY_CART_KEY = 'petbale_cart'
 
 function safePrice(amount: string | undefined): number {
   const n = parseFloat(amount ?? '0')
-  return Number.isFinite(n) ? Math.round(n) : 0
+  return Number.isFinite(n) ? n : 0
 }
 
 function mapLine(line: ShopifyCartLine): CartItem {
@@ -80,7 +80,8 @@ function mapLine(line: ShopifyCartLine): CartItem {
 }
 
 function mapCart(cart: ShopifyCart): CartItem[] {
-  return cart.lines.edges.map((e) => mapLine(e.node))
+  // The Cart API clamps sold-out DENY variants to quantity 0 — hide those lines.
+  return cart.lines.edges.filter((e) => e.node.quantity > 0).map((e) => mapLine(e.node))
 }
 
 // Lazy-loaded so framer-motion stays out of the shared bundle on every route —
