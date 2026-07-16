@@ -17,6 +17,11 @@ FROM node:22-alpine AS builder
 WORKDIR /app
 RUN corepack enable
 
+# Reuse the pnpm binary corepack already downloaded in the deps stage, so
+# `pnpm build` never has to reach registry.npmjs.org (deploys were failing on
+# transient ETIMEDOUT to npmjs from the build server).
+COPY --from=deps /root/.cache/node/corepack /root/.cache/node/corepack
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
