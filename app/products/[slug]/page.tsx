@@ -92,13 +92,21 @@ export default async function ProductPage({
       '@type': 'Brand',
       name: product.brand,
     },
-    offers: {
+    // One Offer per variant, url mirroring the Google feed's ?variant= links,
+    // so Merchant Center price checks match the exact variant it crawled.
+    offers: (product.variants.length > 0
+      ? product.variants
+      : [{ id: null, price: product.price, availableForSale: inStock }]
+    ).map((v) => ({
       '@type': 'Offer',
-      url: `${SITE_URL}/products/${slug}`,
+      url:
+        'id' in v && v.id
+          ? `${SITE_URL}/products/${slug}?variant=${v.id.split('/').pop()}`
+          : `${SITE_URL}/products/${slug}`,
       priceCurrency: 'USD',
-      price: product.price.toFixed(2),
+      price: v.price.toFixed(2),
       priceValidUntil,
-      availability: inStock
+      availability: v.availableForSale
         ? 'https://schema.org/InStock'
         : 'https://schema.org/OutOfStock',
       itemCondition: 'https://schema.org/NewCondition',
@@ -117,7 +125,7 @@ export default async function ProductPage({
         returnMethod: 'https://schema.org/ReturnByMail',
         returnFees: 'https://schema.org/FreeReturn',
       },
-    },
+    })),
   }
 
   if (product.rating > 0 && product.reviewCount > 0) {

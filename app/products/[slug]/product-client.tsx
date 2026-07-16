@@ -71,6 +71,15 @@ export function ProductClient({
   const [activeVariantId, setActiveVariantId] = useState<string | null>(
     initialVariant?.id ?? product.defaultVariantId
   )
+  // Google feed links carry ?variant=<numeric id> — preselect that variant so
+  // the visible price matches the feed item (GMC price-mismatch protection).
+  useEffect(() => {
+    const wanted = new URLSearchParams(window.location.search).get('variant')
+    if (!wanted) return
+    const match = variants.find((v) => v.id.split('/').pop() === wanted)
+    if (match) setActiveVariantId(match.id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   const [activeTab, setActiveTab] = useState('about')
   const [scrollProgress, setScrollProgress] = useState(0)
 
