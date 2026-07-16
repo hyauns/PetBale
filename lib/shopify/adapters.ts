@@ -305,12 +305,37 @@ function deriveBadges(product: ShopifyProduct, metafields: (ShopifyMetafield | n
   return badges.slice(0, 4)
 }
 
-// First IN-STOCK variant, falling back to the first variant. Quick-add cards
-// (home/shop/search/collections) add this variant directly — a sold-out DENY
-// variant gets its quantity clamped to 0 by the Cart API and shows as $0.00.
+// Cheapest IN-STOCK variant, falling back to the cheapest overall. Cards show
+// this price as "From $X" and single-variant quick-add adds it directly — a
+// sold-out DENY variant gets its quantity clamped to 0 by the Cart API and
+// shows as $0.00, so never pick one while stock exists elsewhere.
 function pickPrimaryVariant(product: ShopifyProduct): ShopifyVariant | null {
   const edges = product.variants.edges
-  return edges.find((e) => e.node.availableForSale)?.node ?? edges[0]?.node ?? null
+  const pool = edges.filter((e) => e.node.availableForSale)
+  return (pool.length > 0 ? pool : edges)
+    .map((e) => e.node)
+    .reduce<ShopifyVariant | null>(
+      (min, v) =>
+        !min || parseFloat(v.price.amount) < parseFloat(min.price.amount) ? v : min,
+      null
+    )
+}
+
+/** Chewy-style "9 Flavors, 3 Sizes" — distinct values per real option name. */
+function summarizeOptions(product: ShopifyProduct): string | null {
+  const counts = new Map<string, Set<string>>()
+  for (const { node: v } of product.variants.edges) {
+    for (const o of v.selectedOptions) {
+      if (o.name.toLowerCase() === 'title' || isHexColorValue(o.value)) continue
+      if (!counts.has(o.name)) counts.set(o.name, new Set())
+      counts.get(o.name)!.add(o.value)
+    }
+  }
+  const parts = [...counts.entries()]
+    .filter(([, vals]) => vals.size > 1)
+    .sort((a, b) => b[1].size - a[1].size)
+    .map(([name, vals]) => `${vals.size} ${name}${/s$/i.test(name) ? '' : 's'}`)
+  return parts.length > 0 ? parts.join(', ') : null
 }
 
 // Rx / vet-authorization products must never be orderable on the storefront,
@@ -405,6 +430,7 @@ export function adaptShopifyProduct(product: ShopifyProduct): CatalogProduct {
     benefits: [],
     badges: deriveBadges(product, metafields),
     defaultVariantId: variant?.id ?? null,
+    optionSummary: summarizeOptions(product),
     availableForSale: isPrescriptionOnly(product) ? false : product.availableForSale,
     variants: mapVariants(product),
     ...parseRating(metafields),

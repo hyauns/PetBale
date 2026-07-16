@@ -333,6 +333,11 @@ export function CollectionClient({
                         <h3 className="font-tbj-interval font-black text-base text-black uppercase leading-tight line-clamp-1">
                           {product.name}
                         </h3>
+                        {product.optionSummary && (
+                          <div className="text-[11px] font-black text-zinc-400 uppercase tracking-widest mt-0.5 select-none">
+                            {product.optionSummary}
+                          </div>
+                        )}
                         <div className="text-[11px] font-black text-zinc-400 uppercase tracking-widest mt-0.5">
                           BRAND: {product.brand}
                         </div>
@@ -347,6 +352,9 @@ export function CollectionClient({
                         </div>
 
                         <div className="flex items-baseline gap-2 mt-3 select-none">
+                          {product.variants.length > 1 && (
+                            <span className="text-xs font-black text-zinc-400 uppercase">From</span>
+                          )}
                           <span className="text-2xl font-black text-black">${product.price.toFixed(2)}</span>
                           {product.comparePrice && product.comparePrice > product.price && (
                             <span className="text-base font-bold text-zinc-400 line-through">${product.comparePrice.toFixed(2)}</span>
@@ -358,15 +366,20 @@ export function CollectionClient({
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.95 }}
-                      disabled={!product.defaultVariantId || !product.availableForSale}
+                      disabled={(!product.defaultVariantId && product.variants.length <= 1) || !product.availableForSale}
                       onClick={(e) => {
                         e.stopPropagation()
-                        if (product.defaultVariantId && product.availableForSale) addToCart(product.defaultVariantId, 1, e.clientX, e.clientY)
+                        if (!product.availableForSale) return
+                        if (product.variants.length > 1) {
+                          router.push(`/products/${product.slug}`)
+                          return
+                        }
+                        if (product.defaultVariantId) addToCart(product.defaultVariantId, 1, e.clientX, e.clientY)
                       }}
                       className="w-full py-3 bg-[#ffea79] text-black font-black text-sm border border-black rounded-lg shadow-[2.5px_2.5px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 transition-all duration-150 cursor-pointer flex items-center justify-center gap-1.5 mt-4 disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                       <ShoppingBag className="w-4 h-4 flex-shrink-0 text-black" />
-                      <span>{product.availableForSale ? 'ADD TO CART' : 'OUT OF STOCK'}</span>
+                      <span>{!product.availableForSale ? 'OUT OF STOCK' : product.variants.length > 1 ? 'CHOOSE OPTIONS' : 'ADD TO CART'}</span>
                     </motion.button>
 
                   </div>

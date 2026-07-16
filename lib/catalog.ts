@@ -54,6 +54,9 @@ export interface CatalogProduct {
   benefits: { title: string; description: string }[]
   badges: string[]
   defaultVariantId: string | null
+  /** Chewy-style option summary for cards, e.g. "9 Flavors, 3 Sizes".
+   *  Null when the product has a single choice. */
+  optionSummary: string | null
   /** Product-level stock: false when every variant is out of stock. */
   availableForSale: boolean
   variants: CatalogVariant[]

@@ -19,6 +19,10 @@ export type PricingPlan = {
   accent: string;
   slug: string;
   merchandiseId: string | null;
+  /** "9 Flavors, 3 Sizes" — shown under the title when the product has options. */
+  optionSummary?: string | null;
+  /** True → button becomes CHOOSE OPTIONS and navigates to the PDP. */
+  multiOptions?: boolean;
   availableForSale?: boolean;
   onSale?: boolean;
   comparePrice?: number;
@@ -219,7 +223,12 @@ const PricingCard = ({
         {/* Plan Name and Popular Badge */}
         <div className="mb-2 flex-shrink-0">
           <h3 className="text-lg sm:text-xl font-black text-black mb-1 leading-snug truncate">{plan.name}</h3>
-          
+          {plan.optionSummary && (
+            <div className="text-[11px] font-black text-zinc-400 uppercase tracking-widest mb-1 select-none">
+              {plan.optionSummary}
+            </div>
+          )}
+
           {/* Star Rating */}
           <div className="flex items-center gap-1 mb-1.5">
             <RatingStars rating={plan.rating} size="md" />
@@ -232,6 +241,9 @@ const PricingCard = ({
 
           {/* Price Display BELOW Star Ratings */}
           <div className="flex items-baseline gap-2 mt-2 select-none">
+            {plan.multiOptions && (
+              <span className="text-xs font-black text-zinc-400 uppercase">From</span>
+            )}
             <span className="text-2xl font-black text-black">${plan.price.toFixed(2)}</span>
             {plan.comparePrice && plan.comparePrice > plan.price && (
               <span className="text-base font-bold text-zinc-400 line-through">${plan.comparePrice.toFixed(2)}</span>
@@ -244,9 +256,15 @@ const PricingCard = ({
       <motion.button
         onClick={(e) => {
           e.stopPropagation();
-          if (plan.merchandiseId && plan.availableForSale !== false) addToCart(plan.merchandiseId, 1, e.clientX, e.clientY);
+          if (plan.availableForSale === false) return;
+          if (plan.multiOptions) {
+            // Multiple sizes/flavors — send the shopper to the PDP to pick one.
+            startNavigation(() => router.push(`/products/${plan.slug}`));
+            return;
+          }
+          if (plan.merchandiseId) addToCart(plan.merchandiseId, 1, e.clientX, e.clientY);
         }}
-        disabled={!plan.merchandiseId || plan.availableForSale === false}
+        disabled={(!plan.merchandiseId && !plan.multiOptions) || plan.availableForSale === false}
         className="w-full py-3.5 rounded-lg bg-[#ffea79] text-black font-black text-base border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,0.9)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.9)] active:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.9)] transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 mt-auto disabled:opacity-60 disabled:cursor-not-allowed"
         whileHover={{
           scale: 1.02,
@@ -264,7 +282,7 @@ const PricingCard = ({
           <circle cx="17.5" cy="11.5" r="2" />
           <path d="M12 13.5c-1.8 0-3.5 1-4 2.8-.4 1.3.2 2.7 1.5 3.2 1 .4 3 .5 5 0 1.3-.5 1.9-1.9 1.5-3.2-.5-1.8-2.2-2.8-4-2.8z" />
         </svg>
-        <span>{plan.availableForSale === false ? 'OUT OF STOCK' : 'ADD TO CART'}</span>
+        <span>{plan.availableForSale === false ? 'OUT OF STOCK' : plan.multiOptions ? 'CHOOSE OPTIONS' : 'ADD TO CART'}</span>
       </motion.button>
     </motion.div>
   );

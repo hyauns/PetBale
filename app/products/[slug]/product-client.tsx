@@ -65,9 +65,13 @@ export function ProductClient({
   // (Shopify-CDN-resized) main image is ready, then fades in.
   const [loadedMainSrc, setLoadedMainSrc] = useState<string | null>(null)
   const variants = product.variants
-  // Default to the first in-stock variant so PDP opens on a purchasable size
-  // (and matches the price quick-add cards show), not a sold-out one.
-  const initialVariant = variants.find((v) => v.availableForSale) ?? variants[0] ?? null
+  // Default to the cheapest in-stock variant so PDP opens on a purchasable size
+  // matching the "From $X" price cards show, not a sold-out one.
+  const inStockVariants = variants.filter((v) => v.availableForSale)
+  const initialVariant =
+    (inStockVariants.length > 0 ? inStockVariants : variants).reduce<
+      (typeof variants)[number] | null
+    >((min, v) => (!min || v.price < min.price ? v : min), null)
   const [activeVariantId, setActiveVariantId] = useState<string | null>(
     initialVariant?.id ?? product.defaultVariantId
   )
@@ -846,7 +850,12 @@ export function ProductClient({
               </div>
 
               <div className="flex items-center justify-between gap-4 mt-4 pt-3 border-t border-black/10">
-                <span className="text-2xl font-black text-black">${plan.price.toFixed(2)}</span>
+                <span className="text-2xl font-black text-black">
+                  {plan.variants.length > 1 && (
+                    <span className="text-xs font-black text-zinc-400 uppercase mr-1">From</span>
+                  )}
+                  ${plan.price.toFixed(2)}
+                </span>
                 <button className="py-2 px-4 rounded-lg bg-[#ffea79] text-black font-black text-xs border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,0.9)]">
                   VIEW DETAILS
                 </button>

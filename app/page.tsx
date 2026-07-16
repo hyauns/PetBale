@@ -38,6 +38,8 @@ export default async function HomePage() {
     accent: p.accent,
     slug: p.slug,
     merchandiseId: p.defaultVariantId,
+    optionSummary: p.optionSummary,
+    multiOptions: p.variants.length > 1,
     availableForSale: p.availableForSale,
     onSale: p.onSale,
     comparePrice: p.comparePrice,
