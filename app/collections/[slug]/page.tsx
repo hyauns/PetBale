@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { redirect } from 'next/navigation'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { JsonLd } from '@/components/json-ld'
@@ -243,6 +244,8 @@ export default async function CollectionPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
   const [{ slug }, sp] = await Promise.all([params, searchParams])
+  // Retired empty collection kept out of nav/sitemap; the URL may still be indexed.
+  if (slug === 'deals') redirect('/shop')
   const selected = parseFiltersFromSearch(sp)
   const currentPage = parsePage(sp.page)
 
