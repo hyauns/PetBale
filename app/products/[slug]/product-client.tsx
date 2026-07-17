@@ -46,10 +46,12 @@ export function ProductClient({
   product,
   related,
   reviews,
+  initialVariantId,
 }: {
   product: CatalogProduct
   related: CatalogProduct[]
   reviews: DisplayReview[]
+  initialVariantId?: string | null
 }) {
   const router = useRouter()
   const { addToCart } = useCart()
@@ -72,18 +74,11 @@ export function ProductClient({
     (inStockVariants.length > 0 ? inStockVariants : variants).reduce<
       (typeof variants)[number] | null
     >((min, v) => (!min || v.price < min.price ? v : min), null)
+  // initialVariantId comes from the server-resolved ?variant= feed param, so
+  // the first render (and Google's crawl) already shows the feed variant's price.
   const [activeVariantId, setActiveVariantId] = useState<string | null>(
-    initialVariant?.id ?? product.defaultVariantId
+    initialVariantId ?? initialVariant?.id ?? product.defaultVariantId
   )
-  // Google feed links carry ?variant=<numeric id> — preselect that variant so
-  // the visible price matches the feed item (GMC price-mismatch protection).
-  useEffect(() => {
-    const wanted = new URLSearchParams(window.location.search).get('variant')
-    if (!wanted) return
-    const match = variants.find((v) => v.id.split('/').pop() === wanted)
-    if (match) setActiveVariantId(match.id)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
   const [activeTab, setActiveTab] = useState('about')
   const [scrollProgress, setScrollProgress] = useState(0)
 

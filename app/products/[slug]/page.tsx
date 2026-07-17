@@ -54,15 +54,25 @@ export async function generateMetadata({
 
 export default async function ProductPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
-  const { slug } = await params
+  // Awaiting searchParams opts the page into per-request rendering: the HTML a
+  // feed ?variant= link returns must already show that variant's price (GMC
+  // landing-page rule — price may not change after load). Data fetches stay cached.
+  const [{ slug }, sp] = await Promise.all([params, searchParams])
   const [productBase, all] = await Promise.all([
     getProductBySlug(slug),
     getAllProducts(),
   ])
   if (!productBase) notFound()
+
+  const wantedVariant = typeof sp.variant === 'string' ? sp.variant : undefined
+  const initialVariantId = wantedVariant
+    ? productBase.variants.find((v) => v.id.split('/').pop() === wantedVariant)?.id ?? null
+    : null
 
   // Reviews hidden site-wide during the Merchant compliance period — the
   // AliReviews are AI-generated (see HIDE_REVIEWS in lib/shopify/adapters.ts).
@@ -168,7 +178,7 @@ export default async function ProductPage({
       <JsonLd data={productSchema} />
       <JsonLd data={breadcrumbSchema} />
       <SiteHeader />
-      <ProductClient product={product} related={related} reviews={reviews} />
+      <ProductClient product={product} related={related} reviews={reviews} initialVariantId={initialVariantId} />
       <SiteFooter />
     </>
   )
