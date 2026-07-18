@@ -108,7 +108,7 @@ export function ContactClient() {
                 </div>
                 <div>
                   <h3 className="text-xs font-black text-zinc-400 uppercase tracking-widest leading-none">CALL HOTLINE</h3>
-                  <p className="text-sm font-black text-black uppercase mt-1">+1 (888) 984-6318</p>
+                  <p className="text-sm font-black text-black uppercase mt-1">+1 (239) 441-1004</p>
                 </div>
               </div>
 

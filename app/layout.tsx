@@ -125,7 +125,7 @@ const ORGANIZATION_SCHEMA = {
     '@type': 'ContactPoint',
     contactType: 'customer service',
     email: 'cs@petbale.com',
-    telephone: '+1-888-984-6318',
+    telephone: '+1-239-441-1004',
     areaServed: 'US',
     availableLanguage: ['English'],
   },

@@ -1,0 +1,53 @@
+Subject: Request for Manual Review — Misrepresentation Suspension (Second Occurrence) — petbale.com
+
+Dear Google Merchant Center Policy Team,
+
+I am writing on behalf of PetBale, an online pet-supply store operated by DOG BOWL BAKERY LLC, regarding the Misrepresentation suspension of our Merchant Center account (domain: petbale.com; Merchant Center ID: [ADD YOUR ID]).
+
+BACKGROUND
+Our account was previously suspended under the Misrepresentation policy. We completed a full remediation of our website, policies, and business information, and the account was successfully reinstated on [June 11, 2026 — please confirm]. Between that reinstatement and this second suspension, we did not make any changes to our website's structure, policies, or business identity. Despite this, our account was suspended again for Misrepresentation on [July 11, 2026 — please confirm].
+
+We take this very seriously and want our store to fully meet Google's Shopping ads and free-listings policies. Rather than dispute the decision, after the second suspension we conducted a thorough, independent re-audit of our entire storefront and have proactively implemented the corrective measures below to remove anything that could be interpreted as misleading, exaggerated, or inconsistent.
+
+WHAT WE HAVE CHANGED / VERIFIED
+
+Pricing & promotions
+- Removed all sale/discount pricing across the entire catalog. Every product now shows a single, honest price with no "compare-at" or strike-through prices. There are no discounts, inflated reference prices, countdown timers, or false-urgency messaging anywhere on the site or in our product feed.
+- Disabled an automated price-sync integration that could re-introduce promotional pricing, so prices now remain stable and consistent between the website and the feed.
+- Replaced the promotional homepage banner with a neutral, factual message: "Free shipping on orders $40+ · Ships within the contiguous U.S."
+
+Trust language & claims
+- Removed all "guarantee" wording that could read as absolute or unrealistic (e.g., "100% Happiness Guarantee," "Double Guarantee," "risk-free"), replacing it with accurate, conservative language (30-day returns, food-acceptability support, brand-new products from trusted brands).
+- Removed/hid all product ratings and reviews across the site, including the aggregate-rating structured data, so no rating is displayed that is not tied to verifiable purchases.
+- Confirmed there are no fake trust badges, certifications, awards, or unverifiable endorsements anywhere on the site.
+- Removed health/medical or "cure/treat/prevent" style product claims; a general disclaimer is in place stating that product information is not veterinary advice.
+
+Policies & transparency
+- Rewrote and aligned our Refund Policy and Terms of Service: a clear 30-day return window from delivery, item-condition rules by product type, merchant-provided prepaid return labels for approved returns, no restocking fees, and refunds to the original payment method within 3–5 business days.
+- Our Shipping Policy clearly states costs (free over $40; $8.99 under $40), contiguous-U.S.-only delivery (no international, PO Box, or APO/FPO), handling time (2–4 business days), transit time (3–7 business days), total estimated delivery (5–11 business days), carriers used, and tracking.
+- Our Payment Policy lists accepted methods that match checkout exactly, and payment icons are displayed dynamically from our live payment settings.
+- Updated our Privacy Policy to accurately describe data sharing with analytics/advertising partners, with an opt-out available through our "Your Privacy Choices" page.
+- Added a clear shipping & returns summary near the "Add to Cart" button on every product page.
+
+Business identity (consistent across the website, policies, and structured data)
+- Store name: PetBale
+- Legal entity: DOG BOWL BAKERY LLC
+- Registered address: 3832 Fescue St, Clermont, FL 34714, United States
+- Support email: cs@petbale.com
+- Support phone: +1 (239) 441-1004
+Our on-page structured data (JSON-LD) and our Merchant Center business information match these details exactly.
+
+Technical
+- The site uses HTTPS with a valid certificate; all header, footer, policy, and collection links resolve correctly; checkout and Add-to-Cart are fully functional; and there is no hidden text or placeholder content.
+
+REQUEST
+We respectfully request a manual human review of our account and reinstatement of our Merchant Center. We are fully committed to complying with Google's policies and are glad to make any additional changes your team recommends.
+
+Thank you very much for your time and consideration.
+
+Sincerely,
+[Your full name]
+[Title], DOG BOWL BAKERY LLC (PetBale)
+cs@petbale.com · +1 (239) 441-1004
+https://petbale.com
+Merchant Center ID: [ADD YOUR ID]
