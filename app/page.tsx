@@ -1,6 +1,6 @@
 import { SiteHeader } from '@/components/site-header'
 import { HeroSection } from '@/components/hero-section'
-import { LogoCloud } from '@/components/logo-cloud'
+// import { LogoCloud } from '@/components/logo-cloud'
 import BestSellers, { type PricingPlan } from '@/components/best-sellers'
 import WhyUs from '@/components/why-us'
 import ShopCategories from '@/components/shop-categories'
@@ -52,7 +52,8 @@ export default async function HomePage() {
       <SiteHeader announcement={home.announcement} />
       <main id="main-content">
         <HeroSection content={home.hero} />
-        <LogoCloud logos={home.logos.length > 0 ? home.logos : undefined} />
+        {/* ponytail: brand logo cloud hidden for GMC misrepresentation review (2026-07-27) — restore after approval */}
+        {/* <LogoCloud logos={home.logos.length > 0 ? home.logos : undefined} /> */}
         <WhyUs features={home.features} />
         <ShopCategories categories={home.categories} />
         <BestSellers plans={plans} />
